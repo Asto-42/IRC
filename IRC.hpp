@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/03 16:57:02 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/03 18:11:31 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,24 +70,51 @@ class IRC
 	void Topic(void);
 	void Mode(void);
 
+	class client
+	{
+		private :
+
+		int sock;
+		std::string pass;
+		std::string nick;
+		std::string user;
+
+		public :
+
+		client(int sock, char *serv_rec);
+		~client();
+		int GetSock();
+		std::string GetPass();
+		std::string GetNick();
+		std::string GetUser();
+	};
+
+	class chanel
+	{
+
+	};
+
 	class SocketFailedException:public std::exception
 	{
 		public :
 
 		virtual const char *what() const throw();
 	};
+
 	class BindFailedException:public std::exception
 	{
 		public :
 
 		virtual const char *what() const throw();
 	};
+
 	class ListenFailedException:public std::exception
 	{
 		public :
 
 		virtual const char *what() const throw();
 	};
+
 	class AcceptFailedException:public std::exception
 	{
 		public :

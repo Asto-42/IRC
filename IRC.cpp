@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/03 17:21:16 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/03 18:28:58 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,27 +103,26 @@ void	IRC::launch_serv(void)
 		int recv_rec = 1;
 		while (recv_rec > 0)
 		{
+			connect(client, (struct sockaddr *)&this->peer_addr, this->peer_addr_size);
 			recv_rec = recv(client, server_recv, 200, 0);
-			if (check_pass(server_recv) == 0)
+			class client cl(client, server_recv);
+			if (check_pass(server_recv) == 0) // sert a rien, a setup
 				recv_rec = 0;
+			std::string acc = ":Password accepted.\r\n:localhost 001 jquil :Welcome to bdtServer jquil !~ jquil @127.0.0.1\r\n"; // update apres avoir creer la classe client et integrer les getters
+			//std::string acc = ":localhost 001 " + client.getNick() + " :Welcome to bdtServer " + client.getNick() + "!~" + client.getUsername() + "@127.0.0.1\r\n";
+			send(client, acc.c_str(), 512, 1);
+			exit(0);
 		}
 		std::cout << "Connection lost" << std::endl;
 	}
 	else
 		std::cout << "Accept failed" << std::endl;
 }
+
 bool IRC::check_pass(std::string server_recv)
 {
-	int y = 0;
-	for (size_t x = 18; x < this->mdp.size() + 1; x++)
-	{
-		std::cout << server_recv[x] << std::endl;
-		if (server_recv[x] != mdp[y])
-		{
-			std::cout << server_recv[x] << std::endl;
-			return (0);
-		}
-	}
+	std::string str = server_recv;
+	std::cout << "Password is correct" << std::endl;
 	return (1);
 }
 
@@ -134,6 +133,11 @@ const char *IRC::SocketFailedException::what() const throw()
 
 const char *IRC::BindFailedException::what() const throw()
 {
+	std::cout << "Bind errno = " << errno << std::endl;
+	// if (errno == 98)
+	// {
+	// 	getline();
+	// }
 	return ("Bind() failed\n");
 }
 
