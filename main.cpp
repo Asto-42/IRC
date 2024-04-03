@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 15:41:53 by jquil             #+#    #+#             */
-/*   Updated: 2024/03/28 14:20:45 by jquil            ###   ########.fr       */
+/*   Updated: 2024/03/28 17:21:37 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,15 +73,26 @@ int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struc
 
 Fait la meme mais Poll est mieux, select c'est dla merde mais c'est ce qui est utilise sur l'exam
 
+
+
+Connecter un client au serveur :
+dans un terminal :
+
+irssi
+/connect localhost XXXX mdp
+/rawlog open ~/IRC_githubed/logs
+
+XXXX = numero de port (premier argument du serveur)
+mdp = reflechi serieux (deuxieme argument du serveur)
 */
 
-// namespace Sockets
-// {
-// 	bool Start();
-// 	void Release();
-// 	int GetError();
-// 	bool CloseSocket(int socket);
-// }
+/*
+Doc interessante :
+https://webusers.i3s.unice.fr/~tettaman/Classes/L2I/ProgSys/11_IntroSockets.pdf
+https://www.codequoi.com/programmation-reseau-via-socket-en-c/#surveiller_les_sockets_avec_select
+*/
+
+
 
 int	main(int argc, char **argv)
 {

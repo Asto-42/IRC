@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/03/28 14:21:00 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/03 12:05:03 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ IRC::IRC(int port, std::string mdp)
 		std::cerr << e.what() << std::endl;
 		std::cout << "Listen() failed" << std::endl;
 	}
-	this->peer_addr_size = sizeof(struct sockaddr_in);
+	this->peer_addr_size = sizeof (struct sockaddr_in);
 	this->port = port;
 	this->mdp = mdp;
 };
@@ -63,22 +63,44 @@ IRC::~IRC()
 	std::cout << "Default destructor called" << std::endl;
 };
 
-void IRC::launch_serv(void)
+void	IRC::Kick(void)
 {
+	std::cout << "Enter Kick function" << std::endl;
+}
+
+void	IRC::Invite(void)
+{
+	std::cout << "Enter Invite function" << std::endl;
+}
+
+void	IRC::Topic(void)
+{
+	std::cout << "Enter Topic function" << std::endl;
+}
+
+void	IRC::Mode(void)
+{
+	std::cout << "Enter Mode function" << std::endl;
+}
+
+void	IRC::launch_serv(void)
+{
+	struct epoll_event event;
+	event.events = EPOLLIN | EPOLLET; // EPOLLIN for read events, EPOLLET for edge-triggered behavior
+	std::cout << "Server launched, listening on port : " << this->port << std::endl;
+	int client;
 	while (42)
 	{
-		std::cout << "Server launched, listening on port : " << this->port << std::endl;
-		this->acc = accept(this->sock, (struct sockaddr *)&this->server, &this->peer_addr_size);
-		try
+		std::cout << "yes" << std::endl;
+		if (accept(this->sock, (struct sockaddr *)&this->peer_addr, &this->peer_addr_size) > 0)
 		{
-			if (this->acc < 0)
-				throw IRC::AcceptFailedException();
+			std::cout << "try connect" << std::endl;
+			client = connect(this->sock, (struct sockaddr *)&this->peer_addr, this->peer_addr_size);
+			if (client == -1)
+				std::cout << "Connect failed" << std::endl;
 		}
-		catch(const IRC::AcceptFailedException & e)
-		{
-			std::cerr << e.what() << '\n';
-			std::cout << "Accept() failed" << std::endl;
-		}
+		else
+			std::cout << "Accept failed" << std::endl;
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/03/28 13:55:16 by jquil            ###   ########.fr       */
+/*   Updated: 2024/03/28 17:47:50 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@
 #include <arpa/inet.h> // hton*, ntoh*, inet_addr
 #include <unistd.h>  // close
 #include <cerrno>
+#include <poll.h>
+#include <sys/epoll.h>
 
 class IRC
 {
@@ -50,18 +52,21 @@ class IRC
 
 	int port;
 	std::string mdp;
-	struct sockaddr_in server;
+	struct sockaddr_in server, peer_addr;
 	socklen_t peer_addr_size;
 	int sock;
 	int bind_sock;
 	int lstn;
-	int acc;
 
 	public :
 
 	IRC(int port, std::string mdp);
 	~IRC();
 	void launch_serv(void);
+	void Kick(void);
+	void Invite(void);
+	void Topic(void);
+	void Mode(void);
 
 	class SocketFailedException:public std::exception
 	{
