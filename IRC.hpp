@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/03/28 17:47:50 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/03 16:57:02 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,14 @@ class IRC
 	int sock;
 	int bind_sock;
 	int lstn;
+	bool secure;
 
 	public :
 
 	IRC(int port, std::string mdp);
 	~IRC();
 	void launch_serv(void);
+	bool check_pass(std::string server_recv);
 	void Kick(void);
 	void Invite(void);
 	void Topic(void);

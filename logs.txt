@@ -1,0 +1,4 @@
+<< CAP LS
+<< PASS bibine
+<< NICK jquil
+<< USER jquil jquil localhost :Julien QUIL

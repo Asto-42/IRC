@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/03 12:05:03 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/03 17:21:16 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,22 @@
 IRC::IRC(int port, std::string mdp)
 {
 	std::cout << "Default IRC constructor" << std::endl;
+	memset(&this->server, 0, sizeof(this->server));
+	this->server.sin_addr.s_addr = htonl(INADDR_LOOPBACK);// 127.0.0.1, localhost
+	this->server.sin_port = htons(port);
+	this->server.sin_family = AF_INET;
 	this->sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	try
 	{
-		if (this->sock == -1)
+		if (this->sock < 0)
 			throw IRC::SocketFailedException();
 	}
 	catch(const IRC::SocketFailedException & e)
 	{
 		std::cerr << e.what() << std::endl;
 		std::cout << "Socket() failed" << std::endl;
+		this->secure = 1;
 	}
-	this->server.sin_family = AF_INET;
-	this->server.sin_addr.s_addr = htonl(INADDR_LOOPBACK);// 127.0.0.1, localhost
-	this->server.sin_port = htons(6666);
-	memset(&this->server, 0, sizeof(this->server));
 	this->bind_sock = bind(this->sock, (struct sockaddr *)&this->server, sizeof(this->server)); // invalid argument -> errno 99
 	try
 	{
@@ -39,7 +40,8 @@ IRC::IRC(int port, std::string mdp)
 	catch(const IRC::BindFailedException & e)
 	{
 		std::cerr << e.what() << std::endl;
-		std::cout << "Bind() failed" << std::endl;
+		this->secure = 1;
+		return;
 	}
 	this->lstn = listen(this->sock, 10);
 	try
@@ -50,6 +52,7 @@ IRC::IRC(int port, std::string mdp)
 	catch(const IRC::ListenFailedException & e)
 	{
 		std::cerr << e.what() << std::endl;
+		this->secure = 1;
 		std::cout << "Listen() failed" << std::endl;
 	}
 	this->peer_addr_size = sizeof (struct sockaddr_in);
@@ -83,25 +86,45 @@ void	IRC::Mode(void)
 	std::cout << "Enter Mode function" << std::endl;
 }
 
+// /rawlog open ~/IRC_githubed/logs.txt
 void	IRC::launch_serv(void)
 {
-	struct epoll_event event;
-	event.events = EPOLLIN | EPOLLET; // EPOLLIN for read events, EPOLLET for edge-triggered behavior
-	std::cout << "Server launched, listening on port : " << this->port << std::endl;
-	int client;
-	while (42)
+	if (this->secure == 1)
 	{
-		std::cout << "yes" << std::endl;
-		if (accept(this->sock, (struct sockaddr *)&this->peer_addr, &this->peer_addr_size) > 0)
-		{
-			std::cout << "try connect" << std::endl;
-			client = connect(this->sock, (struct sockaddr *)&this->peer_addr, this->peer_addr_size);
-			if (client == -1)
-				std::cout << "Connect failed" << std::endl;
-		}
-		else
-			std::cout << "Accept failed" << std::endl;
+		std::cout << "Initialisation failure, exit the program" << std::endl;
+		return ;
 	}
+	char server_recv[200];
+	std::cout << "Server launched, listening on port : " << this->port << std::endl;
+	int client = accept(this->sock, (struct sockaddr *)&this->peer_addr, &this->peer_addr_size);
+	if (client > 0)
+	{
+		std::cout << "Accept achieve" << std::endl;
+		int recv_rec = 1;
+		while (recv_rec > 0)
+		{
+			recv_rec = recv(client, server_recv, 200, 0);
+			if (check_pass(server_recv) == 0)
+				recv_rec = 0;
+		}
+		std::cout << "Connection lost" << std::endl;
+	}
+	else
+		std::cout << "Accept failed" << std::endl;
+}
+bool IRC::check_pass(std::string server_recv)
+{
+	int y = 0;
+	for (size_t x = 18; x < this->mdp.size() + 1; x++)
+	{
+		std::cout << server_recv[x] << std::endl;
+		if (server_recv[x] != mdp[y])
+		{
+			std::cout << server_recv[x] << std::endl;
+			return (0);
+		}
+	}
+	return (1);
 }
 
 const char *IRC::SocketFailedException::what() const throw()

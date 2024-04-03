@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 15:41:53 by jquil             #+#    #+#             */
-/*   Updated: 2024/03/28 17:21:37 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/03 16:58:41 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,20 +49,11 @@ socket return -1 en cas d'erreur (penser a secure)
 
 int close(int socket) -> Ferme le socket
 
-int connect(int _socket, const struct sockaddr* server, socklen_t serverlen)
-socket -> socket a co
-server -> struct du serveur
-serverlen -> taille de la struct (sizeof (server) should work)
-
 Pour créer le paramètre server , on utilise une structure sockaddr_in à initialiser ainsi :
 sockaddr_in server;
 server.sin_addr.s_addr = inet_addr(const char* ipaddress);
 server.sin_family = AF_INET;
 server.sin_port = htons(int port);
-
-
--->If (connect(socket, &server, sizeof(server) != 0)
-    // Erreur
 
 
 
