@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/10 18:51:14 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/17 17:45:02 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,7 @@ void	IRC::launch_serv(void)
 		int recv_rec = 1;
 		connect(client, (struct sockaddr *)&this->peer_addr, this->peer_addr_size);
 		recv_rec = recv(client, server_recv, 200, 0);
-		if (!cl)
-			class client cl(client, server_recv, this->mdp);
+		class client cl(client, server_recv, this->mdp);
 		if (check_pass(cl) == 0)
 			recv_rec = 0;
 		std::string acc = ":Password accepted.\r\n:localhost 001 jquil :Welcome to bdtServer jquil !~ jquil @127.0.0.1\r\n"; // update apres avoir creer la classe client et integrer les getters
@@ -112,6 +111,10 @@ void	IRC::launch_serv(void)
 		send(client, acc.c_str(), 512, 1);
 		while (recv_rec > 0)
 		{
+			//epoll_wait();
+			recv_rec = recv(client, server_recv, 200, 0);
+
+			std::cout << "serv_rec = " << server_recv << std::endl;
 		}
 		std::cout << "Connection lost" << std::endl;
 	}

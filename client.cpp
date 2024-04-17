@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:05:17 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/10 18:46:04 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/17 14:19:01 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ IRC::client::client(int sock, char *serv_rec, std::string mdp)
 	int x = tmp.find("PASS");
 	x += 5;
 	int y = -1;
-	char str[10];
+	char str[100];
 	while (tmp[x] != '\r')
 	{
 		str[++y] = tmp[x];
@@ -33,6 +33,27 @@ IRC::client::client(int sock, char *serv_rec, std::string mdp)
 		this->pass_check = 1;
 	else
 		this->pass_check = 0;
+	x = tmp.find("NICK");
+	x += 5;
+	y = -1;
+	while (tmp[x] != '\r')
+	{
+		str[++y] = tmp[x];
+		x++;
+	}
+	str[++y] = '\0';
+	this->nick = str;
+	x = tmp.find("USER");
+	x += 5;
+	y = -1;
+	while (tmp[x] != '\r')
+	{
+		str[++y] = tmp[x];
+		x++;
+	}
+	str[++y] = '\0';
+	this->user = str;
+	//std::cout << "pass = " << this->GetPass() << "	nick = " << this->GetNick() << "	user = " << this->GetUser() << std::endl;
 };
 
 int IRC::client::GetSock()
@@ -55,8 +76,3 @@ std::string IRC::client::GetUser()
 {
 	return (this->user);
 }
-
-IRC::client::~client()
-{
-	std::cout << "Default client destructor called" << std::endl;
-};
