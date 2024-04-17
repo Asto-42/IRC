@@ -2,3 +2,17 @@
 << PASS bibine
 << NICK jquil
 << USER jquil jquil localhost :Julien QUIL
+>> :Password accepted.
+>> :localhost 001 jquil :Welcome to bdtServer jquil !~ jquil @127.0.0.1
+<< MODE jquil +i
+<< PING localhost
+>>
+<< CAP LS
+<< PASS bibine
+<< NICK jquil
+<< USER jquil jquil localhost :Julien QUIL
+>> :Password accepted.
+>> :localhost 001 jquil :Welcome to bdtServer jquil !~ jquil @127.0.0.1
+<< MODE jquil +i
+<< PING localhost
+>> 

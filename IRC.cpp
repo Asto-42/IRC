@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/03 18:28:58 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/10 18:51:14 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,17 +101,17 @@ void	IRC::launch_serv(void)
 	{
 		std::cout << "Accept achieve" << std::endl;
 		int recv_rec = 1;
+		connect(client, (struct sockaddr *)&this->peer_addr, this->peer_addr_size);
+		recv_rec = recv(client, server_recv, 200, 0);
+		if (!cl)
+			class client cl(client, server_recv, this->mdp);
+		if (check_pass(cl) == 0)
+			recv_rec = 0;
+		std::string acc = ":Password accepted.\r\n:localhost 001 jquil :Welcome to bdtServer jquil !~ jquil @127.0.0.1\r\n"; // update apres avoir creer la classe client et integrer les getters
+		//std::string acc = ":localhost 001 " + client.getNick() + " :Welcome to bdtServer " + client.getNick() + "!~" + client.getUsername() + "@127.0.0.1\r\n";
+		send(client, acc.c_str(), 512, 1);
 		while (recv_rec > 0)
 		{
-			connect(client, (struct sockaddr *)&this->peer_addr, this->peer_addr_size);
-			recv_rec = recv(client, server_recv, 200, 0);
-			class client cl(client, server_recv);
-			if (check_pass(server_recv) == 0) // sert a rien, a setup
-				recv_rec = 0;
-			std::string acc = ":Password accepted.\r\n:localhost 001 jquil :Welcome to bdtServer jquil !~ jquil @127.0.0.1\r\n"; // update apres avoir creer la classe client et integrer les getters
-			//std::string acc = ":localhost 001 " + client.getNick() + " :Welcome to bdtServer " + client.getNick() + "!~" + client.getUsername() + "@127.0.0.1\r\n";
-			send(client, acc.c_str(), 512, 1);
-			exit(0);
 		}
 		std::cout << "Connection lost" << std::endl;
 	}
@@ -119,11 +119,18 @@ void	IRC::launch_serv(void)
 		std::cout << "Accept failed" << std::endl;
 }
 
-bool IRC::check_pass(std::string server_recv)
+bool IRC::check_pass(client cl)
 {
-	std::string str = server_recv;
-	std::cout << "Password is correct" << std::endl;
-	return (1);
+	if (cl.pass_check == 1)
+	{
+		std::cout << "Password is correct" << std::endl;
+		return (1);
+	}
+	else
+	{
+		std::cout << "Incorrect Password" << std::endl;
+		return (0);
+	}
 }
 
 const char *IRC::SocketFailedException::what() const throw()

@@ -6,42 +6,33 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:05:17 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/03 18:54:53 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/10 18:46:04 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
 
-IRC::client::client(int sock, char *serv_rec)
+IRC::client::client(int sock, char *serv_rec, std::string mdp)
 {
+	//std::cout << "Default client constructor called" << std::endl;
 	std::string tmp = serv_rec;
-	std::cout << "Default client constructor called" << std::endl;
-	std::cout << serv_rec << std::endl;
 	this->sock = sock;
-	int x = tmp.find('\n');
-	int z = tmp.find('\r', x);
-	for (int y = x; y < z; y++)
-		this->pass[y - x] = tmp[y];
-	// x = tmp.find('\n', x + 1);
-	// z = 0;
-	// for (int y = x + 1; tmp[y] != '\n'; y++)
-	// {
-	// 	if (tmp[y] != '\r')
-	// 		this->nick[z] = tmp[y];
-	// 	z++;
-	// }
-	// x = tmp.find('\n', x + 1);
-	// z = 0;
-	// for (int y = x + 1; tmp[y] != '\n'; y++)
-	// {
-	// 	if (tmp[y] != '\r')
-	// 		this->user[z] = tmp[y];
-	// 	z++;
-	// }
-	std::cout << "pass = " << this->pass << std::endl;
-	// std::cout << "nick = " << this->nick << std::endl;
-	// std::cout << "user = " << this->user << std::endl;
-
+	int x = tmp.find("PASS");
+	x += 5;
+	int y = -1;
+	char str[10];
+	while (tmp[x] != '\r')
+	{
+		str[++y] = tmp[x];
+		x++;
+	}
+	str[++y] = '\0';
+	this->pass = str;
+	//std::cout << this->pass << "	" << mdp << std::endl;
+	if (this->pass == mdp)
+		this->pass_check = 1;
+	else
+		this->pass_check = 0;
 };
 
 int IRC::client::GetSock()
