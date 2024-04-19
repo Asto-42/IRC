@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/17 14:18:40 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/19 12:12:34 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ class IRC
 	int port;
 	std::string mdp;
 	struct sockaddr_in server, peer_addr;
+	struct pollfd *poll_fds;
+	int poll_count;
 	socklen_t peer_addr_size;
 	int sock;
 	int bind_sock;
@@ -63,6 +65,7 @@ class IRC
 
 	IRC(int port, std::string mdp);
 	~IRC();
+	int calloc_pollfd(int size);
 	void launch_serv(void);
 	void Kick(void);
 	void Invite(void);
