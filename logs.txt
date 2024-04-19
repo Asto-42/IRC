@@ -6,5 +6,6 @@
 << MODE jquil +i
 << PING localhost
 << JOIN #test
-<< TOPIC #test :afk
+<< TOPIC #test :kwigjs
+<< JOIN #afk
 << QUIT :Lost terminal

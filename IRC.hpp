@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 15:35:23 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/19 16:02:19 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <ios>
 #include <algorithm>
+#include <signal.h>
 #include <vector>
 #include <math.h>
 #include <cmath>

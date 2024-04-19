@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 15:36:00 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/19 16:14:38 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,7 @@ void	IRC::launch_serv(void)
 						std::string acc = ":localhost 001 " + cl.GetNick() + " :Welcome to bdtServer " + cl.GetNick() + "!~" + cl.GetUser() + "@127.0.0.1\r\n";
 						std::cout << acc << std::endl;
 						send(client, acc.c_str(), 512, 1);
+						std::cout << "\n\n\n" << server_recv << std::endl;
 					}
 					else
 						std::cout << "Wrong password" << std::endl;
@@ -181,27 +182,4 @@ bool IRC::check_pass(client cl)
 	}
 }
 
-const char *IRC::SocketFailedException::what() const throw()
-{
-	return ("Socket() failed\n");
-}
 
-const char *IRC::BindFailedException::what() const throw()
-{
-	std::cout << "Bind errno = " << errno << std::endl;
-	// if (errno == 98)
-	// {
-	// 	getline();
-	// }
-	return ("Bind() failed\n");
-}
-
-const char *IRC::ListenFailedException::what() const throw()
-{
-	return ("Listen() failed\n");
-}
-
-const char *IRC::AcceptFailedException::what() const throw()
-{
-	return ("Accept() failed\n");
-}
