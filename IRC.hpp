@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 17:44:51 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/19 18:18:06 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <ios>
 #include <algorithm>
+#include <signal.h>
 #include <vector>
 #include <math.h>
 #include <cmath>
@@ -89,7 +90,7 @@ class IRC
 			Channel(std::string name, client &creator);
 			~Channel();
 	};
-	
+
 	private :
 
 	std::string mdp;
@@ -112,40 +113,13 @@ class IRC
 	int calloc_pollfd(int size);
 	int add_poll_fds(int fd);
 	void launch_serv(void);
+	void manage_input(int x);
 	void Kick(void);
 	void Invite(void);
 	void Topic(void);
 	void Mode(void);
 
 	bool check_pass(client cl);
-	
 
-	class SocketFailedException:public std::exception
-	{
-		public :
-
-		virtual const char *what() const throw();
-	};
-
-	class BindFailedException:public std::exception
-	{
-		public :
-
-		virtual const char *what() const throw();
-	};
-
-	class ListenFailedException:public std::exception
-	{
-		public :
-
-		virtual const char *what() const throw();
-	};
-
-	class AcceptFailedException:public std::exception
-	{
-		public :
-
-		virtual const char *what() const throw();
-	};
 };
 #endif
