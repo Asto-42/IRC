@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 16:02:19 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/19 17:57:46 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,20 +53,42 @@ class IRC
 	{
 		private :
 
-		int sock;
-		std::string pass;
-		std::string nick;
-		std::string user;
+			std::string 	pass;
+			std::string 	nick;
+			std::string 	user;
+			int sock;
 
 		public :
 
-		bool pass_check;
-		client();
-		client(int sock, char *serv_rec, std::string mdp);
-		int GetSock();
-		std::string GetPass();
-		std::string GetNick();
-		std::string GetUser();
+			bool 			pass_check;
+							client();
+							client(int sock, char *serv_rec, std::string mdp);
+			int				GetSock();
+			std::string 	GetPass();
+			std::string 	GetNick();
+			std::string 	GetUser();
+	};
+
+	class Channel
+	{
+		private:
+			std::string				topic;
+			std::string				name;
+			std::vector<int>		operators;
+			std::vector<client>		clients;
+			Channel(void);
+
+		public:
+			std::string				getName(void);
+			std::string				getTopic(void);
+			std::vector<int>		getOperators(void);
+			std::vector<client>		getClients(void);
+			void					setName(std::string& name);
+			void					setTopic(std::string& topic);
+			void					setOperators(int& operateur);
+			void					setClients(client& client);
+			Channel(std::string name, client &creator);
+			~Channel();
 	};
 
 	private :
@@ -97,10 +119,7 @@ class IRC
 	void Mode(void);
 
 	bool check_pass(client cl);
-	class chanel
-	{
 
-	};
 
 	class SocketFailedException:public std::exception
 	{

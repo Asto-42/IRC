@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:05:17 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 15:36:31 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/19 15:49:21 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ IRC::client::client()
 	this->sock = 0;
 };
 
+// Recoit la socket créé par accept, 
 IRC::client::client(int sock, char *serv_rec, std::string mdp)
 {
 	//std::cout << "Default client constructor called" << std::endl;
