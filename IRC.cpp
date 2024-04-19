@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 12:29:10 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/19 14:37:29 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,10 +130,12 @@ void	IRC::launch_serv(void)
 				int client = accept(this->sock, (struct sockaddr *)&this->peer_addr, &this->peer_addr_size);
 				if (client > 0)
 				{
+					//this->add_poll_fds(client);
+					class client cl(client, server_recv, this->mdp);
+
 					int recv_rec = 1;
 					connect(client, (struct sockaddr *)&this->peer_addr, this->peer_addr_size);
 					recv_rec = recv(client, server_recv, 200, 0);
-					class client cl(client, server_recv, this->mdp);
 					if (check_pass(cl) == 0)
 						recv_rec = 0;
 					else
