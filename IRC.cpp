@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 16:14:38 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/19 17:54:55 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ IRC::IRC(int port, std::string mdp)
 	this->server.sin_addr.s_addr = htonl(INADDR_LOOPBACK);// 127.0.0.1, localhost
 	this->server.sin_port = htons(port);
 	this->poll_count = 1;
+	this->poll_size = 2;
 	this->secure = 0;
 	this->poll_fds = NULL;
 	this->server.sin_family = AF_INET;
@@ -29,41 +30,19 @@ IRC::IRC(int port, std::string mdp)
 	this->poll_fds[0].events = POLLIN;
 	//std::signal(SIGINT, closeServer);
 	//std::signal(SIGQUIT, closeServer);
-	try
-	{
-		if (this->sock < 0)
-			throw IRC::SocketFailedException();
-	}
-	catch(const IRC::SocketFailedException & e)
-	{
-		std::cerr << e.what() << std::endl;
-		std::cout << "Socket() failed" << std::endl;
+	if (this->sock < 0)
 		this->secure = 1;
-	}
-	this->bind_sock = bind(this->sock, (struct sockaddr *)&this->server, sizeof(this->server)); // invalid argument -> errno 99
-	try
+	else
+		this->bind_sock = bind(this->sock, (struct sockaddr *)&this->server, sizeof(this->server)); // invalid argument -> errno 99
+	if (this->bind_sock < 0)
 	{
-		if (this->bind_sock < 0)
-			throw IRC::BindFailedException();
-	}
-	catch(const IRC::BindFailedException & e)
-	{
-		std::cerr << e.what() << std::endl;
 		this->secure = 1;
 		return;
 	}
-	this->lstn = listen(this->sock, 10);
-	try
-	{
-		if (this->lstn < 0)
-			throw IRC::ListenFailedException();
-	}
-	catch(const IRC::ListenFailedException & e)
-	{
-		std::cerr << e.what() << std::endl;
+	else
+		this->lstn = listen(this->sock, 10);
+	if (this->lstn < 0)
 		this->secure = 1;
-		std::cout << "Listen() failed" << std::endl;
-	}
 	this->peer_addr_size = sizeof (struct sockaddr_in);
 	this->port = port;
 	this->mdp = mdp;
@@ -111,7 +90,7 @@ void	IRC::launch_serv(void)
 {
 	if (this->secure == 1)
 	{
-		std::cout << "sock = " << this->sock << "	bind = " << this->bind_sock << "	lstn = " << this->lstn << std::endl;
+		//std::cout << "sock = " << this->sock << "	bind = " << this->bind_sock << "	lstn = " << this->lstn << std::endl;
 		std::cout << "Initialisation failure, exit the program" << std::endl;
 		return ;
 	}
@@ -144,13 +123,25 @@ void	IRC::launch_serv(void)
 						std::cout << acc << std::endl;
 						send(client, acc.c_str(), 512, 1);
 						std::cout << "\n\n\n" << server_recv << std::endl;
+						void *buf = NULL;
+						read(client, buf, 100);
+						std::cout << buf << std::endl;
 					}
 					else
 						std::cout << "Wrong password" << std::endl;
 				}
 			}
+			else
+				manage_input(x);
 		}
 	}
+}
+
+void IRC::manage_input(int x)
+{
+	char server_recv[200];
+	recv(x, server_recv, 200, 0);
+	std::cout << server_recv << std::endl;
 }
 
 int IRC::add_poll_fds(int new_fd)

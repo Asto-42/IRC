@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 16:02:19 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/19 17:51:06 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ class IRC
 	int calloc_pollfd(int size);
 	int add_poll_fds(int fd);
 	void launch_serv(void);
+	void manage_input(int x);
 	void Kick(void);
 	void Invite(void);
 	void Topic(void);
@@ -100,34 +101,6 @@ class IRC
 	class chanel
 	{
 
-	};
-
-	class SocketFailedException:public std::exception
-	{
-		public :
-
-		virtual const char *what() const throw();
-	};
-
-	class BindFailedException:public std::exception
-	{
-		public :
-
-		virtual const char *what() const throw();
-	};
-
-	class ListenFailedException:public std::exception
-	{
-		public :
-
-		virtual const char *what() const throw();
-	};
-
-	class AcceptFailedException:public std::exception
-	{
-		public :
-
-		virtual const char *what() const throw();
 	};
 };
 #endif
