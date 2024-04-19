@@ -6,11 +6,16 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:05:17 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 14:06:44 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/19 15:36:31 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
+
+IRC::client::client()
+{
+	this->sock = 0;
+};
 
 IRC::client::client(int sock, char *serv_rec, std::string mdp)
 {
@@ -19,11 +24,11 @@ IRC::client::client(int sock, char *serv_rec, std::string mdp)
 	this->sock = sock;
 	int x = tmp.find("PASS");
 	if (x <= -1)
+	{
+		std::cout << "Find fail ??\n" << serv_rec << std::endl;
 		return ;
-	// std::cout << "tmp : " << tmp << std::endl;
-	// std::cout << x << std::endl;
+	}
 	x += 5;
-	//std::cout << tmp[x] << std::endl;
 	int y = -1;
 	char str[100];
 	while (tmp[x] != '\r')
@@ -33,7 +38,6 @@ IRC::client::client(int sock, char *serv_rec, std::string mdp)
 	}
 	str[++y] = '\0';
 	this->pass = str;
-	std::cout << this->pass << "	" << mdp << std::endl;
 	if (this->pass == mdp)
 		this->pass_check = 1;
 	else
@@ -58,7 +62,6 @@ IRC::client::client(int sock, char *serv_rec, std::string mdp)
 	}
 	str[++y] = '\0';
 	this->user = str;
-	std::cout << "pass = " << this->GetPass() << "	nick = " << this->GetNick() << "	user = " << this->GetUser() << std::endl;
 };
 
 int IRC::client::GetSock()

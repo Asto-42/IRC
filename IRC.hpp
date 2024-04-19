@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 12:12:34 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/19 15:35:23 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,30 +48,6 @@
 
 class IRC
 {
-	private :
-
-	int port;
-	std::string mdp;
-	struct sockaddr_in server, peer_addr;
-	struct pollfd *poll_fds;
-	int poll_count;
-	socklen_t peer_addr_size;
-	int sock;
-	int bind_sock;
-	int lstn;
-	bool secure;
-
-	public :
-
-	IRC(int port, std::string mdp);
-	~IRC();
-	int calloc_pollfd(int size);
-	void launch_serv(void);
-	void Kick(void);
-	void Invite(void);
-	void Topic(void);
-	void Mode(void);
-
 	class client
 	{
 		private :
@@ -84,12 +60,40 @@ class IRC
 		public :
 
 		bool pass_check;
+		client();
 		client(int sock, char *serv_rec, std::string mdp);
 		int GetSock();
 		std::string GetPass();
 		std::string GetNick();
 		std::string GetUser();
 	};
+
+	private :
+
+	std::string mdp;
+	socklen_t peer_addr_size;
+	struct sockaddr_in server, peer_addr;
+	struct pollfd *poll_fds;
+	std::map<int, client>	users;
+	int poll_count;
+	int poll_size;
+	int port;
+	int sock;
+	int bind_sock;
+	int lstn;
+	bool secure;
+
+	public :
+
+	IRC(int port, std::string mdp);
+	~IRC();
+	int calloc_pollfd(int size);
+	int add_poll_fds(int fd);
+	void launch_serv(void);
+	void Kick(void);
+	void Invite(void);
+	void Topic(void);
+	void Mode(void);
 
 	bool check_pass(client cl);
 	class chanel

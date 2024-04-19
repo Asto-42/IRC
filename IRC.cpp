@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 14:37:29 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/19 15:36:00 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,12 @@ IRC::IRC(int port, std::string mdp)
 	this->poll_fds = NULL;
 	this->server.sin_family = AF_INET;
 	this->sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (this->calloc_pollfd(10) == 0)
+	this->secure = 1;
+	this->poll_fds[0].fd = this->sock;
+	this->poll_fds[0].events = POLLIN;
+	//std::signal(SIGINT, closeServer);
+	//std::signal(SIGQUIT, closeServer);
 	try
 	{
 		if (this->sock < 0)
@@ -58,8 +64,6 @@ IRC::IRC(int port, std::string mdp)
 		this->secure = 1;
 		std::cout << "Listen() failed" << std::endl;
 	}
-	if (this->calloc_pollfd(10) == 0)
-		this->secure = 1;
 	this->peer_addr_size = sizeof (struct sockaddr_in);
 	this->port = port;
 	this->mdp = mdp;
@@ -111,7 +115,6 @@ void	IRC::launch_serv(void)
 		std::cout << "Initialisation failure, exit the program" << std::endl;
 		return ;
 	}
-	// std::cout << "port = " << this->port << "	mdp = " << this->mdp << "	sock = " << this->sock << "\n	bind_sock = " << this->bind_sock << "	lstn = " << this->lstn << "\n secure = " << this->secure << std::endl;
 	char server_recv[200];
 	std::cout << "Server launched, listening on port : " << this->port << std::endl;
 	while (42)
@@ -126,28 +129,42 @@ void	IRC::launch_serv(void)
 		{
 			if (this->poll_fds[x].fd == this->sock)
 			{
-				std::cout << "socket accept" << std::endl;
 				int client = accept(this->sock, (struct sockaddr *)&this->peer_addr, &this->peer_addr_size);
 				if (client > 0)
 				{
-					//this->add_poll_fds(client);
+					if (this->add_poll_fds(client) == 0)
+						return ;
+					recv(client, server_recv, 200, 0);
 					class client cl(client, server_recv, this->mdp);
-
-					int recv_rec = 1;
-					connect(client, (struct sockaddr *)&this->peer_addr, this->peer_addr_size);
-					recv_rec = recv(client, server_recv, 200, 0);
-					if (check_pass(cl) == 0)
-						recv_rec = 0;
-					else
+					if (check_pass(cl) == 1)
 					{
-						std::string acc = ":Password accepted.\r\n:localhost 001 jquil :Welcome to bdtServer jquil !~ jquil @127.0.0.1\r\n"; // update apres avoir creer la classe client et integrer les getters
-						//std::string acc = ":localhost 001 " + client.getNick() + " :Welcome to bdtServer " + client.getNick() + "!~" + client.getUsername() + "@127.0.0.1\r\n";
+						this->users[client] = cl;
+						connect(client, (struct sockaddr *)&this->peer_addr, this->peer_addr_size);
+						std::string acc = ":localhost 001 " + cl.GetNick() + " :Welcome to bdtServer " + cl.GetNick() + "!~" + cl.GetUser() + "@127.0.0.1\r\n";
+						std::cout << acc << std::endl;
 						send(client, acc.c_str(), 512, 1);
 					}
+					else
+						std::cout << "Wrong password" << std::endl;
 				}
 			}
 		}
 	}
+}
+
+int IRC::add_poll_fds(int new_fd)
+{
+	if (this->poll_count == this->poll_size)
+	{
+		this->poll_size *= 2; // Double la taille
+		this->poll_fds = (struct pollfd *) realloc(this->poll_fds, sizeof(*(this->poll_fds)) * (this->poll_size));
+		if (!this->poll_fds)
+			return (0);
+	}
+	this->poll_fds[this->poll_count].fd = new_fd;
+	this->poll_fds[this->poll_count].events = POLLIN;
+	this->poll_count++;
+	return (1);
 }
 
 bool IRC::check_pass(client cl)
