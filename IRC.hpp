@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 17:58:39 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/19 18:01:26 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,37 +120,5 @@ class IRC
 	void Mode(void);
 
 	bool check_pass(client cl);
-
-<<<<<<< HEAD
-
-	class SocketFailedException:public std::exception
-	{
-		public :
-
-		virtual const char *what() const throw();
-	};
-
-	class BindFailedException:public std::exception
-	{
-		public :
-
-		virtual const char *what() const throw();
-	};
-
-	class ListenFailedException:public std::exception
-	{
-		public :
-
-		virtual const char *what() const throw();
-	};
-
-	class AcceptFailedException:public std::exception
-	{
-		public :
-
-		virtual const char *what() const throw();
-=======
->>>>>>> Juju_le_dozo
-	};
 };
 #endif
