@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 16:51:26 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/19 17:49:41 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,7 @@ void	IRC::launch_serv(void)
 						return ;
  					// Lit dans la socket client (socket client, buff, nb octets à lire, flags)
 					recv(client, server_recv, 200, 0);
+					
 					
 					// Créé le nv client
 					class client cl(client, server_recv, this->mdp);
