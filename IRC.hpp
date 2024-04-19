@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 17:57:46 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/19 17:58:39 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ class IRC
 	int calloc_pollfd(int size);
 	int add_poll_fds(int fd);
 	void launch_serv(void);
+	void manage_input(int x);
 	void Kick(void);
 	void Invite(void);
 	void Topic(void);
@@ -120,6 +121,7 @@ class IRC
 
 	bool check_pass(client cl);
 
+<<<<<<< HEAD
 
 	class SocketFailedException:public std::exception
 	{
@@ -147,6 +149,8 @@ class IRC
 		public :
 
 		virtual const char *what() const throw();
+=======
+>>>>>>> Juju_le_dozo
 	};
 };
 #endif
