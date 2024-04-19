@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 15:26:09 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/19 17:44:51 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,29 +48,6 @@
 
 class IRC
 {
-	private :
-
-		struct sockaddr_in	server, peer_addr;
-		struct pollfd 		*poll_fds;
-		socklen_t 			peer_addr_size;
-		std::string 		mdp;
-		bool 				secure;
-		int 				port;
-		int 				sock;
-		int 				bind_sock;
-		int 				lstn;
-		int 				poll_count;
-
-	public :
-							IRC(int port, std::string mdp);
-							~IRC();
-		int					calloc_pollfd(int size);
-		void				launch_serv(void);
-		void 				Kick(void);
-		void 				Invite(void);
-		void 				Topic(void);
-		void 				Mode(void);
-
 	class client
 	{
 		private :
@@ -82,20 +59,66 @@ class IRC
 
 		public :
 
-			client(int sock, char *serv_rec, std::string mdp);
-			std::string		GetPass();
+			bool 			pass_check;
+							client();
+							client(int sock, char *serv_rec, std::string mdp);
+			int				GetSock();
+			std::string 	GetPass();
 			std::string 	GetNick();
 			std::string 	GetUser();
-			bool 			pass_check;// ?? 
-			int 			GetSock();
 	};
 
-	bool check_pass(client cl);// ?? 
-	class chanel
+	class Channel
 	{
-		
+		private:
+			std::string				topic;
+			std::string				name;
+			std::vector<int>		operators;
+			std::vector<client>		clients;
+			Channel(void);
 
+		public:
+			std::string				getName(void);
+			std::string				getTopic(void);
+			std::vector<int>		getOperators(void);
+			std::vector<client>		getClients(void);
+			void					setName(std::string& name);
+			void					setTopic(std::string& topic);
+			void					setOperators(int& operateur);
+			void					setClients(client& client);
+			Channel(std::string name, client &creator);
+			~Channel();
 	};
+	
+	private :
+
+	std::string mdp;
+	socklen_t peer_addr_size;
+	struct sockaddr_in server, peer_addr;
+	struct pollfd *poll_fds;
+	std::map<int, client>	users;
+	int poll_count;
+	int poll_size;
+	int port;
+	int sock;
+	int bind_sock;
+	int lstn;
+	bool secure;
+
+	public :
+
+	IRC(int port, std::string mdp);
+	~IRC();
+	int calloc_pollfd(int size);
+	int add_poll_fds(int fd);
+	void launch_serv(void);
+	void Kick(void);
+	void Invite(void);
+	void Topic(void);
+	void Mode(void);
+
+	bool check_pass(client cl);
+	
 
 	class SocketFailedException:public std::exception
 	{
