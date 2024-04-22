@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:05:17 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 14:21:15 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 16:13:15 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,56 +15,14 @@
 IRC::client::client()
 {
 	this->sock = 0;
+	this->set = 0;
 };
 
-IRC::client::client(int sock, char *serv_rec, std::string mdp)
+IRC::client::client(int sock)
 {
 	std::cout << "Default client constructor called" << std::endl;
-	std::string tmp = serv_rec;
 	this->sock = sock;
-	int x = 0;
-	x = tmp.find("PASS");
-	std::cout << x << std::endl;
-	if (x == -1)
-	{
-		std::cout << "Find fail ??\n" << serv_rec << std::endl;
-		return ;
-	}
-	x += 5;
-	int y = -1;
-	char str[100];
-	memset(str, 0, 100);
-	while (tmp[x] != '\r')
-	{
-		str[++y] = tmp[x];
-		x++;
-	}
-	str[++y] = '\0';
-	this->pass = str;
-	if (this->pass == mdp)
-		this->pass_check = 1;
-	else
-		this->pass_check = 0;
-	x = tmp.find("NICK");
-	x += 5;
-	y = -1;
-	while (tmp[x] != '\r')
-	{
-		str[++y] = tmp[x];
-		x++;
-	}
-	str[++y] = '\0';
-	this->nick = str;
-	x = tmp.find("USER");
-	x += 5;
-	y = -1;
-	while (tmp[x] != '\r')
-	{
-		str[++y] = tmp[x];
-		x++;
-	}
-	str[++y] = '\0';
-	this->user = str;
+	this->set = 0;
 };
 
 int IRC::client::GetSock()
@@ -85,4 +43,24 @@ std::string IRC::client::GetNick()
 std::string IRC::client::GetUser()
 {
 	return (this->user);
+}
+
+std::string IRC::client::GetBuffer()
+{
+	return (this->buffer);
+}
+
+void IRC::client::SetBuffer(std::string buf)
+{
+	this->buffer = buf;
+}
+
+void IRC::client::SetPass(std::string pas)
+{
+	this->pass = pas;
+}
+
+void IRC::client::SetNick(std::string nic)
+{
+	this->nick = nic;
 }

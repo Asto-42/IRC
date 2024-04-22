@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 14:19:14 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 16:14:54 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ IRC::IRC(int port, std::string mdp)
 {
 	std::cout << "Default IRC constructor" << std::endl;
 	memset(&this->server, 0, sizeof(this->server));
-	this->server.sin_addr.s_addr = htonl(INADDR_LOOPBACK);// 127.0.0.1, localhost
+	this->server.sin_addr.s_addr = htonl(INADDR_LOOPBACK); // 127.0.0.1, localhost
 	this->server.sin_port = htons(port);
 	this->poll_count = 1;
 	this->poll_size = 2;
@@ -41,16 +41,17 @@ IRC::IRC(int port, std::string mdp)
 		this->lstn = listen(this->sock, 10);
 	if (this->lstn < 0)
 		this->secure = 1;
-	this->peer_addr_size = sizeof (struct sockaddr_in);
+	this->peer_addr_size = sizeof(struct sockaddr_in);
 	this->port = port;
 	this->mdp = mdp;
+	initCommand();
 };
 
 int IRC::calloc_pollfd(int size)
 {
 	if (!this->poll_fds)
 	{
-		this->poll_fds = (struct pollfd *) calloc(size + 1, sizeof *this->poll_fds);
+		this->poll_fds = (struct pollfd *)calloc(size + 1, sizeof *this->poll_fds);
 		if (!this->poll_fds)
 			return (0);
 	}
@@ -64,34 +65,12 @@ IRC::~IRC()
 	std::cout << "Default destructor called" << std::endl;
 };
 
-void	IRC::Kick(void)
-{
-	std::cout << "Enter Kick function" << std::endl;
-}
-
-void	IRC::Invite(void)
-{
-	std::cout << "Enter Invite function" << std::endl;
-}
-
-void	IRC::Topic(void)
-{
-	std::cout << "Enter Topic function" << std::endl;
-}
-
-void	IRC::Mode(void)
-{
-	std::cout << "Enter Mode function" << std::endl;
-}
-
-
-
-void	IRC::launch_serv(void)
+void IRC::launch_serv(void)
 {
 	if (this->secure == 1)
 	{
 		std::cout << "Initialisation failure, exit the program" << std::endl;
-		return ;
+		return;
 	}
 	char server_recv[200];
 	memset(server_recv, '\0', 200);
@@ -102,60 +81,135 @@ void	IRC::launch_serv(void)
 		if (status == -1)
 		{
 			std::cout << "Poll failure" << std::endl;
-			return ;
+			return;
 		}
 		for (int x = 0; x < 10; x++)
 		{
 			if ((poll_fds[x].revents & POLLIN) != 1)
-				continue ;
- 			if (this->poll_fds[x].fd == this->sock)
+				continue;
+			if (this->poll_fds[x].fd == this->sock)
 			{
 				int client = accept(this->sock, (struct sockaddr *)&this->peer_addr, &this->peer_addr_size);
 				if (client > 0)
 				{
 					if (this->add_poll_fds(client) == 0)
-						return ;
-					recv(client, server_recv, 200, 0);
-					class client cl(client, server_recv, this->mdp);
-					if (check_pass(cl) == 1)
-					{
-						this->users[client] = cl;
-						connect(client, (struct sockaddr *)&this->peer_addr, this->peer_addr_size);
-						std::string acc = ":localhost 001 " + cl.GetNick() + " :Welcome to bdtServer " + cl.GetNick() + "!~" + cl.GetUser() + "@127.0.0.1\r\n";
-						std::cout << acc << std::endl;
-						send(client, acc.c_str(), 512, 1);
-					}
-					else
-					{
-						std::cout << "Wrong password" << std::endl;
-						return ;
-					}
+						return;
+					class client cl(client);
 				}
 			}
 			else
-				manage_input(this->poll_fds[x].fd);
+				manage_input(x);
 		}
 	}
 }
 
-void IRC::manage_input(int fd)
+void IRC::manage_input(int x)
 {
-	char server_recv[200];
-	int bytes_read = 0;
-	memset(server_recv, '\0', 200);
-	bytes_read = recv(fd, server_recv, 200, 0);
-	if (bytes_read > 0)
+	char server_recv[512];
+	int fd = this->poll_fds[x].fd;
+	memset(&server_recv, '\0', sizeof(server_recv));
+	if (recv(fd, server_recv, sizeof(server_recv), 0) <= 0)
 	{
-		std::cout << server_recv << std::endl;
-		sleep(5);
+		// del user
+		// close le fd
+		// delete du poll de fd
 	}
+	else
+	{
+		std::string line = users.find(fd)->second.GetBuffer() + server_recv;
+		this->users.find(fd)->second.SetBuffer("");
+		std::string input;
+		std::string tmp;
+		std::string::size_type end;
+		std::string::size_type space;
+		while ((end = line.find("\r", 0)) != std::string::npos)
+		{
+			input = line.substr(0, end);
+			//line.erase(0, end + 2); // clear la line
+			line.clear();
+			if ((space = input.find(" ", 0)) != std::string::npos)
+			{
+				tmp = input.substr(0, space);
+				input.erase(0, space + 1);
+				if (this->cmd.find(tmp) != this->cmd.end())
+					(this->*cmd[tmp])(this->users.find(fd)->second, input);
+			}
+		}
+	}
+}
+
+
+bool	IRC::capLs(client &client, std::string cmd)
+{
+	if (cmd != "LS")
+		return (0);
+	if (client.set == 0)
+		client.set = 1;
+	return (1);
+}
+
+bool	IRC::pass(client &client, std::string cmd)
+{
+	if (cmd != this->mdp)
+		return (0);
+	client.SetPass(cmd);
+	client.set = 2;
+	return (1);
+}
+
+bool	IRC::nick(client &client, std::string cmd)
+{
+	if (cmd.size() == 0)
+		return (0);
+	client.SetNick(cmd);
+	client.set = 3;
+	return (1);
+}
+
+//void IRC::Kick(void)
+// {
+// 	std::cout << "Enter Kick function" << std::endl;
+// }
+
+// void IRC::Invite(void)
+// {
+// 	std::cout << "Enter Invite function" << std::endl;
+// }
+
+// void IRC::Topic(void)
+// {
+// 	std::cout << "Enter Topic function" << std::endl;
+// }
+
+// void IRC::Mode(void)
+// {
+// 	std::cout << "Enter Mode function" << std::endl;
+// }
+
+
+void IRC::initCommand(void)
+{
+	this->cmd["CAP"] = &IRC::capLs;
+	// this->cmd["NICK"]    = &IRC::nick;
+	// this->cmd["USER"]    = &IRC::user;
+	// this->cmd["PASS"]    = &IRC::pass;
+	// this->cmd["PING"]    = &IRC::ping;
+	// this->cmd["QUIT"]    = &IRC::quit;
+	// this->cmd["JOIN"]    = &IRC::join;
+	// this->cmd["PRIVMSG"] = &IRC::privmsg;
+	// this->cmd["KICK"]    = &IRC::kick;
+	// this->cmd["TOPIC"]   = &IRC::topic;
+	// this->cmd["MODE"]    = &IRC::mode;
+	// this->cmd["INVITE"]  = &IRC::invite;
+	// this->cmd["PART"]    = &IRC::part;
+	// this->cmd["OPER"]    = &Server::oper;
 }
 
 int IRC::add_poll_fds(int new_fd)
 {
 	if (this->poll_count == this->poll_size)
 	{
-		this->poll_fds = (struct pollfd *) realloc(this->poll_fds, sizeof(*(this->poll_fds)) * (this->poll_size));
+		this->poll_fds = (struct pollfd *)realloc(this->poll_fds, sizeof(*(this->poll_fds)) * (this->poll_size));
 		if (!this->poll_fds)
 			return (0);
 	}
@@ -178,5 +232,3 @@ bool IRC::check_pass(client cl)
 		return (0);
 	}
 }
-
-

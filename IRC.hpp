@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 14:19:21 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 16:13:52 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,25 @@ class IRC
 			std::string 	pass;
 			std::string 	nick;
 			std::string 	user;
+			std::string		buffer;
 			int sock;
 
 		public :
 
-			bool 			pass_check;
+			int			 	set;
+			bool			pass_check;
 							client();
-							client(int sock, char *serv_rec, std::string mdp);
+							client(int sock);
 			int				GetSock();
 			std::string 	GetPass();
 			std::string 	GetNick();
 			std::string 	GetUser();
+			std::string		GetBuffer();
+			void		SetBuffer(std::string buf);
+			void		SetPass(std::string pas);
+			void 		SetNick(std::string nic);
+
+
 	};
 
 	class Channel
@@ -98,13 +106,14 @@ class IRC
 		struct sockaddr_in 			server, peer_addr;
 		struct pollfd 				*poll_fds;
 		std::map<int, client>		users;
-		int 						poll_count;
-		int 						poll_size;
-		int 						port;
-		int 						sock;
-		int 						bind_sock;
-		int 						lstn;
-		bool 						secure;
+		std::map<std::string, bool (IRC::*)(client&, std::string)>	cmd;
+		int							poll_count;
+		int							poll_size;
+		int							port;
+		int							sock;
+		int							bind_sock;
+		int							lstn;
+		bool							secure;
 
 	public :
 
@@ -112,10 +121,27 @@ class IRC
 		int 						add_poll_fds(int fd);
 		void 						launch_serv(void);
 		void 						manage_input(int fd);
-		void 						Kick(void);
-		void 						Invite(void);
-		void 						Topic(void);
-		void 						Mode(void);
+		void						initCommand(void);
+		bool						capLs(client &client, std::string cmd);
+		bool						pass(client &client, std::string cmd);
+		bool						nick(client &client, std::string cmd);
+		// bool						user(client &client, std::string cmd);
+		// bool						ping(client &client, std::string cmd);
+		// bool						join(client &client, std::string cmd);
+		// bool						part(client &client, std::string cmd);
+		// bool						privmsg(client &client, std::string cmd);
+		// bool						privmsg_user(client &client, std::string cmd);
+		// bool						topic(client &client, std::string cmd);
+		// bool						mode(client &client, std::string cmd);
+		// bool						oper(client &client, std::string cmd);
+		// bool						whois(client &client, std::string cmd);
+		// bool						kick(client &client, std::string cmd);
+		// bool						quit(client &client, std::string cmd);
+		// bool						invite(client &client, std::string cmd);
+		// void 						Kick(void);
+		// void 						Invite(void);
+		// void 						Topic(void);
+		// void 						Mode(void);
 									IRC(int port, std::string mdp);
 									~IRC();
 
