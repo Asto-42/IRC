@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 13:54:07 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/22 14:06:39 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ int IRC::calloc_pollfd(int size)
 
 IRC::~IRC()
 {
+	free(this->poll_fds);
 	close(this->sock);
 	std::cout << "Default destructor called" << std::endl;
 };
@@ -134,7 +135,10 @@ void	IRC::Mode(void)
 }
 
 // /rawlog open ~/IRC_githubed/logs.txt
-// /rawlog open ~Coding/inProgress/IRC/IRC1-Branch-Lucas/logs.txt
+
+//nc localhost 1114
+//CAP LS ctrl+V ctrl+M
+
 void	IRC::launch_serv(void)
 {
 	if (this->secure == 1)
@@ -143,8 +147,6 @@ void	IRC::launch_serv(void)
 		std::cout << "Initialisation failure, exit the program" << std::endl;
 		return ;
 	}
-
-	// Server buffer ppour les messages
 	char server_recv[200];
 
 	memset(server_recv, '\0', 200);
@@ -162,8 +164,6 @@ void	IRC::launch_serv(void)
 			std::cout << "Poll failure" << std::endl;
 			return ;
 		}
-
-		// Routine
 		for (int x = 0; x < 10; x++)
 		{
 			//std::cout << "\tRoutine" << std::endl;
@@ -192,10 +192,7 @@ void	IRC::launch_serv(void)
 					// Check mdp renseigné par le client / Msg de bienvenue
 					if (check_pass(cl) == 1)
 					{
-						// Enregistre le client dans la map
 						this->users[client] = cl;
-
-						// Connect le nouveau client
 						connect(client, (struct sockaddr *)&this->peer_addr, this->peer_addr_size);
 
 						// Créé et envoie un message de bienvenue
@@ -216,11 +213,14 @@ void	IRC::launch_serv(void)
 						std::cout << buf << std::endl;
 					}
 					else
+					{
 						std::cout << "Wrong password" << std::endl;
+						return ;
+					}
 				}
 			}
 			else
-				manage_input(poll_fds[x].fd);
+				manage_input(this->poll_fds[x].fd);
 		}
 	}
 }
