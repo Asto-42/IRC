@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 16:14:54 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 16:56:00 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,8 +116,9 @@ void IRC::manage_input(int x)
 	}
 	else
 	{
-		std::string line = users.find(fd)->second.GetBuffer() + server_recv;
-		this->users.find(fd)->second.SetBuffer("");
+		std::string line = server_recv;
+		// std::string line = users.find(fd)->second.GetBuffer() + server_recv;
+		// this->users.find(fd)->second.SetBuffer("");
 		std::string input;
 		std::string tmp;
 		std::string::size_type end;
@@ -143,26 +144,44 @@ bool	IRC::capLs(client &client, std::string cmd)
 {
 	if (cmd != "LS")
 		return (0);
-	if (client.set == 0)
-		client.set = 1;
+	if (client.GetSetup() == 0)
+		client.SetSetup(1);
 	return (1);
 }
 
 bool	IRC::pass(client &client, std::string cmd)
 {
-	if (cmd != this->mdp)
+	if (cmd != this->mdp || client.GetSetup() != 1)
 		return (0);
 	client.SetPass(cmd);
-	client.set = 2;
+	client.SetSetup(2);
 	return (1);
 }
 
 bool	IRC::nick(client &client, std::string cmd)
 {
-	if (cmd.size() == 0)
+	if (cmd.size() == 0 || client.GetSetup() != 2)
 		return (0);
 	client.SetNick(cmd);
-	client.set = 3;
+	client.SetSetup(3);
+	return (1);
+}
+
+bool	IRC::user(client &client, std::string cmd)
+{
+	if (cmd.size() == 0 || client.GetSetup() != 3)
+		return (0);
+	client.SetUser(cmd);
+	client.SetSetup(4);
+	return (1);
+}
+
+bool	IRC::privmsg(client &client, std::string cmd)
+{
+	(void)client;
+	if (cmd.size() == 0)
+		return (1);
+
 	return (1);
 }
 
@@ -190,13 +209,13 @@ bool	IRC::nick(client &client, std::string cmd)
 void IRC::initCommand(void)
 {
 	this->cmd["CAP"] = &IRC::capLs;
-	// this->cmd["NICK"]    = &IRC::nick;
-	// this->cmd["USER"]    = &IRC::user;
-	// this->cmd["PASS"]    = &IRC::pass;
+	this->cmd["NICK"]    = &IRC::nick;
+	this->cmd["USER"]    = &IRC::user;
+	this->cmd["PASS"]    = &IRC::pass;
 	// this->cmd["PING"]    = &IRC::ping;
 	// this->cmd["QUIT"]    = &IRC::quit;
 	// this->cmd["JOIN"]    = &IRC::join;
-	// this->cmd["PRIVMSG"] = &IRC::privmsg;
+	this->cmd["PRIVMSG"] = &IRC::privmsg;
 	// this->cmd["KICK"]    = &IRC::kick;
 	// this->cmd["TOPIC"]   = &IRC::topic;
 	// this->cmd["MODE"]    = &IRC::mode;

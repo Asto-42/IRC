@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 16:13:52 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 16:57:50 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,22 +57,25 @@ class IRC
 			std::string 	nick;
 			std::string 	user;
 			std::string		buffer;
+			int			 	setup;
 			int sock;
 
 		public :
 
-			int			 	set;
 			bool			pass_check;
 							client();
 							client(int sock);
 			int				GetSock();
+			int				GetSetup() const;
 			std::string 	GetPass();
 			std::string 	GetNick();
 			std::string 	GetUser();
-			std::string		GetBuffer();
+			std::string		GetBuffer() const;
 			void		SetBuffer(std::string buf);
 			void		SetPass(std::string pas);
 			void 		SetNick(std::string nic);
+			void 		SetUser(std::string use);
+			void		SetSetup(int x);
 
 
 	};
@@ -125,11 +128,11 @@ class IRC
 		bool						capLs(client &client, std::string cmd);
 		bool						pass(client &client, std::string cmd);
 		bool						nick(client &client, std::string cmd);
-		// bool						user(client &client, std::string cmd);
+		bool						user(client &client, std::string cmd);
 		// bool						ping(client &client, std::string cmd);
 		// bool						join(client &client, std::string cmd);
 		// bool						part(client &client, std::string cmd);
-		// bool						privmsg(client &client, std::string cmd);
+		bool						privmsg(client &client, std::string cmd);
 		// bool						privmsg_user(client &client, std::string cmd);
 		// bool						topic(client &client, std::string cmd);
 		// bool						mode(client &client, std::string cmd);
@@ -138,10 +141,10 @@ class IRC
 		// bool						kick(client &client, std::string cmd);
 		// bool						quit(client &client, std::string cmd);
 		// bool						invite(client &client, std::string cmd);
-		// void 						Kick(void);
-		// void 						Invite(void);
-		// void 						Topic(void);
-		// void 						Mode(void);
+		// void 					Kick(void);
+		// void 					Invite(void);
+		// void 					Topic(void);
+		// void 					Mode(void);
 									IRC(int port, std::string mdp);
 									~IRC();
 

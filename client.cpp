@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:05:17 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 16:13:15 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 16:57:25 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,16 @@
 IRC::client::client()
 {
 	this->sock = 0;
-	this->set = 0;
+	this->setup = 0;
+	this->buffer = "";
 };
 
 IRC::client::client(int sock)
 {
 	std::cout << "Default client constructor called" << std::endl;
 	this->sock = sock;
-	this->set = 0;
+	this->setup = 0;
+	this->buffer = "";
 };
 
 int IRC::client::GetSock()
@@ -45,9 +47,14 @@ std::string IRC::client::GetUser()
 	return (this->user);
 }
 
-std::string IRC::client::GetBuffer()
+std::string	IRC::client::GetBuffer() const
 {
-	return (this->buffer);
+	return this->buffer;
+}
+
+int	IRC::client::GetSetup() const
+{
+	return this->setup;
 }
 
 void IRC::client::SetBuffer(std::string buf)
@@ -63,4 +70,14 @@ void IRC::client::SetPass(std::string pas)
 void IRC::client::SetNick(std::string nic)
 {
 	this->nick = nic;
+}
+
+void IRC::client::SetUser(std::string use)
+{
+	this->user = use;
+}
+
+void IRC::client::SetSetup(int x)
+{
+	this->setup = x;
 }
