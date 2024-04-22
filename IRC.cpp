@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 18:00:12 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 13:52:28 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ IRC::IRC(int port, std::string mdp)
 
 	// Test de la socket
 	if (this->calloc_pollfd(10) == 0)
-	this->secure = 1;
+		this->secure = 1;
 	this->poll_fds[0].fd = this->sock;
 	this->poll_fds[0].events = POLLIN;
 	//std::signal(SIGINT, closeServer);
@@ -87,6 +87,7 @@ int IRC::calloc_pollfd(int size)
 
 IRC::~IRC()
 {
+	free(this->poll_fds);
 	close(this->sock);
 	std::cout << "Default destructor called" << std::endl;
 };
@@ -112,6 +113,10 @@ void	IRC::Mode(void)
 }
 
 // /rawlog open ~/IRC_githubed/logs.txt
+
+//nc localhost 1114
+//CAP LS ctrl+V ctrl+M
+
 void	IRC::launch_serv(void)
 {
 	if (this->secure == 1)
@@ -120,79 +125,55 @@ void	IRC::launch_serv(void)
 		std::cout << "Initialisation failure, exit the program" << std::endl;
 		return ;
 	}
-
-	// Server buffer ppour les messages
 	char server_recv[200];
-
+	memset(server_recv, 0, 200);
 	std::cout << "Server launched, listening on port : " << this->port << std::endl;
 	while (42)
 	{
-		// Lancement de poll ()
 		int status = poll(this->poll_fds, this->poll_count, 9000);
-
- 		// Security check du lancement de poll
 		if (status == -1)
 		{
 			std::cout << "Poll failure" << std::endl;
 			return ;
 		}
-
-		// Routine
 		for (int x = 0; x < 10; x++)
 		{
-
 			if (this->poll_fds[x].fd == this->sock)
 			{
- 				// Accept/Parse de la connexion entrante (Socket ouverte, addr du nouveau client, taille de l'addr)
-				// Renvoie un descripteur de fichier pour la socket client
 				int client = accept(this->sock, (struct sockaddr *)&this->peer_addr, &this->peer_addr_size);
-
-
 				if (client > 0)
 				{
 					if (this->add_poll_fds(client) == 0)
 						return ;
- 					// Lit dans la socket client (socket client, buff, nb octets à lire, flags)
 					recv(client, server_recv, 200, 0);
-
-					// Créé le nv client
 					class client cl(client, server_recv, this->mdp);
-
-					// Check mdp renseigné par le client
 					if (check_pass(cl) == 1)
 					{
-						// Enregistre le client dans la map
 						this->users[client] = cl;
-
-						// Connect le nouveau client
 						connect(client, (struct sockaddr *)&this->peer_addr, this->peer_addr_size);
-
-						// Créé et envoie un message de bienvenue
-						std::string acc = ":localhost 001 " + cl.GetNick() + " :Welcome to bdtServer " + cl.GetNick() + "!~" + cl.GetUser() + "@127.0.0.1\r\n";
-						std::cout << acc << std::endl;
-
-						// Envoie le message de bienvenue dans la socket du client
-						send(client, acc.c_str(), 512, 1);
-						std::cout << "\n\n\n" << server_recv << std::endl;
-						void *buf = NULL;
-						read(client, buf, 100);
-						std::cout << buf << std::endl;
+						std::string acc = ":localhost 001 " + cl.GetNick() + " :Welcome to SUUUServer " + cl.GetNick() + "!~" + cl.GetUser() + "@127.0.0.1\r\n";
+						int snd = send(client, acc.c_str(), 512, 1);
+						(void)snd;
 					}
 					else
+					{
 						std::cout << "Wrong password" << std::endl;
+						return ;
+					}
 				}
 			}
 			else
-				manage_input(x);
+				manage_input(this->poll_fds[x].fd);
 		}
 	}
 }
 
 void IRC::manage_input(int x)
 {
-	char server_recv[200];
-	recv(x, server_recv, 200, 0);
-	std::cout << server_recv << std::endl;
+	(void)x;
+	// char server_recv[200];
+	// recv(x, server_recv, 200, 0);
+	// std::cout << server_recv << std::endl;
 }
 
 int IRC::add_poll_fds(int new_fd)
