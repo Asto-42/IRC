@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 18:08:53 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 18:14:00 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,61 +140,6 @@ void IRC::manage_input(int x)
 			}
 		}
 	}
-}
-
-
-bool	IRC::capLs(client &client, std::string cmd)
-{
-	if (cmd != "LS")
-		return (0);
-	if (client.GetSetup() == 0)
-		client.SetSetup(1);
-	return (1);
-}
-
-bool	IRC::pass(client &client, std::string cmd)
-{
-	if (cmd != this->mdp || client.GetSetup() != 1)
-		return (0);
-	client.SetPass(cmd);
-	client.SetSetup(2);
-	return (1);
-}
-
-bool	IRC::nick(client &client, std::string cmd)
-{
-	if (cmd.size() == 0 || client.GetSetup() != 2)
-		return (0);
-	client.SetNick(cmd);
-	client.SetSetup(3);
-	return (1);
-}
-
-bool	IRC::user(client &client, std::string cmd)
-{
-	if (client.GetSetup() != 3)
-		return (0);
-	client.SetUser(cmd);
-	client.SetSetup(4);
-	std::string					msg;
-	std::string					name;
-	msg = ":localhost 001 " + client.GetNick() + " :Welcome to SUUUUUServer " + client.GetNick() + "!~" + client.GetUser() + "@127.0.0.1\r\n";
-	std::cout << "Socket in user = " << client.GetSock() << std::endl;
-	if (send(client.GetSock(), msg.c_str(), msg.size(), 0) < 1)
-	{
-		//del_user(client.getFd());
-		return (0);
-	}
-	return (1);
-}
-
-bool	IRC::privmsg(client &client, std::string cmd)
-{
-	(void)client;
-	if (cmd.size() == 0)
-		return (1);
-
-	return (1);
 }
 
 //void IRC::Kick(void)

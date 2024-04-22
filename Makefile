@@ -6,7 +6,7 @@
 #    By: jquil <jquil@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/18 16:46:22 by aboulest          #+#    #+#              #
-#    Updated: 2024/04/03 18:21:16 by jquil            ###   ########.fr        #
+#    Updated: 2024/04/22 18:17:58 by jquil            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,21 @@ FLAGS		:= -Wall -Wextra -Werror -MMD -std=c++98 -g3
 SRC			:= 	main.cpp			\
 				IRC.cpp				\
 				client.cpp			\
+				capLS.cpp			\
+				pass.cpp			\
+				nick.cpp			\
+				user.cpp			\
+				ping.cpp			\
+				join.cpp			\
+				part.cpp			\
+				privmsg.cpp			\
+				topic.cpp			\
+				mode.cpp			\
+				oper.cpp			\
+				whois.cpp			\
+				kick.cpp			\
+				quit.cpp			\
+				invite.cpp			\
 
 OBJ_DIR 	:= ./objs/
 C_OBJ_DIR	:= @mkdir -p $(OBJ_DIR)
