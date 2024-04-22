@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:05:17 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 15:49:21 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/22 14:21:15 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,15 @@ IRC::client::client()
 	this->sock = 0;
 };
 
-// Recoit la socket créé par accept, 
 IRC::client::client(int sock, char *serv_rec, std::string mdp)
 {
-	//std::cout << "Default client constructor called" << std::endl;
+	std::cout << "Default client constructor called" << std::endl;
 	std::string tmp = serv_rec;
 	this->sock = sock;
-	int x = tmp.find("PASS");
-	if (x <= -1)
+	int x = 0;
+	x = tmp.find("PASS");
+	std::cout << x << std::endl;
+	if (x == -1)
 	{
 		std::cout << "Find fail ??\n" << serv_rec << std::endl;
 		return ;
@@ -32,6 +33,7 @@ IRC::client::client(int sock, char *serv_rec, std::string mdp)
 	x += 5;
 	int y = -1;
 	char str[100];
+	memset(str, 0, 100);
 	while (tmp[x] != '\r')
 	{
 		str[++y] = tmp[x];
@@ -69,7 +71,6 @@ int IRC::client::GetSock()
 {
 	return (this->sock);
 }
-
 
 std::string IRC::client::GetPass()
 {

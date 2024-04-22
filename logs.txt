@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+
+=======
 << CAP LS
 << PASS abc
 << NICK jquil
@@ -19,3 +22,36 @@
 << JOIN #LOL
 << TOPIC #LOL :njgs
 << QUIT :Lost terminal
+<< CAP LS
+<< PASS abc
+<< NICK jquil
+<< USER jquil jquil localhost :Julien QUIL
+>> :localhost 001 jquil :Welcome to bdtServer jquil!~LS@127.0.0.1
+<< MODE jquil +i
+<< PING localhost
+<< JOIN #test
+<< TOPIC #test :abn
+<< QUIT :leaving
+<< CAP LS
+<< PASS abc
+<< NICK jquil
+<< USER jquil jquil localhost :Julien QUIL
+<< CAP LS
+<< PASS abc
+<< NICK jquil
+<< USER jquil jquil localhost :Julien QUIL
+>> :localhost 001 jquil :Welcome to bdtServer jquil!~LS@127.0.0.1
+<< MODE jquil +i
+<< PING localhost
+<< JOIN #test
+<< TOPIC #test :ik
+<< QUIT :leaving
+<< CAP LS
+<< PASS abc
+<< NICK jquil
+<< USER jquil jquil localhost :Julien QUIL
+<< CAP LS
+<< PASS abc
+<< NICK jquil
+<< USER jquil jquil localhost :Julien QUIL
+>>>>>>> 3e032361f5997a0c3606eaa1800d03fd8b6a2fb7

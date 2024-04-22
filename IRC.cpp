@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 14:17:18 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 14:19:14 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ IRC::IRC(int port, std::string mdp)
 	this->server.sin_family = AF_INET;
 	this->sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (this->calloc_pollfd(10) == 0)
-	this->secure = 1;
+		this->secure = 1;
 	this->poll_fds[0].fd = this->sock;
 	this->poll_fds[0].events = POLLIN;
 	if (this->sock < 0)
@@ -59,6 +59,7 @@ int IRC::calloc_pollfd(int size)
 
 IRC::~IRC()
 {
+	free(this->poll_fds);
 	close(this->sock);
 	std::cout << "Default destructor called" << std::endl;
 };
@@ -83,16 +84,17 @@ void	IRC::Mode(void)
 	std::cout << "Enter Mode function" << std::endl;
 }
 
-// /rawlog open ~/IRC_githubed/logs.txt
+
+
 void	IRC::launch_serv(void)
 {
 	if (this->secure == 1)
 	{
-		//std::cout << "sock = " << this->sock << "	bind = " << this->bind_sock << "	lstn = " << this->lstn << std::endl;
 		std::cout << "Initialisation failure, exit the program" << std::endl;
 		return ;
 	}
 	char server_recv[200];
+	memset(server_recv, '\0', 200);
 	std::cout << "Server launched, listening on port : " << this->port << std::endl;
 	while (42)
 	{
@@ -104,7 +106,9 @@ void	IRC::launch_serv(void)
 		}
 		for (int x = 0; x < 10; x++)
 		{
-			if (this->poll_fds[x].fd == this->sock)
+			if ((poll_fds[x].revents & POLLIN) != 1)
+				continue ;
+ 			if (this->poll_fds[x].fd == this->sock)
 			{
 				int client = accept(this->sock, (struct sockaddr *)&this->peer_addr, &this->peer_addr_size);
 				if (client > 0)
@@ -122,27 +126,35 @@ void	IRC::launch_serv(void)
 						send(client, acc.c_str(), 512, 1);
 					}
 					else
+					{
 						std::cout << "Wrong password" << std::endl;
+						return ;
+					}
 				}
 			}
 			else
-				manage_input(x);
+				manage_input(this->poll_fds[x].fd);
 		}
 	}
 }
 
-void IRC::manage_input(int x)
+void IRC::manage_input(int fd)
 {
 	char server_recv[200];
-	recv(x, server_recv, 200, 0);
-	std::cout << server_recv << std::endl;
+	int bytes_read = 0;
+	memset(server_recv, '\0', 200);
+	bytes_read = recv(fd, server_recv, 200, 0);
+	if (bytes_read > 0)
+	{
+		std::cout << server_recv << std::endl;
+		sleep(5);
+	}
 }
 
 int IRC::add_poll_fds(int new_fd)
 {
 	if (this->poll_count == this->poll_size)
 	{
-		this->poll_size *= 2; // Double la taille
 		this->poll_fds = (struct pollfd *) realloc(this->poll_fds, sizeof(*(this->poll_fds)) * (this->poll_size));
 		if (!this->poll_fds)
 			return (0);
