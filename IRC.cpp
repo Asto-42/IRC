@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 18:07:16 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 18:08:53 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ IRC::IRC(int port, std::string mdp)
 		this->lstn = listen(this->sock, 10);
 	if (this->lstn < 0)
 		this->secure = 1;
-	this->peer_addr_size	std::string lala;
+	this->peer_addr_size = sizeof(struct sockaddr_in);
+	this->port = port;
+	this->mdp = mdp;
 	initCommand();
 };
 
