@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:05:17 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 12:23:28 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/22 14:12:33 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ IRC::client::client(int sock, char *serv_rec, std::string mdp)
 	int x = 0;
 	std::cout << "\tServ_rec value \n" << serv_rec << std::endl << "\tEND serv_rec value " << std::endl;
 	x = tmp.find("PASS");
-	std::cout << "find() return value " << tmp.find("PASS") << std::endl;
+	std::cout << "find() return value " << x << std::endl;
 	if (tmp.find("PASS") == std::string::npos)
 	{
 		std::cout << "Find fail ??\n" << serv_rec << std::endl;

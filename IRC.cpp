@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 14:06:39 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/22 15:09:28 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ IRC::IRC(int port, std::string mdp)
 	// Alloc et Init de la structure pollfd 
 	if (this->calloc_pollfd(10) == 0)
 		this->secure = 1;
+		
 	// Le premier poll_fd est la socket du serveur
 	this->poll_fds[0].fd = this->sock;
 	
@@ -151,6 +152,8 @@ void	IRC::launch_serv(void)
 
 	memset(server_recv, '\0', 200);
 
+	std::string lala;
+
 	std::cout << "Server launched, listening on port : " << this->port << std::endl;
 	while (42)
 	{
@@ -158,6 +161,7 @@ void	IRC::launch_serv(void)
 		// Lancement de poll / Attend un évènement concernant un fd 
 		int status = poll(this->poll_fds, this->poll_count, 10000);
 		
+		std::cout << "Poll status : " << status << std::endl;
  		// Security check du lancement de poll
 		if (status == -1)
 		{
@@ -235,7 +239,7 @@ void IRC::manage_input(int fd)
 	if (bytes_read > 0)
 	{
 		std::cout << server_recv << std::endl;
-		sleep(5);
+		sleep(1);
 	}
 }
 
