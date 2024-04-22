@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 18:18:06 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/22 13:53:57 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,31 +93,31 @@ class IRC
 
 	private :
 
-	std::string mdp;
-	socklen_t peer_addr_size;
-	struct sockaddr_in server, peer_addr;
-	struct pollfd *poll_fds;
-	std::map<int, client>	users;
-	int poll_count;
-	int poll_size;
-	int port;
-	int sock;
-	int bind_sock;
-	int lstn;
-	bool secure;
+		std::string 				mdp;
+		socklen_t					peer_addr_size;
+		struct sockaddr_in 			server, peer_addr;
+		struct pollfd 				*poll_fds;
+		std::map<int, client>		users;
+		int 						poll_count;
+		int 						poll_size;
+		int 						port;
+		int 						sock;
+		int 						bind_sock;
+		int 						lstn;
+		bool 						secure;
 
 	public :
 
-	IRC(int port, std::string mdp);
-	~IRC();
-	int calloc_pollfd(int size);
-	int add_poll_fds(int fd);
-	void launch_serv(void);
-	void manage_input(int x);
-	void Kick(void);
-	void Invite(void);
-	void Topic(void);
-	void Mode(void);
+		int							calloc_pollfd(int size);
+		int 						add_poll_fds(int fd);
+		void 						launch_serv(void);
+		void 						manage_input(int fd);
+		void 						Kick(void);
+		void 						Invite(void);
+		void 						Topic(void);
+		void 						Mode(void);
+									IRC(int port, std::string mdp);
+									~IRC();
 
 	bool check_pass(client cl);
 
