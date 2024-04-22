@@ -6,7 +6,7 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 18:31:58 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/22 19:19:08 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ class IRC
 		void 						manage_input(int fd);
 		void						initCommand(void);
 		void 						sendRPL(std::string rpl, int fd);
+		int							cmd_used_name(std::string &name, int mode);
 		bool						capLs(client &client, std::string cmd);
 		bool						pass(client &client, std::string cmd);
 		bool						nick(client &client, std::string cmd);
