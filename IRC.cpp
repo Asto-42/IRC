@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 18:14:00 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 18:32:37 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,11 @@ void IRC::manage_input(int x)
 // 	std::cout << "Enter Mode function" << std::endl;
 // }
 
+void IRC::sendRPL(std::string rpl, int fd)
+{
+	std::cout << "Response sent to " << fd << ": " << rpl << std::endl;
+	send(fd, rpl.c_str(), rpl.size(), 0);
+}
 
 void IRC::initCommand(void)
 {
@@ -180,6 +185,7 @@ void IRC::initCommand(void)
 	// this->cmd["PART"]    = &IRC::part;
 	// this->cmd["OPER"]    = &Server::oper;
 }
+
 
 int IRC::add_poll_fds(int new_fd)
 {

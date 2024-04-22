@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 17:04:33 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 18:31:58 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@
 #include <cerrno>
 #include <poll.h>
 #include <sys/epoll.h>
+#include "rpl.hpp"
 
 class IRC
 {
@@ -119,12 +120,13 @@ class IRC
 		bool							secure;
 
 	public :
-
+		
 		int							calloc_pollfd(int size);
 		int 						add_poll_fds(int fd);
 		void 						launch_serv(void);
 		void 						manage_input(int fd);
 		void						initCommand(void);
+		void 						sendRPL(std::string rpl, int fd);
 		bool						capLs(client &client, std::string cmd);
 		bool						pass(client &client, std::string cmd);
 		bool						nick(client &client, std::string cmd);
