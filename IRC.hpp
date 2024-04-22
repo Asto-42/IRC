@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 16:13:52 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 18:10:50 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,17 +83,23 @@ class IRC
 			std::string				topic;
 			std::string				name;
 			std::vector<int>		operators;
+			int						topicOperators[10];
 			std::vector<client>		clients;
+			int						LimitClients;
 			Channel(void);
 
 		public:
 			std::string				getName(void);
 			std::string				getTopic(void);
 			std::vector<int>		getOperators(void);
+			int						*getTopicOperators(void);
 			std::vector<client>		getClients(void);
+			int						getLimitClients(void);
+			int						setLimitClients(int limit);
 			void					setName(std::string& name);
 			void					setTopic(std::string& topic);
 			void					setOperators(int& operateur);
+			void					setTopicOperators(client &client);
 			void					setClients(client& client);
 			Channel(std::string name, client &creator);
 			~Channel();
@@ -107,6 +113,7 @@ class IRC
 		struct pollfd 				*poll_fds;
 		std::map<int, client>		users;
 		std::map<std::string, bool (IRC::*)(client&, std::string)>	cmd;
+		std::vector<Channel> 		channels;
 		int							poll_count;
 		int							poll_size;
 		int							port;
@@ -131,7 +138,7 @@ class IRC
 		// bool						part(client &client, std::string cmd);
 		// bool						privmsg(client &client, std::string cmd);
 		// bool						privmsg_user(client &client, std::string cmd);
-		// bool						topic(client &client, std::string cmd);
+		bool						topic(client &client, std::string cmd);
 		// bool						mode(client &client, std::string cmd);
 		// bool						oper(client &client, std::string cmd);
 		// bool						whois(client &client, std::string cmd);
@@ -140,7 +147,7 @@ class IRC
 		// bool						invite(client &client, std::string cmd);
 		// void 						Kick(void);
 		// void 						Invite(void);
-		// void 						Topic(void);
+		//void 						Topic(void);
 		// void 						Mode(void);
 									IRC(int port, std::string mdp);
 									~IRC();

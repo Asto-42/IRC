@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 16:31:50 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/22 18:12:47 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ IRC::IRC(int port, std::string mdp)
 		this->lstn = listen(this->sock, 10);
 	if (this->lstn < 0)
 		this->secure = 1;
-	this->peer_addr_size	std::string lala;
+	this->peer_addr_size = sizeof(struct sockaddr_in);
+	this->mdp = mdp;
 	initCommand();
 };
 
@@ -166,6 +167,22 @@ bool	IRC::nick(client &client, std::string cmd)
 	return (1);
 }
 
+bool		IRC::topic(client &client, std::string cmd)
+{
+	for (std::vector<Channel>::iterator itChan = this->channels.begin(); itChan != this->channels.end(); itChan++)
+	{
+		for (size_t i = 0; i < 10; i++)
+		{
+			if (itChan->getTopicOperators()[i] == client.GetSock())
+			{
+				itChan->setTopic(cmd);
+				return (1);
+			}
+		}
+	}
+	return (0);
+}
+
 //void IRC::Kick(void)
 // {
 // 	std::cout << "Enter Kick function" << std::endl;
@@ -198,7 +215,7 @@ void IRC::initCommand(void)
 	// this->cmd["JOIN"]    = &IRC::join;
 	// this->cmd["PRIVMSG"] = &IRC::privmsg;
 	// this->cmd["KICK"]    = &IRC::kick;
-	// this->cmd["TOPIC"]   = &IRC::topic;
+	this->cmd["TOPIC"]   	= &IRC::topic;
 	// this->cmd["MODE"]    = &IRC::mode;
 	// this->cmd["INVITE"]  = &IRC::invite;
 	// this->cmd["PART"]    = &IRC::part;

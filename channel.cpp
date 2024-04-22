@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/19 17:58:00 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 18:11:02 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,12 @@ std::vector<int>			IRC::Channel::getOperators(void)
 	return (this->operators);
 }
 
+int							*IRC::Channel::getTopicOperators(void)
+{
+	return (this->topicOperators);
+}
+
+
 std::vector<IRC::client>	IRC::Channel::getClients(void)
 {
 	return (this->clients);
@@ -60,6 +66,23 @@ void						IRC::Channel::setTopic(std::string& topic)
 void						IRC::Channel::setOperators(int& operateur)
 {
 	this->operators.push_back(operateur);
+}
+
+void						IRC::Channel::setTopicOperators(client &client)
+{
+	this->topicOperators.push_back(client.GetSock());
+}
+
+
+int						IRC::Channel::getLimitClients(void)
+{
+	return (this->LimitClients);
+}
+
+int					IRC::Channel::setLimitClients(int limit)
+{
+	this->LimitClients = limit;
+
 }
 
 void						IRC::Channel::setClients(client& client)
