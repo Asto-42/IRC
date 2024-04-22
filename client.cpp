@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:05:17 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 14:12:33 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/22 16:25:39 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,64 +15,14 @@
 IRC::client::client()
 {
 	this->sock = 0;
+	this->set = 0;
 };
 
-// Recoit la socket créé par accept, 
-IRC::client::client(int sock, char *serv_rec, std::string mdp)
+IRC::client::client(int sock)
 {
 	std::cout << "Default client constructor called" << std::endl;
-	std::string tmp = serv_rec;
 	this->sock = sock;
-	int x = 0;
-	std::cout << "\tServ_rec value \n" << serv_rec << std::endl << "\tEND serv_rec value " << std::endl;
-	x = tmp.find("PASS");
-	std::cout << "find() return value " << x << std::endl;
-	if (tmp.find("PASS") == std::string::npos)
-	{
-		std::cout << "Find fail ??\n" << serv_rec << std::endl;
-		return ;
-	}
-
-	// Skipping "PASS"
-	x += 5;
-	int y = -1;
-	char str[100];
-	memset(str, 0, 100);
-	while (tmp[x] != '\r')
-	{
-		str[++y] = tmp[x];
-		x++;
-	}
-	
-	str[++y] = '\0';
-	std::cout << "FIND MDP PARSING: " << str << std::endl;
-	this->pass = str;
-	std::cout <<  "MDP IN PASS: " << pass << std::endl; 
-	if (this->pass == mdp)
-		this->pass_check = 1;
-	else
-		this->pass_check = 0;
-	std::cout <<  "pass_check = " << pass_check << std::endl; 
-	x = tmp.find("NICK");
-	x += 5;
-	y = -1;
-	while (tmp[x] != '\r')
-	{
-		str[++y] = tmp[x];
-		x++;
-	}
-	str[++y] = '\0';
-	this->nick = str;
-	x = tmp.find("USER");
-	x += 5;
-	y = -1;
-	while (tmp[x] != '\r')
-	{
-		str[++y] = tmp[x];
-		x++;
-	}
-	str[++y] = '\0';
-	this->user = str;
+	this->set = 0;
 };
 
 int IRC::client::GetSock()
@@ -93,4 +43,24 @@ std::string IRC::client::GetNick()
 std::string IRC::client::GetUser()
 {
 	return (this->user);
+}
+
+std::string IRC::client::GetBuffer()
+{
+	return (this->buffer);
+}
+
+void IRC::client::SetBuffer(std::string buf)
+{
+	this->buffer = buf;
+}
+
+void IRC::client::SetPass(std::string pas)
+{
+	this->pass = pas;
+}
+
+void IRC::client::SetNick(std::string nic)
+{
+	this->nick = nic;
 }
