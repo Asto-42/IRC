@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 17:50:44 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 17:53:34 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,7 @@ IRC::IRC(int port, std::string mdp)
 		this->lstn = listen(this->sock, 10);
 	if (this->lstn < 0)
 		this->secure = 1;
-	this->peer_addr_size = sizeof(struct sockaddr_in);
-	this->port = port;
-	this->mdp = mdp;
+	this->peer_addr_size	std::string lala;
 	initCommand();
 };
 
@@ -112,6 +110,8 @@ void IRC::manage_input(int x)
 	memset(&server_recv, '\0', sizeof(server_recv));
 	if (recv(fd, server_recv, sizeof(server_recv), 0) <= 0)
 	{
+		std::cout << server_recv << std::endl;
+		sleep(1);
 		// del user
 		// close le fd
 		// delete du poll de fd
