@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:13:25 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 18:13:41 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 18:25:47 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 bool	IRC::user(client &client, std::string cmd)
 {
+	std::cout << client.GetSetup() << std::endl;
 	if (client.GetSetup() != 3)
 		return (0);
 	client.SetUser(cmd);
