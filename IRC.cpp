@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 17:53:34 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 18:07:16 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ void IRC::launch_serv(void)
 					if (this->add_poll_fds(client) == 0)
 						return;
 					class client cl(client);
+					this->users[client] = cl;
 				}
 			}
 			else
@@ -118,8 +119,7 @@ void IRC::manage_input(int x)
 	}
 	else
 	{
-		//std::string line = users.find(fd)->second.GetBuffer() + server_recv;
-		std::string line = users[fd].GetBuffer() + server_recv;
+		std::string line = users.find(fd)->second.GetBuffer() + server_recv;
 		this->users.find(fd)->second.SetBuffer("");
 		std::string input;
 		std::string tmp;
@@ -128,8 +128,7 @@ void IRC::manage_input(int x)
 		while ((end = line.find("\r", 0)) != std::string::npos)
 		{
 			input = line.substr(0, end);
-			//line.erase(0, end + 2); // clear la line
-			line.clear();
+			line.erase(0 ,end + 2);
 			if ((space = input.find(" ", 0)) != std::string::npos)
 			{
 				tmp = input.substr(0, space);
@@ -171,7 +170,6 @@ bool	IRC::nick(client &client, std::string cmd)
 
 bool	IRC::user(client &client, std::string cmd)
 {
-	std::cout << "User mode" << std::endl;
 	if (client.GetSetup() != 3)
 		return (0);
 	client.SetUser(cmd);
@@ -179,7 +177,7 @@ bool	IRC::user(client &client, std::string cmd)
 	std::string					msg;
 	std::string					name;
 	msg = ":localhost 001 " + client.GetNick() + " :Welcome to SUUUUUServer " + client.GetNick() + "!~" + client.GetUser() + "@127.0.0.1\r\n";
-	std::cout << "YES" << std::endl;
+	std::cout << "Socket in user = " << client.GetSock() << std::endl;
 	if (send(client.GetSock(), msg.c_str(), msg.size(), 0) < 1)
 	{
 		//del_user(client.getFd());
