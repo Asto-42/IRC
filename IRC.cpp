@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 16:56:00 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 17:08:37 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ IRC::IRC(int port, std::string mdp)
 	this->poll_fds = NULL;
 	this->server.sin_family = AF_INET;
 	this->sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	int optval = 1;
+	setsockopt(this->sock, SOL_SOCKET, SO_REUSEADDR, &optval , sizeof(int));
 	if (this->calloc_pollfd(10) == 0)
 		this->secure = 1;
 	this->poll_fds[0].fd = this->sock;
@@ -173,7 +175,15 @@ bool	IRC::user(client &client, std::string cmd)
 		return (0);
 	client.SetUser(cmd);
 	client.SetSetup(4);
-	return (1);
+	std::string					msg;
+	std::string					name;
+	msg = ":localhost 001 " + client.GetNick() + " :Welcome to SUUUUUServer " + client.GetNick() + "!~" + client.GetUser() + "@127.0.0.1\r\n";
+		if (send(client.GetSock(), msg.c_str(), msg.size(), 0) < 1)
+		{
+			//del_user(client.getFd());
+			return (0);
+		}
+		return (1);
 }
 
 bool	IRC::privmsg(client &client, std::string cmd)

@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 16:57:50 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 17:04:33 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ class IRC
 			std::string 	user;
 			std::string		buffer;
 			int			 	setup;
-			int sock;
+			int				sock;
 
 		public :
 

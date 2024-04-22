@@ -1,34 +1,4 @@
 << CAP LS
+<< PASS abc
 << NICK jquil
-<< USER jquil jquil irc.dal.net :Julien QUIL
-<< JOIN #test
-<< MODE #test
->> :sakura.jp.as.dal.net 324 jquil #test +tn
---> chanquery mode
-<< WHO #test
->> :sakura.jp.as.dal.net 329 jquil #test 1680688351
---> event 329
->> :sakura.jp.as.dal.net 352 jquil #test ~jquil 846a-1314-359-dfc-eddf.210.62.ip sakura.jp.as.dal.net jquil H :0 Julien QUIL
---> silent event who
->> :sakura.jp.as.dal.net 352 jquil #test ~andrew 751e-f489-2f83-3244-4f69.4.81.ip bifrost.ca.us.dal.net andrew G@ :4 andrew
---> silent event who
->> :sakura.jp.as.dal.net 352 jquil #test ~thekingof 4648-f1e-1597-14eb-5966.203.5300.2607.ip halcyon.il.us.dal.net tkob H :4 thekingofbandit
---> silent event who
->> :sakura.jp.as.dal.net 352 jquil #test unknown 4ede-e670-3738-e5d8-1642.45.185.ip serenity.fl.us.dal.net andrei H@ :3 andrei
---> silent event who
->> :sakura.jp.as.dal.net 352 jquil #test ~andrei a9-20c4-655c-b4bd-7844.81.206.ip atw.hu.eu.dal.net iuestcipi H :4 andrei
---> silent event who
->> :sakura.jp.as.dal.net 352 jquil #test tkob f2f-12b7-2a9b-bd1c-e0b5.life.is-a.beauty sakura.jp.as.dal.net thekingofbandit G :0 The King of Bandit
---> silent event who
->> :sakura.jp.as.dal.net 315 jquil #test :End of /WHO list.
---> chanquery who end
-<< MODE #test b
->> :sakura.jp.as.dal.net 367 jquil #test *!*@1f9a-e727-f3df-f7e3-c39.210.62.ip andrei!unknown@4ede-e670-3738-e5d8-1642.45.185.ip 1710570054
---> chanquery ban
->> :sakura.jp.as.dal.net 368 jquil #test :End of Channel Ban List
---> chanquery ban end
-<< PRIVMSG #test :lol
-<< PRIVMSG #test : 
-<< PRIVMSG #test : 
-<< PRIVMSG #test : 
-<< QUIT :leaving
+<< USER jquil jquil localhost :Julien QUIL
