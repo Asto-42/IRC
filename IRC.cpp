@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 17:08:37 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 17:50:44 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,9 @@ void IRC::manage_input(int x)
 	}
 	else
 	{
-		std::string line = server_recv;
-		// std::string line = users.find(fd)->second.GetBuffer() + server_recv;
-		// this->users.find(fd)->second.SetBuffer("");
+		//std::string line = users.find(fd)->second.GetBuffer() + server_recv;
+		std::string line = users[fd].GetBuffer() + server_recv;
+		this->users.find(fd)->second.SetBuffer("");
 		std::string input;
 		std::string tmp;
 		std::string::size_type end;
@@ -171,19 +171,21 @@ bool	IRC::nick(client &client, std::string cmd)
 
 bool	IRC::user(client &client, std::string cmd)
 {
-	if (cmd.size() == 0 || client.GetSetup() != 3)
+	std::cout << "User mode" << std::endl;
+	if (client.GetSetup() != 3)
 		return (0);
 	client.SetUser(cmd);
 	client.SetSetup(4);
 	std::string					msg;
 	std::string					name;
 	msg = ":localhost 001 " + client.GetNick() + " :Welcome to SUUUUUServer " + client.GetNick() + "!~" + client.GetUser() + "@127.0.0.1\r\n";
-		if (send(client.GetSock(), msg.c_str(), msg.size(), 0) < 1)
-		{
-			//del_user(client.getFd());
-			return (0);
-		}
-		return (1);
+	std::cout << "YES" << std::endl;
+	if (send(client.GetSock(), msg.c_str(), msg.size(), 0) < 1)
+	{
+		//del_user(client.getFd());
+		return (0);
+	}
+	return (1);
 }
 
 bool	IRC::privmsg(client &client, std::string cmd)
@@ -219,9 +221,9 @@ bool	IRC::privmsg(client &client, std::string cmd)
 void IRC::initCommand(void)
 {
 	this->cmd["CAP"] = &IRC::capLs;
-	this->cmd["NICK"]    = &IRC::nick;
-	this->cmd["USER"]    = &IRC::user;
-	this->cmd["PASS"]    = &IRC::pass;
+	this->cmd["NICK"] = &IRC::nick;
+	this->cmd["USER"] = &IRC::user;
+	this->cmd["PASS"] = &IRC::pass;
 	// this->cmd["PING"]    = &IRC::ping;
 	// this->cmd["QUIT"]    = &IRC::quit;
 	// this->cmd["JOIN"]    = &IRC::join;

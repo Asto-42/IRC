@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:05:17 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 16:57:25 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/22 17:44:40 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ IRC::client::client()
 {
 	this->sock = 0;
 	this->setup = 0;
-	this->buffer = "";
 };
 
 IRC::client::client(int sock)
@@ -24,7 +23,6 @@ IRC::client::client(int sock)
 	std::cout << "Default client constructor called" << std::endl;
 	this->sock = sock;
 	this->setup = 0;
-	this->buffer = "";
 };
 
 int IRC::client::GetSock()
