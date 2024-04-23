@@ -1,34 +1,10 @@
-<< CAP LS
-<< NICK jquil
-<< USER jquil jquil irc.dal.net :Julien QUIL
->> :sakura.jp.as.dal.net 001 jquil :Welcome to the DALnet IRC Network jquil!~jquil@62.210.32.180
-<< MODE jquil +i
->> :sakura.jp.as.dal.net 002 jquil :Your host is sakura.jp.as.dal.net, running version bahamut-2.2.2
->> :jquil MODE jquil :+iH
-<< JOIN #test_chan
->> :jquil!~jquil@364b-fb8e-6154-a1c2-c271.210.62.ip JOIN :#test_chan
->> :sakura.jp.as.dal.net 353 jquil = #test_chan :@jquil
->> :sakura.jp.as.dal.net 366 jquil #test_chan :End of /NAMES list.
-<< MODE #test_chan
->> :sakura.jp.as.dal.net 324 jquil #test_chan +
---> chanquery mode
-<< WHO #test_chan
->> :sakura.jp.as.dal.net 329 jquil #test_chan 1713883260
---> event 329
->> :sakura.jp.as.dal.net 352 jquil #test_chan ~jquil 364b-fb8e-6154-a1c2-c271.210.62.ip sakura.jp.as.dal.net jquil H@ :0 Julien QUIL
---> silent event who
->> :sakura.jp.as.dal.net 315 jquil #test_chan :End of /WHO list.
---> chanquery who end
-<< MODE #test_chan b
->> :sakura.jp.as.dal.net 368 jquil #test_chan :End of Channel Ban List
+
+<< JOIN #test
+<< MODE #test
+<< MODE #test b
+>> :bitcoin.uk.eu.dal.net 367 jquil_ #test *!*@1f9a-e727-f3df-f7e3-c39.210.62.ip andrei!unknown@4ede-e670-3738-e5d8-1642.45.185.ip 1710570055
+--> chanquery ban
+>> :bitcoin.uk.eu.dal.net 368 jquil_ #test :End of Channel Ban List
 --> chanquery ban end
-<< OPER jquil test
->> :sakura.jp.as.dal.net 491 jquil :No Oper block for your host
->> :jquil_!~jquil@364b-fb8e-6154-a1c2-c271.210.62.ip JOIN :#test_chan
->> :jquil_!~jquil@364b-fb8e-6154-a1c2-c271.210.62.ip PRIVMSG #test_chan :lol
-<< KICK #test_chan jquil_ :
->> :jquil!~jquil@364b-fb8e-6154-a1c2-c271.210.62.ip KICK #test_chan jquil_ :jquil
-<< PING sakura.jp.as.dal.net
->> :sakura.jp.as.dal.net PONG sakura.jp.as.dal.net :jquil
---> lag pong
+<< PRIVMSG #test :Wsh magle on test ici
 << QUIT :leaving

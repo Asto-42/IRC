@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 18:28:57 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/23 20:00:48 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ void IRC::initCommand(void)
 	this->cmd["PING"]    = &IRC::ping;
 	// this->cmd["QUIT"]    = &IRC::quit;
 	// this->cmd["JOIN"]    = &IRC::join;
-	//this->cmd["PRIVMSG"] = &IRC::privmsg;
+	this->cmd["PRIVMSG"] = &IRC::privmsg;
 	this->cmd["KICK"]    = &IRC::kick;
 	//this->cmd["TOPIC"]   	= &IRC::topic;
 	// this->cmd["MODE"]    = &IRC::mode;
@@ -199,20 +199,6 @@ int IRC::add_poll_fds(int new_fd)
 	this->poll_fds[this->poll_count].events = POLLIN;
 	this->poll_count++;
 	return (1);
-}
-
-bool IRC::check_pass(client cl)
-{
-	if (cl.pass_check == 1)
-	{
-		std::cout << "Password is correct" << std::endl;
-		return (1);
-	}
-	else
-	{
-		std::cout << "Incorrect Password" << std::endl;
-		return (0);
-	}
 }
 
 // bool						IRC::ChannelExist(std::string name){

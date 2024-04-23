@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 19:12:13 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/23 19:45:43 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,12 @@ class IRC
 			std::string 	nick;
 			std::string 	user;
 			std::string		buffer;
-			int			 	setup;
+			int				setup;
 			int				sock;
+			std::string		current_channel;
 
 		public :
 
-			bool			pass_check;
 							client();
 							client(int sock);
 			int				GetSock();
@@ -73,11 +73,13 @@ class IRC
 			std::string 	GetNick();
 			std::string 	GetUser();
 			std::string		GetBuffer() const;
+			std::string		GetCurrentChannel() const;
 			void			SetBuffer(std::string buf);
 			void		SetPass(std::string pas);
 			void 		SetNick(std::string nic);
 			void 		SetUser(std::string use);
 			void		SetSetup(int x);
+			void		SetCurrentChannel(std::string str);
 
 
 	};
