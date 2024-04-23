@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: russelenc <russelenc@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 09:58:03 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/23 15:11:08 by russelenc        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,4 +213,12 @@ bool IRC::check_pass(client cl)
 		std::cout << "Incorrect Password" << std::endl;
 		return (0);
 	}
+}
+
+bool						IRC::ChannelExist(std::string name){
+	for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it){
+		if (it->GetFd() == fd)
+			return (true);
+	}
+	return (false);
 }

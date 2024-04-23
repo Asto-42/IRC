@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: russelenc <russelenc@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 10:07:59 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:50:52 by russelenc        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,12 @@ int							IRC::Channel::setLimitClients(int limit)
 void						IRC::Channel::setClients(client& client)
 {
 	this->clients.push_back(client);
+}
+
+bool							IRC::Channel::isOperator(int fd){
+	for (std::vector<Client>::iterator it = operators.begin(); it != operators.end(); ++it){
+		if (it->GetFd() == fd)
+			return (true);
+	}
+	return (false);
 }

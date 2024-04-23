@@ -11,3 +11,5 @@
 #define ERR_ALREADYREGISTERED(nickname) (": 462 " + nickname + " :You may not reregister !" + CRLF )
 #define ERR_ERRONEUSNICK(nickname) (": 432 " + nickname + " :Erroneus nickname" + CRLF)
 #define ERR_NONICKNAME(nickname) (": 431 " + nickname + " :No nickname given" + CRLF )
+#define ERR_NOTOPERATOR(nickname) (": 482 #" + nickname + " :You're not a channel operator" + CRLF)
+#define ERR_CHANNELNOTFOUND(nickname, channelname) (": 403 " + nickname + " " + channelname + " :No such channel" + CRLF)
