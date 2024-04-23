@@ -6,13 +6,13 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:16:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 18:27:24 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/23 19:11:45 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
 
-bool	IRC::kick(client &client, std::string cmd)
+bool	IRC::kick(client &clients, std::string cmd)
 {
 	std::string chan;
 	std::string user;
@@ -31,12 +31,18 @@ bool	IRC::kick(client &client, std::string cmd)
 	{
 		if (chan == it->getName())
 		{
-			if (it->isOperator(client) == 1)
+			if (it->isOperator(clients) == 1)
 			{
 				//if user appartient a chan -> go kick
-				if (it->remove_client(user) == 0)
-					std::cout << user << " is not in " << chan << std::endl;
-				return (true);
+				for (std::map<int, client>::iterator it2 = this->users.begin(); it != (this->isers.end()); ++it)
+				{
+					if (it2->second.GetUser() == user)
+					{
+						if (it->remove_client(it2->second) == 0)
+							std::cout << user << " is not in " << chan << std::endl;
+						return (true);
+					}
+				}
 			}
 		}
 

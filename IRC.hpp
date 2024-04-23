@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 19:02:28 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/23 19:12:13 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ class IRC
 			bool					isClient(std::string user);
 			bool					isOperator(client &client);
 			bool					add_client(client &new_client);
-			bool					remove_client(std::string user);
+			bool					remove_client(client &new_client);
 			Channel(std::string name, client &creator);
 			~Channel();
 	};

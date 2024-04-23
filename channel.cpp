@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 18:57:54 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/23 19:17:36 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,15 +104,16 @@ bool	IRC::Channel::isClient(std::string user)
 	return (false);
 }
 
-bool	IRC::Channel::remove_client(std::string user)
+bool	IRC::Channel::remove_client(client &new_client)
 {
-	if (this->isClient(user) == 1)
+	if (this->isClient(new_client.GetUser()) == 1)
 	{
 		for (std::vector<client>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
 		{
-			if (it->GetUser() == user)
+			if (it->GetSock() == new_client.GetSock())
 			{
-				delete (&it);
+				std::vector<int>::size_type pos;
+				this->white_list.erase(pos);
 				return (1);
 			}
 		}
