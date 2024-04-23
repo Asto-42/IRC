@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:23 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 10:22:11 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/23 10:27:57 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ bool						IRC::topic(client &client, std::string cmd)
 		{
 			if (it->getTopicOperators()[i] == client.GetSock())
 				it->setTopic(cmd);
+			return (true);
 		}
 	}
+	return (false);
 }	
