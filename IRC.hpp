@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 10:07:54 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/23 17:01:40 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,13 @@
 #include <sys/epoll.h>
 #include "rpl.hpp"
 
+class Channel;
+
 class IRC
 {
 	class client
 	{
 		private :
-
 			std::string 	pass;
 			std::string 	nick;
 			std::string 	user;
@@ -84,29 +85,28 @@ class IRC
 	class Channel
 	{
 		private:
+			bool					isProtected;
 			std::string				topic;
 			std::string				name;
 			std::vector<int>		operators;
-			std::vector<int>		topicOperators;
 			std::vector<client>		clients;
-			int						LimitClients;
+			int						limitClients;
 			Channel(void);
 
 		public:
 			std::string				getName(void);
 			std::string				getTopic(void);
 			std::vector<int>		getOperators(void);
-			std::vector<int>		getTopicOperators(void);
 			std::vector<client>		getClients(void);
 			int						getLimitClients(void);
-			int						setLimitClients(int limit);
+			bool					getIsProtected(void);
+			void					setLimitClients(int limit);
 			void					setName(std::string& name);
 			void					setTopic(std::string& topic);
 			void					setOperators(int& operateur);
-			void					setTopicOperators(client &client);
 			void					setClients(client& client);
 			Channel(std::string name, client &creator);
-			//~Channel();
+			~Channel();
 	};
 
 	private :

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jquil <jquil@student.42.fr>                +#+  +:+       +#+         #
+#    By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/18 16:46:22 by aboulest          #+#    #+#              #
-#    Updated: 2024/04/22 18:17:58 by jquil            ###   ########.fr        #
+#    Updated: 2024/04/23 17:00:18 by lbouguet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ FLAGS		:= -Wall -Wextra -Werror -MMD -std=c++98 -g3
 SRC			:= 	main.cpp			\
 				IRC.cpp				\
 				client.cpp			\
+				channel.cpp			\
 				capLS.cpp			\
 				pass.cpp			\
 				nick.cpp			\
@@ -33,6 +34,7 @@ SRC			:= 	main.cpp			\
 				kick.cpp			\
 				quit.cpp			\
 				invite.cpp			\
+				
 
 OBJ_DIR 	:= ./objs/
 C_OBJ_DIR	:= @mkdir -p $(OBJ_DIR)

@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 10:07:59 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/23 17:01:48 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,20 @@ IRC::Channel::Channel(std::string name, client &creator)
 	this->name = name;
 	this->operators.push_back(creator.GetSock());
 	this->clients.push_back(creator);
-
+	this->isProtected = false;
+	this->topic.clear();
+	this->limitClients = 10;
 }
 
 IRC::Channel::~Channel()
 {
 	std::cout << "Channel " << this->name << " destructor called" << std::endl;
 	return ;
+}
+
+bool						IRC::Channel::getIsProtected(void)
+{
+	return(this->isProtected);
 }
 
 std::string					IRC::Channel::getName(void)
@@ -41,12 +48,6 @@ std::vector<int>			IRC::Channel::getOperators(void)
 {
 	return (this->operators);
 }
-
-std::vector<int>			IRC::Channel::getTopicOperators(void)
-{
-	return (this->topicOperators);
-}
-
 
 std::vector<IRC::client>	IRC::Channel::getClients(void)
 {
@@ -68,19 +69,14 @@ void						IRC::Channel::setOperators(int& operateur)
 	this->operators.push_back(operateur);
 }
 
-void						IRC::Channel::setTopicOperators(client &client)
-{
-	this->topicOperators.push_back(client.GetSock());
-}
-
 int							IRC::Channel::getLimitClients(void)
 {
-	return (this->LimitClients);
+	return (this->limitClients);
 }
 
-int							IRC::Channel::setLimitClients(int limit)
+void							IRC::Channel::setLimitClients(int limit)
 {
-	this->LimitClients = limit;
+	this->limitClients = limit;
 
 }
 
@@ -88,3 +84,4 @@ void						IRC::Channel::setClients(client& client)
 {
 	this->clients.push_back(client);
 }
+
