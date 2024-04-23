@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:11:15 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/23 17:19:21 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ class IRC
 			std::vector<int>		operators;
 			std::vector<client>		clients;
 			int						limitClients;
+			bool					privacy;
 			Channel(void);
 
 		public:
@@ -128,7 +129,7 @@ class IRC
 		bool							secure;
 
 	public :
-		
+
 		int							calloc_pollfd(int size);
 		int 						add_poll_fds(int fd);
 		void 						launch_serv(void);
@@ -140,17 +141,16 @@ class IRC
 		bool						pass(client &client, std::string cmd);
 		bool						nick(client &client, std::string cmd);
 		bool						user(client &client, std::string cmd);
-		// bool						ping(client &client, std::string cmd);
-		// bool						join(client &client, std::string cmd);
-		// bool						part(client &client, std::string cmd);
 		bool						privmsg(client &client, std::string cmd);
 		// bool						privmsg_user(client &client, std::string cmd);
 		bool						topic(client &client, std::string cmd);
 		bool						mode(client &client, std::string cmd);
-		// bool						oper(client &client, std::string cmd);
-		// bool						whois(client &client, std::string cmd);
-		// bool						kick(client &client, std::string cmd);
-		// bool						quit(client &client, std::string cmd);
+		bool						ping(client &client, std::string cmd); // fait
+		// bool						join(client &client, std::string cmd); // LUCAS
+		// bool						part(client &client, std::string cmd); // LUCAS
+		// bool						whois(client &client, std::string cmd); // Pas obligatoire, on verra plus tard
+		bool						kick(client &client, std::string cmd); // fait MAIS une partie en pseudo code a MaJ quand MODE et OPER seront up
+		// bool						quit(client &client, std::string cmd); // LUCAS
 		// bool						invite(client &client, std::string cmd);
 		// void 					Kick(void);
 		// void 					Invite(void);

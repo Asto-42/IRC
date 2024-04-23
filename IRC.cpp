@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:11:10 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/23 17:19:33 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void IRC::manage_input(int x)
 		std::string tmp;
 		std::string::size_type end;
 		std::string::size_type space;
-		while ((end = line.find("\r", 0)) != std::string::npos)
+		while ((end = line.find("\r\n", 0)) != std::string::npos)
 		{
 			input = line.substr(0, end);
 			line.erase(0 ,end + 2);
@@ -174,7 +174,7 @@ void IRC::initCommand(void)
 	this->cmd["NICK"] = &IRC::nick;
 	this->cmd["USER"] = &IRC::user;
 	this->cmd["PASS"] = &IRC::pass;
-	// this->cmd["PING"]    = &IRC::ping;
+	this->cmd["PING"]    = &IRC::ping;
 	// this->cmd["QUIT"]    = &IRC::quit;
 	// this->cmd["JOIN"]    = &IRC::join;
 	this->cmd["PRIVMSG"] = &IRC::privmsg;
