@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:23 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:15:40 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/23 17:22:16 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ bool						IRC::topic(client &client, std::string cmd)
 	size_t					i = 0;
 	while (i < this->channels.size() || this->channels[i].getName() != chanNam)
 		i++;
+	
 	// Not found channel
 	if (i == 10)
 		return ((void)sendRPL(ERR_CHANNELNOTFOUND(cmd, chanNam), client.GetSock()), false);
