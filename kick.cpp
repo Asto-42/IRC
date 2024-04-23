@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:16:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 19:11:45 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/23 19:34:08 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ bool	IRC::kick(client &clients, std::string cmd)
 			if (it->isOperator(clients) == 1)
 			{
 				//if user appartient a chan -> go kick
-				for (std::map<int, client>::iterator it2 = this->users.begin(); it != (this->isers.end()); ++it)
+				for (std::map<int, client>::iterator it2 = this->users.begin(); it2 != (this->users.end()); ++it2)
 				{
 					if (it2->second.GetUser() == user)
 					{
