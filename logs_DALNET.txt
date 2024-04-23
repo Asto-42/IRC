@@ -1,0 +1,10 @@
+
+<< CAP LS
+<< NICK jquil
+<< USER jquil jquil irc.dal.net :Julien QUIL
+<< MODE jquil +i
+>> :jquil MODE jquil :+iH
+<< PING lion.tx.us.dal.net
+>> :lion.tx.us.dal.net PONG lion.tx.us.dal.net :jquil
+--> lag pong
+<< QUIT :leaving
