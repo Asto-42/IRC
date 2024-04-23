@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 18:21:19 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/23 18:55:12 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ class IRC
 			std::string				topic;
 			std::string				name;
 			std::vector<int>		operators;
+			std::vector<int>		white_list;
 			std::vector<client>		clients;
 			int						limitClients;
 			bool					privacy;
@@ -108,6 +109,7 @@ class IRC
 			void					setClients(client& client);
 			bool					isClient(std::string user);
 			bool					isOperator(client &client);
+			bool					add_client(client &new_client);
 			bool					remove_client(std::string user);
 			Channel(std::string name, client &creator);
 			~Channel();
@@ -151,9 +153,9 @@ class IRC
 		// bool						join(client &client, std::string cmd); // LUCAS
 		// bool						part(client &client, std::string cmd); // LUCAS
 		// bool						whois(client &client, std::string cmd); // Pas obligatoire, on verra plus tard
-		bool						kick(client &client, std::string cmd); // fait MAIS une partie en pseudo code a MaJ quand MODE et OPER seront up
+		bool						kick(client &client, std::string cmd); // fait MAIS a verifier
 		// bool						quit(client &client, std::string cmd); // LUCAS
-		// bool						invite(client &client, std::string cmd);
+		bool						invite(client &clients, std::string cmd);
 		// void 					Kick(void);
 		// void 					Invite(void);
 		// void 					Topic(void);

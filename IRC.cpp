@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:42:55 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/23 18:28:57 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,7 @@ void IRC::initCommand(void)
 	this->cmd["KICK"]    = &IRC::kick;
 	//this->cmd["TOPIC"]   	= &IRC::topic;
 	// this->cmd["MODE"]    = &IRC::mode;
-	// this->cmd["INVITE"]  = &IRC::invite;
+	this->cmd["INVITE"]  = &IRC::invite;
 	// this->cmd["PART"]    = &IRC::part;
 	// this->cmd["OPER"]    = &Server::oper;
 }
