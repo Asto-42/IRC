@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:19:33 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/23 18:21:18 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,6 +214,8 @@ bool IRC::check_pass(client cl)
 		return (0);
 	}
 }
+
+//std::vector<Channel>		*getChannel(void);
 
 // bool						IRC::ChannelExist(std::string name){
 // 	for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it){

@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:23 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:34:18 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/23 17:39:01 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 bool						IRC::topic(client &client, std::string cmd)
 {
-	//std::string				err = "localhost";
 	std::string 			topicNam;
 	std::string 			chanNam;
 	std::string::size_type 	posHash = cmd.find('#');
@@ -37,10 +36,16 @@ bool						IRC::topic(client &client, std::string cmd)
 	if (i == 10)
 		return ((void)sendRPL(ERR_CHANNELNOTFOUND(cmd, chanNam), client.GetSock()), false);
 
-	// No topic specified
+	// No topic specified in client msg
 	if (posColon == std::string::npos)
-		return ((void)sendRPL(RPL_TOPIC(client.GetNick(), this->channels[i].getName(), this->channels[i].getTopic()), client.GetSock()), false);
-
+	{
+		// No topic set in channel
+		if (this->channels[i].getName().empty())
+			return ((void)sendRPL(ERR_NOTOPIC(cmd, chanNam), client.GetSock()), false);
+		else
+			return ((void)sendRPL(RPL_TOPIC(client.GetNick(), this->channels[i].getName(), this->channels[i].getTopic()), client.GetSock()), false);
+	}
+	
 	// Extracting topic name from cmd
 	topicNam = cmd.substr(posColon + 1, cmd.find("\r") - posColon - 1);
 	
