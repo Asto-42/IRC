@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:19:21 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/23 18:21:19 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,9 @@ class IRC
 			void					setTopic(std::string& topic);
 			void					setOperators(int& operateur);
 			void					setClients(client& client);
-			//bool					isOperator(client &client);
+			bool					isClient(std::string user);
+			bool					isOperator(client &client);
+			bool					remove_client(std::string user);
 			Channel(std::string name, client &creator);
 			~Channel();
 	};
@@ -144,7 +146,7 @@ class IRC
 		bool						privmsg(client &client, std::string cmd);
 		// bool						privmsg_user(client &client, std::string cmd);
 		bool						topic(client &client, std::string cmd);
-		bool						mode(client &client, std::string cmd);
+		//bool						mode(client &client, std::string cmd);
 		bool						ping(client &client, std::string cmd); // fait
 		// bool						join(client &client, std::string cmd); // LUCAS
 		// bool						part(client &client, std::string cmd); // LUCAS

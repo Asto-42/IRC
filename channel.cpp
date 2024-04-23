@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:06:55 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/23 18:24:24 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,37 @@ void						IRC::Channel::setClients(client& client)
 	this->clients.push_back(client);
 }
 
-// bool							IRC::Channel::isOperator(int fd){
-// 	for (std::vector<Client>::iterator it = operators.begin(); it != operators.end(); ++it){
-// 		if (it->GetFd() == fd)
-// 			return (true);
-// 	}
-// 	return (false);
-// }
+bool	IRC::Channel::isOperator(client &client)
+{
+	for (std::vector<int>::iterator it = this->operators.begin(); it != this->operators.end(); ++it)
+	{
+		if (*it == client.GetSock())
+			return (true);
+	}
+	return (false);
+}
+bool	IRC::Channel::isClient(std::string user)
+{
+	for (std::vector<client>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
+	{
+		if (it->GetUser() == user)
+			return (true);
+	}
+	return (false);
+}
+
+bool	IRC::Channel::remove_client(std::string user)
+{
+	if (this->isClient(user) == 1)
+	{
+		for (std::vector<client>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
+		{
+			if (it->GetUser() == user)
+			{
+				delete (&it);
+				return (1);
+			}
+		}
+	}
+	return (false);
+}
