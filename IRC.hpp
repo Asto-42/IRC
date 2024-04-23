@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 18:55:12 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/23 19:02:28 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,9 +153,9 @@ class IRC
 		// bool						join(client &client, std::string cmd); // LUCAS
 		// bool						part(client &client, std::string cmd); // LUCAS
 		// bool						whois(client &client, std::string cmd); // Pas obligatoire, on verra plus tard
-		bool						kick(client &client, std::string cmd); // fait MAIS a verifier
+		bool						kick(client &client, std::string cmd); // fait MAIS a verifier + RPL a ajouter
 		// bool						quit(client &client, std::string cmd); // LUCAS
-		bool						invite(client &clients, std::string cmd);
+		bool						invite(client &clients, std::string cmd); // RPL a ajouter
 		// void 					Kick(void);
 		// void 					Invite(void);
 		// void 					Topic(void);
