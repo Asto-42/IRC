@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:01:40 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/23 17:11:15 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ class IRC
 			void					setTopic(std::string& topic);
 			void					setOperators(int& operateur);
 			void					setClients(client& client);
+			//bool					isOperator(client &client);
 			Channel(std::string name, client &creator);
 			~Channel();
 	};
@@ -145,7 +146,7 @@ class IRC
 		bool						privmsg(client &client, std::string cmd);
 		// bool						privmsg_user(client &client, std::string cmd);
 		bool						topic(client &client, std::string cmd);
-		// bool						mode(client &client, std::string cmd);
+		bool						mode(client &client, std::string cmd);
 		// bool						oper(client &client, std::string cmd);
 		// bool						whois(client &client, std::string cmd);
 		// bool						kick(client &client, std::string cmd);
@@ -155,6 +156,7 @@ class IRC
 		// void 					Invite(void);
 		// void 					Topic(void);
 		// void 					Mode(void);
+		bool						ChannelExist(std::string name);
 									IRC(int port, std::string mdp);
 									~IRC();
 

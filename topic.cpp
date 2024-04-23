@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:23 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 16:25:34 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/23 17:15:40 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ bool						IRC::topic(client &client, std::string cmd)
 		i++;
 	// Not found channel
 	if (i == 10)
-		return ((void)sendRPL(ERR_NOSUCHCHANNEL(cmd), client.GetSock()), false);
+		return ((void)sendRPL(ERR_CHANNELNOTFOUND(cmd, chanNam), client.GetSock()), false);
 
 	// No topic specified
 	if (posColon == std::string::npos)
@@ -60,7 +60,7 @@ bool						IRC::topic(client &client, std::string cmd)
 				return (true);
 			}
 		}
-		return ((void)sendRPL(ERR_CHANOPRIVSNEEDED(err), client.GetSock()), false);
+		return ((void)sendRPL(ERR_CHANOPRIVSNEEDED(client.GetNick(), this->channels[i].getName()), client.GetSock()), false);
 	}
 	else
 	{	
