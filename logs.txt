@@ -2,10 +2,3 @@
 << PASS abc
 << NICK jquil
 << USER jquil jquil localhost :Julien QUIL
->> :localhost 001 jquil :Welcome to bdtServer jquil!~jquil jquil localhost :Julien QUIL@127.0.0.1
-<< MODE jquil +i
-<< PING localhost
-<< JOIN #test
-<< TOPIC #test :kwigjs
-<< JOIN #afk
-<< QUIT :Lost terminal

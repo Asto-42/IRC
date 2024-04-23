@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 18:12:47 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/23 09:58:03 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ IRC::IRC(int port, std::string mdp)
 	this->poll_fds = NULL;
 	this->server.sin_family = AF_INET;
 	this->sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	int optval = 1;
+	setsockopt(this->sock, SOL_SOCKET, SO_REUSEADDR, &optval , sizeof(int));
 	if (this->calloc_pollfd(10) == 0)
 		this->secure = 1;
 	this->poll_fds[0].fd = this->sock;
@@ -42,6 +44,7 @@ IRC::IRC(int port, std::string mdp)
 	if (this->lstn < 0)
 		this->secure = 1;
 	this->peer_addr_size = sizeof(struct sockaddr_in);
+	this->port = port;
 	this->mdp = mdp;
 	initCommand();
 };
@@ -94,6 +97,7 @@ void IRC::launch_serv(void)
 					if (this->add_poll_fds(client) == 0)
 						return;
 					class client cl(client);
+					this->users[client] = cl;
 				}
 			}
 			else
@@ -126,8 +130,7 @@ void IRC::manage_input(int x)
 		while ((end = line.find("\r", 0)) != std::string::npos)
 		{
 			input = line.substr(0, end);
-			//line.erase(0, end + 2); // clear la line
-			line.clear();
+			line.erase(0 ,end + 2);
 			if ((space = input.find(" ", 0)) != std::string::npos)
 			{
 				tmp = input.substr(0, space);
@@ -137,50 +140,6 @@ void IRC::manage_input(int x)
 			}
 		}
 	}
-}
-
-
-bool	IRC::capLs(client &client, std::string cmd)
-{
-	if (cmd != "LS")
-		return (0);
-	if (client.set == 0)
-		client.set = 1;
-	return (1);
-}
-
-bool	IRC::pass(client &client, std::string cmd)
-{
-	if (cmd != this->mdp)
-		return (0);
-	client.SetPass(cmd);
-	client.set = 2;
-	return (1);
-}
-
-bool	IRC::nick(client &client, std::string cmd)
-{
-	if (cmd.size() == 0)
-		return (0);
-	client.SetNick(cmd);
-	client.set = 3;
-	return (1);
-}
-
-bool		IRC::topic(client &client, std::string cmd)
-{
-	for (std::vector<Channel>::iterator itChan = this->channels.begin(); itChan != this->channels.end(); itChan++)
-	{
-		for (size_t i = 0; i < 10; i++)
-		{
-			if (itChan->getTopicOperators()[i] == client.GetSock())
-			{
-				itChan->setTopic(cmd);
-				return (1);
-			}
-		}
-	}
-	return (0);
 }
 
 //void IRC::Kick(void)
@@ -203,24 +162,30 @@ bool		IRC::topic(client &client, std::string cmd)
 // 	std::cout << "Enter Mode function" << std::endl;
 // }
 
+void IRC::sendRPL(std::string rpl, int fd)
+{
+	std::cout << "Response sent to " << fd << ": " << rpl << std::endl;
+	send(fd, rpl.c_str(), rpl.size(), 0);
+}
 
 void IRC::initCommand(void)
 {
 	this->cmd["CAP"] = &IRC::capLs;
-	// this->cmd["NICK"]    = &IRC::nick;
-	// this->cmd["USER"]    = &IRC::user;
-	// this->cmd["PASS"]    = &IRC::pass;
+	this->cmd["NICK"] = &IRC::nick;
+	this->cmd["USER"] = &IRC::user;
+	this->cmd["PASS"] = &IRC::pass;
 	// this->cmd["PING"]    = &IRC::ping;
 	// this->cmd["QUIT"]    = &IRC::quit;
 	// this->cmd["JOIN"]    = &IRC::join;
-	// this->cmd["PRIVMSG"] = &IRC::privmsg;
+	this->cmd["PRIVMSG"] = &IRC::privmsg;
 	// this->cmd["KICK"]    = &IRC::kick;
-	this->cmd["TOPIC"]   	= &IRC::topic;
+	//this->cmd["TOPIC"]   	= &IRC::topic;
 	// this->cmd["MODE"]    = &IRC::mode;
 	// this->cmd["INVITE"]  = &IRC::invite;
 	// this->cmd["PART"]    = &IRC::part;
 	// this->cmd["OPER"]    = &Server::oper;
 }
+
 
 int IRC::add_poll_fds(int new_fd)
 {
