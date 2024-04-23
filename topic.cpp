@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:23 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:22:16 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/23 17:34:18 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,16 @@
 
 bool						IRC::topic(client &client, std::string cmd)
 {
-	std::string				err = "localhost";
+	//std::string				err = "localhost";
 	std::string 			topicNam;
 	std::string 			chanNam;
 	std::string::size_type 	posHash = cmd.find('#');
 	std::string::size_type 	posSpace = cmd.find(posHash, ' ');
 	std::string::size_type 	posColon = cmd.find(posSpace, ':');
 	
-
-	if (cmd.empty())
-		return ((void)sendRPL(ERR_NOTENOUGHPARAM(err), client.GetSock()), false);
-	
 	// Need '#'
 	if (posHash == std::string::npos)
-		return ((void)sendRPL(ERR_NOTENOUGHPARAM(err), client.GetSock()), false);
+		return ((void)sendRPL(ERR_NEEDMOREPARAMS(client.GetNick(), cmd), client.GetSock()), false);
 	
 	// Extracting channel name from cmd
 	chanNam = cmd.substr(posHash, posSpace - posHash - 1);
@@ -44,9 +40,9 @@ bool						IRC::topic(client &client, std::string cmd)
 	// No topic specified
 	if (posColon == std::string::npos)
 		return ((void)sendRPL(RPL_TOPIC(client.GetNick(), this->channels[i].getName(), this->channels[i].getTopic()), client.GetSock()), false);
-	
+
 	// Extracting topic name from cmd
-	topicNam = cmd.substr(posColon + 1, cmd.size() - posColon - 1);
+	topicNam = cmd.substr(posColon + 1, cmd.find("\r") - posColon - 1);
 	
 	// Checking if the channel's topic is protected
 	if (this->channels[i].getIsProtected())
