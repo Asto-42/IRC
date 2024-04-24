@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 14:35:58 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/24 14:41:47 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,3 +140,10 @@ bool	IRC::Channel::add_client(client &new_client)
 		std::cout << new_client.GetUser() << " is already in " << this->getName() << std::endl;
 	return (false);
 }
+// bool							IRC::Channel::isOperator(int fd){
+// 	for (std::vector<int>::iterator it = operators.begin(); it != operators.end(); ++it){
+// 		if (*it == fd)
+// 			return (true);
+// 	}
+// 	return (false);
+// }

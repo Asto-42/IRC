@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:39 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:16:56 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/24 14:38:36 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,46 +32,47 @@ std::vector<std::string> split(const std::string& s, const std::string& delimite
     return tokens;
 }
 
-// bool IRC::mode(client &client, std::string cmd){
-// 	std::vector<std::string> options = split(cmd ," ");
-// 	std::string channelName;
-// 	std::vector<std::string>		param;
-// 	std::vector<s_option>           opt_vector;
-// 	std::vector<std::string>::iterator it = options.begin()
-// 	int optCount = 0;
+bool IRC::mode(client &client, std::string cmd){
+	std::vector<std::string> options = split(cmd ," ");
+	std::string channelName;
+	std::vector<std::string>		param;
+	std::vector<s_option>           opt_vector;
+	std::vector<std::string>::iterator it = options.begin();
+	int optCount = 0;
+	std::string err = "localhost";
+	s_option stuc_opt = {-1, '\0'};
 	
-// 	if (cmd.size() == 0){
-// 		std::string tmp = "USER";
-// 		sendRPL(ERR_NOTENOUGHPARAM(err), client.GetSock());
-// 		return (0);
-// 	}
-// 	if(client.GetSetup() != 2 && client.GetSetup() != 4)
-// 		sendRPL(ERR_NOTREGISTERED(err), client.GetSock());
-// 	if(options.size() < 2 || cmd == "")
-// 		sendRPL(ERR_NOTENOUGHPARAM(err), client.GetSock());
+	if (cmd.size() == 0){
+		std::string tmp = "USER";
+		sendRPL(ERR_NOTENOUGHPARAM(err), client.GetSock());
+		return (0);
+	}
+	if(client.GetSetup() != 2 && client.GetSetup() != 4)
+		sendRPL(ERR_NOTREGISTERED(err), client.GetSock());
+	if(options.size() < 2 || cmd == "")
+		sendRPL(ERR_NOTENOUGHPARAM(err), client.GetSock());
 
-// 	if(Channel::isOperator(client.GetSock()))
-// 		sendRPL(ERR_NOTOPERATOR(client.GetNick()));
-// 	for(; it != options.end; it++)
-//     {
-// 		s_option stuc_opt = {-1, NULL};
-//         std::string opt = *it;
-//         if (opt[0] == '+')
-//         {
-// 			struc_opt.sign = 1;
-// 			struc_opt.opt = opt[1];
-//             optCount++;
-//             opt_vector.push_back(opt[i]);
-//         }
-// 		else if (opt[0] == '-')
-//         {
-// 			struc_opt.sign = 1;
-// 			struc_opt.opt = opt[1];
-//             optCount++;
-//             opt_vector.push_back(struc_opt);
-//         }
-//         else
-//             param.push_back(*it);
-//     }
-	
-// }
+	// if(client.isOperator(client.GetSock()))
+	// 	sendRPL(ERR_NOTOPERATOR(client.GetNick()), client.GetSock());
+	for(; it != options.end(); it++)
+    {
+        std::string opt = *it;
+        if (opt[0] == '+')
+        {
+			stuc_opt.sign = 1;
+			stuc_opt.opt = opt[1];
+            optCount++;
+            opt_vector.push_back(stuc_opt);
+        }
+		else if (opt[0] == '-')
+        {
+			stuc_opt.sign = 0;
+			stuc_opt.opt = opt[1];
+            optCount++;
+            opt_vector.push_back(stuc_opt);
+        }
+        else
+            param.push_back(*it);
+    }
+	return(true);
+}

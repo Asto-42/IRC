@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 14:32:35 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/24 14:44:37 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ class IRC
 		bool						privmsg(client &client, std::string cmd);
 		// bool						privmsg_user(client &client, std::string cmd);
 		bool						topic(client &client, std::string cmd);
-		//bool						mode(client &client, std::string cmd);
+		bool						mode(client &client, std::string cmd);
 		bool						ping(client &client, std::string cmd); // fait
 		// bool						join(client &client, std::string cmd); // LUCAS
 		// bool						part(client &client, std::string cmd); // LUCAS
