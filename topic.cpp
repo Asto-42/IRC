@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:23 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:39:01 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/24 14:41:05 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool						IRC::topic(client &client, std::string cmd)
 	while (i < this->channels.size() || this->channels[i].getName() != chanNam)
 		i++;
 	
-	// Not found channel
+	// Channel not found
 	if (i == 10)
 		return ((void)sendRPL(ERR_CHANNELNOTFOUND(cmd, chanNam), client.GetSock()), false);
 
@@ -50,7 +50,7 @@ bool						IRC::topic(client &client, std::string cmd)
 	topicNam = cmd.substr(posColon + 1, cmd.find("\r") - posColon - 1);
 	
 	// Checking if the channel's topic is protected
-	if (this->channels[i].getIsProtected())
+	if (this->channels[i].getModes().find('t') != std::string::npos)
 	{
 		//if Yes, does the client has the right to change the topic ?
 		for (size_t i = 0; i < this->channels[i].getOperators().size(); i++)

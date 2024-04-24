@@ -5,7 +5,7 @@
 #define CRLF "\r\n"
 
 #define RPL_CONNECTED(nickname) (": 001 " + nickname + " : Welcome to the IRC server!" + CRLF)
-#define RPL_TOPIC(nickname, channelName, topic) (nickname + " " + channelName + " :" + topic + CRLF)
+#define RPL_TOPIC(nickname, channelName, topic) (": 332 " + nickname + " " + channelName + " :" + topic + CRLF)
 
 #define ERR_NOTREGISTERED(nickname) (": 451 " + nickname + " :You have not registered!" + CRLF)
 #define ERR_NOTENOUGHPARAM(nickname) (": 461 " + nickname + " :Not enough parameters given" + CRLF)
@@ -17,3 +17,6 @@
 #define ERR_CHANOPRIVSNEEDED(nickname, channelname) (": 482 " + nickname + " " + channelname + " :You're not channel operator" + CRLF)
 #define ERR_NEEDMOREPARAMS(nickname, cmd) (": 461 " + nickname + " " + cmd + " :Not enough parameters" + CRLF)
 #define ERR_NOTOPIC(nickname, channelname) (": 331 " + nickname + " " + channelname + " :No topic is set" + CRLF)
+#define ERR_INVITEONLYCHAN(nickname, channel) (":localhost 473 " + client + " " + channel + " :Cannot join channel (+i)" + CRLF)
+#define ERR_BADCHANNELKEY(client, channel) (":localhost 475 " + client + " " + channel + " :Cannot join channel (+k)" + CRLF)
+#define ERR_CHANNELISFULL(client, channel) (":localhost 471 " + client + " " + channel + " :Cannot join channel (+l)" + "\r\n")

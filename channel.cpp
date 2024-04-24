@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:06:55 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/24 14:39:31 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@ IRC::Channel::Channel(std::string name, client &creator)
 	this->name = name;
 	this->operators.push_back(creator.GetSock());
 	this->clients.push_back(creator);
-	this->isProtected = false;
+	this->clientSockets.push_back(creator.GetSock());
 	this->topic.clear();
+	this->modes.clear();
 	this->limitClients = 10;
 }
 
@@ -29,9 +30,14 @@ IRC::Channel::~Channel()
 	return ;
 }
 
-bool						IRC::Channel::getIsProtected(void)
+std::vector<std::string> IRC::Channel::getInvitations(void)
 {
-	return(this->isProtected);
+	return (this->invitations);
+}
+
+std::string IRC::Channel::getModes(void)
+{
+	return (this->modes);
 }
 
 std::string					IRC::Channel::getName(void)
@@ -52,6 +58,11 @@ std::vector<int>			IRC::Channel::getOperators(void)
 std::vector<IRC::client>	IRC::Channel::getClients(void)
 {
 	return (this->clients);
+}
+
+std::vector<int>		IRC::Channel::getClientSockets(void)
+{
+	return (this->clientSockets);
 }
 
 void						IRC::Channel::setName(std::string& name)
@@ -80,11 +91,16 @@ void							IRC::Channel::setLimitClients(int limit)
 
 }
 
-void						IRC::Channel::setClients(client& client)
+void							IRC::Channel::setClients(client& client)
 {
 	this->clients.push_back(client);
 }
 
+void							IRC::Channel::setClientSockets(int Socket)
+{
+	this->clientSockets.push_back(Socket);
+
+}
 // bool							IRC::Channel::isOperator(int fd){
 // 	for (std::vector<Client>::iterator it = operators.begin(); it != operators.end(); ++it){
 // 		if (it->GetFd() == fd)

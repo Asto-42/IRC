@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 18:20:43 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/24 14:40:03 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,12 @@ class IRC
 	class client
 	{
 		private :
-			std::string 	pass;
-			std::string 	nick;
-			std::string 	user;
-			std::string		buffer;
-			int			 	setup;
-			int				sock;
+			std::string 				pass;
+			std::string 				nick;
+			std::string 				user;
+			std::string					buffer;
+			int			 				setup;
+			int							sock;
 
 		public :
 
@@ -85,13 +85,15 @@ class IRC
 	class Channel
 	{
 		private:
-			bool					isProtected;
-			std::string				topic;
-			std::string				name;
-			std::vector<int>		operators;
-			std::vector<client>		clients;
-			int						limitClients;
-			bool					privacy;
+			std::vector<std::string> 	invitations;
+			std::string					modes;
+			std::string					topic;
+			std::string					name;
+			std::vector<int>			operators;
+			std::vector<client>			clients;
+			std::vector<int>			clientSockets;//test
+			int							limitClients;
+			bool						privacy;
 			Channel(void);
 
 		public:
@@ -99,12 +101,16 @@ class IRC
 			std::string				getTopic(void);
 			std::vector<int>		getOperators(void);
 			std::vector<client>		getClients(void);
+			std::vector<int>		getClientSockets(void);
 			int						getLimitClients(void);
-			bool					getIsProtected(void);
+			bool					getIsPrivate(void);
+			std::vector<std::string> getInvitations(void);
+			std::string 			getModes(void);
 			void					setLimitClients(int limit);
 			void					setName(std::string& name);
 			void					setTopic(std::string& topic);
 			void					setOperators(int& operateur);
+			void					setClientSockets(int Socket);
 			void					setClients(client& client);
 			//bool					isOperator(client &client);
 			Channel(std::string name, client &creator);
