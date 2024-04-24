@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:13:49 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 20:01:10 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/24 14:36:28 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ bool	IRC::privmsg(client &clients, std::string cmd)
 	std::string::size_type doubl_point;
 	std::string::size_type end;
 
+	(void)clients;
 	if ((x = cmd.find("#", 0)) == std::string::npos)
 		return (0);
 	if ((doubl_point = cmd.find(":", 0)) == std::string::npos)
@@ -30,13 +31,12 @@ bool	IRC::privmsg(client &clients, std::string cmd)
 		return (0);
 	chan = cmd.substr(x + 1, doubl_point);
 	msg = cmd.substr(doubl_point + 1, end);
-	if (clients.GetCurrentChannel() == chan)
+	//chan -> vector channel == chan
+	for (std::vector<Channel>::iterator it = this->channels.begin(); it != this->channels.end(); ++it)
 	{
-		for (std::map<int, client>::iterator it = this->users.begin(); it != this->users.end(); ++it)
+		if (it->getName() == chan)
 		{
-			if (it->second.GetCurrentChannel() == chan)
-				if (send(it->second.GetSock(), msg.c_str(), msg.size(), 0) > 0)
-					return (1);
+			it->private_msg_chan(msg);
 		}
 	}
 	return (1);

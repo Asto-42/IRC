@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 19:45:43 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/24 14:32:35 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ class IRC
 			std::string				name;
 			std::vector<int>		operators;
 			std::vector<int>		white_list;
-			std::vector<client>		clients;
+			std::vector<int>		clients;
 			int						limitClients;
 			bool					privacy;
 			Channel(void);
@@ -101,7 +101,7 @@ class IRC
 			std::string				getName(void);
 			std::string				getTopic(void);
 			std::vector<int>		getOperators(void);
-			std::vector<client>		getClients(void);
+			std::vector<int>		getClients(void);
 			int						getLimitClients(void);
 			bool					getIsProtected(void);
 			void					setLimitClients(int limit);
@@ -109,10 +109,11 @@ class IRC
 			void					setTopic(std::string& topic);
 			void					setOperators(int& operateur);
 			void					setClients(client& client);
-			bool					isClient(std::string user);
+			bool					isClient(int sock);
 			bool					isOperator(client &client);
 			bool					add_client(client &new_client);
-			bool					remove_client(client &new_client);
+			bool					remove_client(int sock);
+			void					private_msg_chan(std::string msg);
 			Channel(std::string name, client &creator);
 			~Channel();
 	};

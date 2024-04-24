@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:16:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 19:34:08 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/24 14:32:25 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ bool	IRC::kick(client &clients, std::string cmd)
 				{
 					if (it2->second.GetUser() == user)
 					{
-						if (it->remove_client(it2->second) == 0)
+						if (it->remove_client(it2->second.GetSock()) == 0)
 							std::cout << user << " is not in " << chan << std::endl;
 						return (true);
 					}

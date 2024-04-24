@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 19:36:32 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/24 14:35:58 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ IRC::Channel::Channel(std::string name, client &creator)
 	std::cout << "Parametric constructor called for Channel " << this->name << " destructor called" << std::endl;
 	this->name = name;
 	this->operators.push_back(creator.GetSock());
-	this->clients.push_back(creator);
+	this->clients.push_back(creator.GetSock());
 	this->isProtected = false;
 	this->topic.clear();
 	this->limitClients = 10;
@@ -49,7 +49,7 @@ std::vector<int>			IRC::Channel::getOperators(void)
 	return (this->operators);
 }
 
-std::vector<IRC::client>	IRC::Channel::getClients(void)
+std::vector<int>	IRC::Channel::getClients(void)
 {
 	return (this->clients);
 }
@@ -80,9 +80,9 @@ void							IRC::Channel::setLimitClients(int limit)
 
 }
 
-void						IRC::Channel::setClients(client& client)
+void	IRC::Channel::setClients(client& client)
 {
-	this->clients.push_back(client);
+	this->clients.push_back(client.GetSock());
 }
 
 bool	IRC::Channel::isOperator(client &client)
@@ -94,40 +94,43 @@ bool	IRC::Channel::isOperator(client &client)
 	}
 	return (false);
 }
-bool	IRC::Channel::isClient(std::string user)
+bool	IRC::Channel::isClient(int sock)
 {
-	for (std::vector<client>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
+	for (std::vector<int>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
 	{
-		if (it->GetUser() == user)
+		if (*it == sock)
 			return (true);
 	}
 	return (false);
 }
 
-bool	IRC::Channel::remove_client(client &new_client)
+bool	IRC::Channel::remove_client(int sock)
 {
-	if (this->isClient(new_client.GetUser()) == 1)
+	if (this->isClient(sock) == 1)
 	{
-		for (std::vector<client>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
+		for (std::vector<int>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
 		{
-			if (it->GetSock() == new_client.GetSock())
-				delete(&it);
-		}
-		for (std::vector<int>::iterator it = this->white_list.begin(); it != this->white_list.end(); ++it)
-		{
-			if (*it == new_client.GetSock())
+			if (*it == sock)
 			{
 				delete(&it);
+				return (true);
 			}
 		}
 	}
-
 	return (false);
+}
+
+void	IRC::Channel::private_msg_chan(std::string msg)
+{
+	for (std::vector<int>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
+	{
+		send(*it, msg.c_str(), msg.size(), 0);
+	}
 }
 
 bool	IRC::Channel::add_client(client &new_client)
 {
-	if (this->isClient(new_client.GetUser()) == 0)
+	if (this->isClient(new_client.GetSock()) == 0)
 	{
 		this->white_list.push_back(new_client.GetSock());
 		std::cout << new_client.GetUser() << " successfully add to " << this->getName() << "'s white list" << std::endl;

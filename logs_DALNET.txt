@@ -8,3 +8,72 @@
 --> chanquery ban end
 << PRIVMSG #test :Wsh magle on test ici
 << QUIT :leaving
+<< CAP LS
+<< NICK jquil
+<< USER jquil jquil irc.dal.net :Julien QUIL
+<< MODE jquil +i
+>> :serenity.fl.us.dal.net 002 jquil :Your host is serenity.fl.us.dal.net, running version bahamut-2.2.2
+>> :serenity.fl.us.dal.net 003 jquil :This server was created Tue 23 Aug UTC at 2022 04:42:56 AM
+>> :serenity.fl.us.dal.net 004 jquil serenity.fl.us.dal.net bahamut-2.2.2 aAbcCdefFghHiIjkKmnoOPrRsSwxXy AbceiIjklLmMnoOpPrRsStv beIjklov
+>> :serenity.fl.us.dal.net 005 jquil NETWORK=DALnet SAFELIST MAXBANS=200 MAXCHANNELS=50 CHANNELLEN=32 KICKLEN=307 NICKLEN=30 TOPICLEN=307 MODES=6 CHANTYPES=# CHANLIMIT=#:50 PREFIX=(ohv)@%+ STATUSMSG=@%+ :are available on this server
+>> :serenity.fl.us.dal.net 005 jquil CASEMAPPING=ascii WATCH=128 SILENCE=10 ELIST=cmntu EXCEPTS INVEX CHANMODES=beI,k,jl,ciPAmMnOprRsSt MAXLIST=b:200,e:100,I:100 TARGMAX=DCCALLOW:,JOIN:,KICK:4,KILL:20,NOTICE:20,PART:,PRIVMSG:20,WHOIS:,WHOWAS: :are available on this server
+>> :serenity.fl.us.dal.net 251 jquil :There are 68 users and 7470 invisible on 36 servers
+>> :serenity.fl.us.dal.net 252 jquil 79 :IRC Operators online
+>> :serenity.fl.us.dal.net 254 jquil 3696 :channels formed
+>> :serenity.fl.us.dal.net 255 jquil :I have 197 clients and 1 servers
+>> :serenity.fl.us.dal.net 265 jquil :Current local users: 197 Max: 1393
+>> :serenity.fl.us.dal.net 266 jquil :Current global users: 7538 Max: 12060
+>> :serenity.fl.us.dal.net NOTICE jquil :*** Notice -- motd was last changed at 30/11/2020 19:09
+>> :serenity.fl.us.dal.net 375 jquil :- serenity.fl.us.dal.net Message of the Day -
+>> :serenity.fl.us.dal.net 372 jquil :-30/11/2020 19:09
+>> :serenity.fl.us.dal.net 372 jquil :- serenity.fl.us.dal.net
+>> :serenity.fl.us.dal.net 372 jquil :- sponsored by: Kape, Inc & Datapacket.com
+>> :serenity.fl.us.dal.net 372 jquil :- admin: Mustang
+>> :serenity.fl.us.dal.net 372 jquil :-
+>> :serenity.fl.us.dal.net 372 jquil :- Please abide by DALnet's Acceptable Use Policy:
+>> :serenity.fl.us.dal.net 372 jquil :- https://www.dal.net/aup
+>> :serenity.fl.us.dal.net 372 jquil :-
+>> :serenity.fl.us.dal.net 372 jquil :-
+>> :serenity.fl.us.dal.net 376 jquil :End of /MOTD command.
+>> :jquil MODE jquil :+iH
+<< PING serenity.fl.us.dal.net
+>> :serenity.fl.us.dal.net PONG serenity.fl.us.dal.net :jquil
+--> lag pong
+<< JOIN #test
+>> :jquil!~jquil@a2b1-6684-5e1b-c571-ce59.210.62.ip JOIN :#test
+>> :serenity.fl.us.dal.net 332 jquil #test :13w08e11l12c04o09m12e 08t09o 00#04t08e13s09t 13o12n 04d12a04l08n09e00t09.
+>> :serenity.fl.us.dal.net 333 jquil #test melika!tkob@f2f-12b7-2a9b-bd1c-e0b5.life.is-a.beauty 1686454513
+>> :serenity.fl.us.dal.net 353 jquil = #test :jquil Guest02773 Guest83310 @andrew tkob @andrei iuestcipi thekingofbandit
+>> :serenity.fl.us.dal.net 366 jquil #test :End of /NAMES list.
+<< MODE #test
+>> :serenity.fl.us.dal.net 324 jquil #test +tn
+--> chanquery mode
+<< WHO #test
+>> :serenity.fl.us.dal.net 329 jquil #test 1680688351
+--> event 329
+>> :serenity.fl.us.dal.net 352 jquil #test ~jquil a2b1-6684-5e1b-c571-ce59.210.62.ip serenity.fl.us.dal.net jquil H :0 Julien QUIL
+--> silent event who
+>> :serenity.fl.us.dal.net 352 jquil #test ~josh 3bd5-e2cc-a714-3669-3c69.210.62.ip serenity.fl.us.dal.net Guest02773 H :0 Lucas BOUGUET
+--> silent event who
+>> :serenity.fl.us.dal.net 352 jquil #test ~josh 3bd5-e2cc-a714-3669-3c69.210.62.ip atw.hu.eu.dal.net Guest83310 H :3 Lucas BOUGUET
+--> silent event who
+>> :serenity.fl.us.dal.net 352 jquil #test ~andrew 751e-f489-2f83-3244-4f69.4.81.ip bifrost.ca.us.dal.net andrew G@ :3 andrew
+--> silent event who
+>> :serenity.fl.us.dal.net 352 jquil #test ~thekingof 4648-f1e-1597-14eb-5966.203.5300.2607.ip halcyon.il.us.dal.net tkob H :3 thekingofbandit
+--> silent event who
+>> :serenity.fl.us.dal.net 352 jquil #test unknown 4ede-e670-3738-e5d8-1642.45.185.ip serenity.fl.us.dal.net andrei H@ :0 andrei
+--> silent event who
+>> :serenity.fl.us.dal.net 352 jquil #test ~andrei a9-20c4-655c-b4bd-7844.81.206.ip atw.hu.eu.dal.net iuestcipi H :3 andrei
+--> silent event who
+>> :serenity.fl.us.dal.net 352 jquil #test tkob f2f-12b7-2a9b-bd1c-e0b5.life.is-a.beauty sakura.jp.as.dal.net thekingofbandit G :3 The King of Bandit
+--> silent event who
+>> :serenity.fl.us.dal.net 315 jquil #test :End of /WHO list.
+--> chanquery who end
+<< MODE #test b
+>> :serenity.fl.us.dal.net 367 jquil #test *!*@1f9a-e727-f3df-f7e3-c39.210.62.ip merlin.hub.dal.net 1710866644
+--> chanquery ban
+>> :serenity.fl.us.dal.net 368 jquil #test :End of Channel Ban List
+--> chanquery ban end
+<< PRIVMSG #test :abc
+<< PRIVMSG #test :lol
+<< QUIT :leaving
