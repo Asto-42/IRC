@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 14:47:51 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/24 17:13:12 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,8 @@ class IRC
 			std::vector<std::string> getInvitations(void);
 			std::string 			getModes(void);
 			void					setLimitClients(int limit);
+			void 					setModes(char c);
+			void 					delModes(char c);
 			void					setName(std::string& name);
 			void					setTopic(std::string& topic);
 			void					setOperators(int& operateur);
