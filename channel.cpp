@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:06:55 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/24 14:38:48 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ void						IRC::Channel::setClients(client& client)
 }
 
 // bool							IRC::Channel::isOperator(int fd){
-// 	for (std::vector<Client>::iterator it = operators.begin(); it != operators.end(); ++it){
-// 		if (it->GetFd() == fd)
+// 	for (std::vector<int>::iterator it = operators.begin(); it != operators.end(); ++it){
+// 		if (*it == fd)
 // 			return (true);
 // 	}
 // 	return (false);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:19:21 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/24 14:38:40 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ class IRC
 			void 		SetNick(std::string nic);
 			void 		SetUser(std::string use);
 			void		SetSetup(int x);
+			bool		isOperator(int fd);
 
 
 	};
@@ -106,7 +107,7 @@ class IRC
 			void					setTopic(std::string& topic);
 			void					setOperators(int& operateur);
 			void					setClients(client& client);
-			//bool					isOperator(client &client);
+			// bool					isOperator(int fd);
 			Channel(std::string name, client &creator);
 			~Channel();
 	};
