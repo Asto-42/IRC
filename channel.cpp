@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 14:49:17 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/24 16:41:06 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ IRC::Channel::Channel(std::string name, client &creator)
 	this->topic.clear();
 	this->modes.clear();
 	this->limitClients = 10;
+	
 }
 
 IRC::Channel::~Channel()

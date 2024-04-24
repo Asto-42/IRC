@@ -6,12 +6,17 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 16:18:44 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/24 16:34:11 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef IRC_HPP
 # define IRC_HPP
+
+#define BLUE "\033[34m"
+#define END_C "\033[0m"
+
+
 
 #include <iostream>
 #include <cstdio>
