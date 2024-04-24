@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 18:21:18 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/24 14:49:40 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,10 +178,10 @@ void IRC::initCommand(void)
 	// this->cmd["QUIT"]    = &IRC::quit;
 	// this->cmd["JOIN"]    = &IRC::join;
 	this->cmd["PRIVMSG"] = &IRC::privmsg;
-	// this->cmd["KICK"]    = &IRC::kick;
+	this->cmd["KICK"]    = &IRC::kick;
 	//this->cmd["TOPIC"]   	= &IRC::topic;
-	// this->cmd["MODE"]    = &IRC::mode;
-	// this->cmd["INVITE"]  = &IRC::invite;
+	this->cmd["MODE"]    = &IRC::mode;
+	this->cmd["INVITE"]  = &IRC::invite;
 	// this->cmd["PART"]    = &IRC::part;
 	// this->cmd["OPER"]    = &Server::oper;
 }
@@ -201,26 +201,10 @@ int IRC::add_poll_fds(int new_fd)
 	return (1);
 }
 
-bool IRC::check_pass(client cl)
-{
-	if (cl.pass_check == 1)
-	{
-		std::cout << "Password is correct" << std::endl;
-		return (1);
+bool						IRC::ChannelExist(std::string name){
+	for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it){
+		if (it->getName() == name)
+			return (true);
 	}
-	else
-	{
-		std::cout << "Incorrect Password" << std::endl;
-		return (0);
-	}
+	return (false);
 }
-
-//std::vector<Channel>		*getChannel(void);
-
-// bool						IRC::ChannelExist(std::string name){
-// 	for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it){
-// 		if (it->GetFd() == fd)
-// 			return (true);
-// 	}
-// 	return (false);
-// }

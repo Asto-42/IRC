@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 14:40:03 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/24 14:47:51 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,16 @@ class IRC
 	class client
 	{
 		private :
-			std::string 				pass;
-			std::string 				nick;
-			std::string 				user;
-			std::string					buffer;
-			int			 				setup;
-			int							sock;
+			std::string 	pass;
+			std::string 	nick;
+			std::string 	user;
+			std::string		buffer;
+			int				setup;
+			int				sock;
+			std::string		current_channel;
 
 		public :
 
-			bool			pass_check;
 							client();
 							client(int sock);
 			int				GetSock();
@@ -73,11 +73,13 @@ class IRC
 			std::string 	GetNick();
 			std::string 	GetUser();
 			std::string		GetBuffer() const;
+			std::string		GetCurrentChannel() const;
 			void			SetBuffer(std::string buf);
 			void		SetPass(std::string pas);
 			void 		SetNick(std::string nic);
 			void 		SetUser(std::string use);
 			void		SetSetup(int x);
+			void		SetCurrentChannel(std::string str);
 
 
 	};
@@ -85,23 +87,23 @@ class IRC
 	class Channel
 	{
 		private:
-			std::vector<std::string> 	invitations;
-			std::string					modes;
-			std::string					topic;
-			std::string					name;
-			std::vector<int>			operators;
-			std::vector<client>			clients;
-			std::vector<int>			clientSockets;//test
-			int							limitClients;
-			bool						privacy;
+			bool					isProtected;
+			std::string				topic;
+			std::string				name;
+			std::string				modes;
+			std::vector<std::string> invitations;
+			std::vector<int>		operators;
+			std::vector<int>		white_list;
+			std::vector<int>		clients;
+			int						limitClients;
+			bool					privacy;
 			Channel(void);
 
 		public:
 			std::string				getName(void);
 			std::string				getTopic(void);
 			std::vector<int>		getOperators(void);
-			std::vector<client>		getClients(void);
-			std::vector<int>		getClientSockets(void);
+			std::vector<int>		getClients(void);
 			int						getLimitClients(void);
 			bool					getIsPrivate(void);
 			std::vector<std::string> getInvitations(void);
@@ -112,7 +114,11 @@ class IRC
 			void					setOperators(int& operateur);
 			void					setClientSockets(int Socket);
 			void					setClients(client& client);
-			//bool					isOperator(client &client);
+			bool					isClient(int sock);
+			bool					isOperator(client &client);
+			bool					add_client(client &new_client);
+			bool					remove_client(int sock);
+			void					private_msg_chan(std::string msg);
 			Channel(std::string name, client &creator);
 			~Channel();
 	};
@@ -154,9 +160,9 @@ class IRC
 		bool						join(client &client, std::string cmd); // LUCAS
 		// bool						part(client &client, std::string cmd); // LUCAS
 		// bool						whois(client &client, std::string cmd); // Pas obligatoire, on verra plus tard
-		bool						kick(client &client, std::string cmd); // fait MAIS une partie en pseudo code a MaJ quand MODE et OPER seront up
+		bool						kick(client &client, std::string cmd); // fait MAIS a verifier + RPL a ajouter
 		// bool						quit(client &client, std::string cmd); // LUCAS
-		// bool						invite(client &client, std::string cmd);
+		bool						invite(client &clients, std::string cmd); // RPL a ajouter
 		// void 					Kick(void);
 		// void 					Invite(void);
 		// void 					Topic(void);
