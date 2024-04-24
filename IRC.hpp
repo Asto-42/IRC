@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 14:47:51 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/24 16:18:44 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ class IRC
 	class Channel
 	{
 		private:
-			bool					isProtected;
 			std::string				topic;
 			std::string				name;
 			std::string				modes;
@@ -96,7 +95,6 @@ class IRC
 			std::vector<int>		white_list;
 			std::vector<int>		clients;
 			int						limitClients;
-			bool					privacy;
 			Channel(void);
 
 		public:
@@ -112,7 +110,6 @@ class IRC
 			void					setName(std::string& name);
 			void					setTopic(std::string& topic);
 			void					setOperators(int& operateur);
-			void					setClientSockets(int Socket);
 			void					setClients(client& client);
 			bool					isClient(int sock);
 			bool					isOperator(client &client);
