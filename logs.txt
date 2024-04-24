@@ -27,3 +27,16 @@
 --> lag pong
 << PRIVMSG abc :PING 1713882682 329081
 << QUIT :leaving
+<< CAP LS
+<< PASS abc
+<< NICK jquil
+<< USER jquil jquil localhost :Julien QUIL
+>> :localhost 001 jquil :Welcome to SUUUUUServer jquil!~jquil jquil localhost :Julien QUIL@127.0.0.1
+<< MODE jquil +i
+<< PING localhost
+>> :localhost PONG localhost :jquil jquil localhost :Julien QUIL
+--> lag pong
+<< JOIN #test
+<< PING localhost
+>> --> lag pong:localhost PONG localhost :jquil jquil localhost :Julien QUIL
+<< QUIT :Lost terminal

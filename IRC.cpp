@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 14:49:40 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/24 14:56:22 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ void IRC::initCommand(void)
 	this->cmd["USER"] = &IRC::user;
 	this->cmd["PASS"] = &IRC::pass;
 	this->cmd["PING"]    = &IRC::ping;
-	// this->cmd["QUIT"]    = &IRC::quit;
+	this->cmd["QUIT"]    = &IRC::quit;
 	// this->cmd["JOIN"]    = &IRC::join;
 	this->cmd["PRIVMSG"] = &IRC::privmsg;
 	this->cmd["KICK"]    = &IRC::kick;

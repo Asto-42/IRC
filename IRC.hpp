@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 14:47:51 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/24 16:26:21 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,13 @@ class IRC
 	class client
 	{
 		private :
-			std::string 	pass;
-			std::string 	nick;
-			std::string 	user;
-			std::string		buffer;
-			int				setup;
-			int				sock;
-			std::string		current_channel;
+			std::string					pass;
+			std::string					nick;
+			std::string					user;
+			std::string					buffer;
+			int							setup;
+			int							sock;
+			std::vector<std::string>	current_channel;
 
 		public :
 
@@ -156,13 +156,14 @@ class IRC
 		// bool						privmsg_user(client &client, std::string cmd);
 		bool						topic(client &client, std::string cmd);
 		bool						mode(client &client, std::string cmd);
-		bool						ping(client &client, std::string cmd); // fait
+		bool						ping(client &client, std::string cmd); // fait, sans la gestion d'erreur mais normalement pas besoin parce qu'on doit pas faire le ping inter client
 		bool						join(client &client, std::string cmd); // LUCAS
 		// bool						part(client &client, std::string cmd); // LUCAS
 		// bool						whois(client &client, std::string cmd); // Pas obligatoire, on verra plus tard
 		bool						kick(client &client, std::string cmd); // fait MAIS a verifier + RPL a ajouter
-		// bool						quit(client &client, std::string cmd); // LUCAS
+		bool						quit(client &client, std::string cmd); // fait
 		bool						invite(client &clients, std::string cmd); // RPL a ajouter
+		void						exec_mode(std::string channelName, std::string flag, std::string arg);
 		// void 					Kick(void);
 		// void 					Invite(void);
 		// void 					Topic(void);
@@ -171,6 +172,5 @@ class IRC
 									IRC(int port, std::string mdp);
 									~IRC();
 
-	bool check_pass(client cl);
 };
 #endif
