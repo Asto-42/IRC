@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/25 10:50:12 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/25 15:29:24 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,24 @@ void						IRC::Channel::setLimitClients(int limit)
 
 }
 
-void						IRC::Channel::setClients(client& client)
+void							IRC::Channel::setModes(char c)
+{
+	if(modes.find(c) == std::string::npos)
+		modes += c;
+	std::cout << "MODES STRING = " << modes << std::endl;
+	return ;
+}
+
+void							IRC::Channel::delModes(char c)
+{
+	std::size_t position_c = modes.find(c);
+	if(position_c != std::string::npos)
+		modes.erase(position_c);
+	std::cout << "MODES STRING = " << modes << std::endl;
+	return ;
+}
+
+void	IRC::Channel::setClients(client& client)
 {
 	this->clients.push_back(client.GetSock());
 }

@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/25 14:39:53 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/25 15:29:01 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ class IRC
 			std::vector<std::string> getInvitations(void);
 			std::string 			getModes(void);
 			void					setLimitClients(int limit);
+			void 					setModes(char c);
+			void 					delModes(char c);
 			void					setName(std::string& name);
 			void					setTopic(std::string& topic);
 			void					setOperators(int& operateur);
@@ -124,7 +126,7 @@ class IRC
 		std::string 				mdp;
 		socklen_t					peer_addr_size;
 		struct sockaddr_in 			server, peer_addr;
-		struct pollfd 				*poll_fds;
+		std::vector<struct pollfd>	poll_fds;
 		std::map<int, client>		users;
 		std::map<std::string, bool (IRC::*)(client&, std::string)>	cmd;
 		std::vector<Channel> 		channels;
@@ -138,8 +140,8 @@ class IRC
 
 	public :
 		std::vector<Channel>		*getChannel(void);
-		int							calloc_pollfd(int size);
-		int 						add_poll_fds(int fd);
+		// int							calloc_pollfd(int size);
+		// int 						add_poll_fds(int fd);
 		void 						launch_serv(void);
 		void 						manage_input(int fd);
 		void						initCommand(void);
