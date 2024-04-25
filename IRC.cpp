@@ -6,7 +6,7 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 17:21:52 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/25 14:19:42 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ void IRC::initCommand(void)
 	this->cmd["PASS"] = &IRC::pass;
 	this->cmd["PING"]    = &IRC::ping;
 	// this->cmd["QUIT"]    = &IRC::quit;
-	// this->cmd["JOIN"]    = &IRC::join;
+	this->cmd["JOIN"]    = &IRC::join;
 	this->cmd["PRIVMSG"] = &IRC::privmsg;
 	this->cmd["KICK"]    = &IRC::kick;
 	//this->cmd["TOPIC"]   	= &IRC::topic;

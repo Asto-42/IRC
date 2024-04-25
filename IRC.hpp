@@ -6,12 +6,17 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 17:13:12 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/25 14:20:00 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef IRC_HPP
 # define IRC_HPP
+
+#define BLUE "\033[34m"
+#define END_C "\033[0m"
+
+
 
 #include <iostream>
 #include <cstdio>
@@ -87,7 +92,6 @@ class IRC
 	class Channel
 	{
 		private:
-			bool					isProtected;
 			std::string				topic;
 			std::string				name;
 			std::string				modes;
@@ -96,7 +100,6 @@ class IRC
 			std::vector<int>		white_list;
 			std::vector<int>		clients;
 			int						limitClients;
-			bool					privacy;
 			Channel(void);
 
 		public:
@@ -114,7 +117,6 @@ class IRC
 			void					setName(std::string& name);
 			void					setTopic(std::string& topic);
 			void					setOperators(int& operateur);
-			void					setClientSockets(int Socket);
 			void					setClients(client& client);
 			bool					isClient(int sock);
 			bool					isOperator(client &client);

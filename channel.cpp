@@ -6,7 +6,7 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 17:18:23 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/25 14:19:55 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ IRC::Channel::Channel(std::string name, client &creator)
 	this->topic.clear();
 	this->modes.clear();
 	this->limitClients = 10;
+	
 }
 
 IRC::Channel::~Channel()
