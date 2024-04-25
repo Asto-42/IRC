@@ -6,7 +6,7 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/25 14:19:42 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/25 15:09:36 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,13 @@ IRC::IRC(int port, std::string mdp)
 	this->poll_count = 1;
 	this->poll_size = 2;
 	this->secure = 0;
-	this->poll_fds = NULL;
+	// this->poll_fds = NULL;
 	this->server.sin_family = AF_INET;
 	this->sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	int optval = 1;
 	setsockopt(this->sock, SOL_SOCKET, SO_REUSEADDR, &optval , sizeof(int));
-	if (this->calloc_pollfd(10) == 0)
-		this->secure = 1;
-	this->poll_fds[0].fd = this->sock;
-	this->poll_fds[0].events = POLLIN;
+	// if (this->calloc_pollfd(10) == 0)
+	// 	this->secure = 1;
 	if (this->sock < 0)
 		this->secure = 1;
 	else
@@ -43,26 +41,31 @@ IRC::IRC(int port, std::string mdp)
 		this->lstn = listen(this->sock, 10);
 	if (this->lstn < 0)
 		this->secure = 1;
+	struct pollfd	pollfds;
+	pollfds.fd = sock;
+	pollfds.events = POLLIN;
+	pollfds.revents = 0;
+	poll_fds.push_back(pollfds);
 	this->peer_addr_size = sizeof(struct sockaddr_in);
 	this->port = port;
 	this->mdp = mdp;
 	initCommand();
 };
 
-int IRC::calloc_pollfd(int size)
-{
-	if (!this->poll_fds)
-	{
-		this->poll_fds = (struct pollfd *)calloc(size + 1, sizeof *this->poll_fds);
-		if (!this->poll_fds)
-			return (0);
-	}
-	return (1);
-}
+// int IRC::calloc_pollfd(int size)
+// {
+// 	if (!this->poll_fds)
+// 	{
+// 		this->poll_fds = (struct pollfd *)calloc(size + 1, sizeof *this->poll_fds);
+// 		if (!this->poll_fds)
+// 			return (0);
+// 	}
+// 	return (1);
+// }
 
 IRC::~IRC()
 {
-	free(this->poll_fds);
+	// free(this->poll_fds);
 	close(this->sock);
 	std::cout << "Default destructor called" << std::endl;
 };
@@ -79,13 +82,13 @@ void IRC::launch_serv(void)
 	std::cout << "Server launched, listening on port : " << this->port << std::endl;
 	while (42)
 	{
-		int status = poll(this->poll_fds, this->poll_count, 9000);
+		int status = poll(&poll_fds[0], poll_fds.size(), -1);
 		if (status == -1)
 		{
 			std::cout << "Poll failure" << std::endl;
 			return;
 		}
-		for (int x = 0; x < 10; x++)
+		for (size_t x = 0; x < poll_fds.size(); x++)
 		{
 			if ((poll_fds[x].revents & POLLIN) != 1)
 				continue;
@@ -94,8 +97,11 @@ void IRC::launch_serv(void)
 				int client = accept(this->sock, (struct sockaddr *)&this->peer_addr, &this->peer_addr_size);
 				if (client > 0)
 				{
-					if (this->add_poll_fds(client) == 0)
-						return;
+					struct pollfd pollStruct;
+					pollStruct.fd = client;
+					pollStruct.events = POLLIN;
+					pollStruct.revents = 0;
+					poll_fds.push_back(pollStruct);
 					class client cl(client);
 					this->users[client] = cl;
 				}
@@ -188,19 +194,19 @@ void IRC::initCommand(void)
 }
 
 
-int IRC::add_poll_fds(int new_fd)
-{
-	if (this->poll_count == this->poll_size)
-	{
-		this->poll_fds = (struct pollfd *)realloc(this->poll_fds, sizeof(*(this->poll_fds)) * (this->poll_size));
-		if (!this->poll_fds)
-			return (0);
-	}
-	this->poll_fds[this->poll_count].fd = new_fd;
-	this->poll_fds[this->poll_count].events = POLLIN;
-	this->poll_count++;
-	return (1);
-}
+// int IRC::add_poll_fds(int new_fd)
+// {
+// 	if (this->poll_count == this->poll_size)
+// 	{
+// 		this->poll_fds = (struct pollfd *)realloc(this->poll_fds, sizeof(*(this->poll_fds)) * (this->poll_size));
+// 		if (!this->poll_fds)
+// 			return (0);
+// 	}
+// 	this->poll_fds[this->poll_count].fd = new_fd;
+// 	this->poll_fds[this->poll_count].events = POLLIN;
+// 	this->poll_count++;
+// 	return (1);
+// }
 
 bool						IRC::ChannelExist(std::string name){
 	for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it){

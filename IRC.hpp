@@ -6,7 +6,7 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/25 14:20:00 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/25 15:09:10 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ class IRC
 		std::string 				mdp;
 		socklen_t					peer_addr_size;
 		struct sockaddr_in 			server, peer_addr;
-		struct pollfd 				*poll_fds;
+		std::vector<struct pollfd>	poll_fds;
 		std::map<int, client>		users;
 		std::map<std::string, bool (IRC::*)(client&, std::string)>	cmd;
 		std::vector<Channel> 		channels;
@@ -145,8 +145,8 @@ class IRC
 
 	public :
 		std::vector<Channel>		*getChannel(void);
-		int							calloc_pollfd(int size);
-		int 						add_poll_fds(int fd);
+		// int							calloc_pollfd(int size);
+		// int 						add_poll_fds(int fd);
 		void 						launch_serv(void);
 		void 						manage_input(int fd);
 		void						initCommand(void);
