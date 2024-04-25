@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 16:41:06 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/25 10:50:12 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ IRC::Channel::Channel(std::string name, client &creator)
 	this->topic.clear();
 	this->modes.clear();
 	this->limitClients = 10;
-	
 }
 
 IRC::Channel::~Channel()
@@ -55,7 +54,7 @@ std::vector<int>			IRC::Channel::getOperators(void)
 	return (this->operators);
 }
 
-std::vector<int>	IRC::Channel::getClients(void)
+std::vector<int>			IRC::Channel::getClients(void)
 {
 	return (this->clients);
 }
@@ -80,18 +79,18 @@ int							IRC::Channel::getLimitClients(void)
 	return (this->limitClients);
 }
 
-void							IRC::Channel::setLimitClients(int limit)
+void						IRC::Channel::setLimitClients(int limit)
 {
 	this->limitClients = limit;
 
 }
 
-void	IRC::Channel::setClients(client& client)
+void						IRC::Channel::setClients(client& client)
 {
 	this->clients.push_back(client.GetSock());
 }
 
-bool	IRC::Channel::isOperator(client &client)
+bool						IRC::Channel::isOperator(client &client)
 {
 	for (std::vector<int>::iterator it = this->operators.begin(); it != this->operators.end(); ++it)
 	{
@@ -100,7 +99,7 @@ bool	IRC::Channel::isOperator(client &client)
 	}
 	return (false);
 }
-bool	IRC::Channel::isClient(int sock)
+bool						IRC::Channel::isClient(int sock)
 {
 	for (std::vector<int>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
 	{
@@ -110,7 +109,7 @@ bool	IRC::Channel::isClient(int sock)
 	return (false);
 }
 
-bool	IRC::Channel::remove_client(int sock)
+bool						IRC::Channel::remove_client(int sock)
 {
 	if (this->isClient(sock) == 1)
 	{
@@ -126,7 +125,7 @@ bool	IRC::Channel::remove_client(int sock)
 	return (false);
 }
 
-void	IRC::Channel::private_msg_chan(std::string msg)
+void					IRC::Channel::private_msg_chan(std::string msg)
 {
 	for (std::vector<int>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
 	{

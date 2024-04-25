@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 16:37:18 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/25 15:03:02 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,7 @@ void IRC::manage_input(int x)
 				input.erase(0, space + 1);
 				if (this->cmd.find(tmp) != this->cmd.end())
 					(this->*cmd[tmp])(this->users.find(fd)->second, input);
+			
 			}
 		}
 	}
@@ -164,8 +165,17 @@ void IRC::manage_input(int x)
 
 void IRC::sendRPL(std::string rpl, int fd)
 {
+	int bytes = 0;
 	std::cout << "Response sent to " << fd << ": " << rpl << std::endl;
 	send(fd, rpl.c_str(), rpl.size(), 0);
+	if (bytes < 0) 
+		std::cout << "Error sending data to client." << std::endl;
+	
+}
+
+void					IRC::setChannels(Channel newChannel)
+{
+	channels.push_back(newChannel);
 }
 
 void IRC::initCommand(void)

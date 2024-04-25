@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:14:55 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 17:55:54 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/25 15:11:30 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,14 @@ bool						IRC::join(client &client, std::string cmd)
 	std::string 	chanNam("");
 	std::string		rplList;
 	
-
-	
-	std::cout << BLUE << "in IRC::join()" << END_C << std::endl;
-	std::cout << BLUE << client.GetUser() << cmd << END_C <<  std::endl;
 	if (cmd.empty())
 		return ((void)sendRPL(ERR_NOTENOUGHPARAM(client.GetUser()), client.GetSock()), false);
 
 	// Extract channel name and key
 	if(cmd.find(' ') == std::string::npos)
-		chanNam = cmd.substr(cmd.find('#') + 1, cmd.find(' ') - cmd.find('#') - 1);
+		chanNam = cmd.substr(cmd.find('#'), cmd.find(' ') - cmd.find('#') - 1);
 	else
-		chanNam = cmd.substr(cmd.find('#') + 1, cmd.find('\r') - cmd.find('#') - 1);
+		chanNam = cmd.substr(cmd.find('#'), cmd.find('\r') - cmd.find('#') - 1);
 	
 	// Does channel exists ? 
 	for (size_t i = 0; i < this->channels.size(); i++)
@@ -45,6 +41,7 @@ bool						IRC::join(client &client, std::string cmd)
 	// YES - ADD client to channel 
 	if (chanFound != NULL)
 	{
+		std::cout << BLUE << "CHANNEL EXISTS" << END_C << std::endl;
 		// Checks modes (i, k, l)
 			// Invitation only
 		if (chanFound->getModes().find('i') != std::string::npos)
@@ -54,7 +51,7 @@ bool						IRC::join(client &client, std::string cmd)
 			if (std::find(chanFound->getInvitations().begin(), chanFound->getInvitations().end(), client.GetUser()) == chanFound->getInvitations().end()) // NO
 				return ((void)sendRPL(ERR_INVITEONLYCHAN(client.GetUser(), chanNam), client.GetSock()), false);
 		}// Key 
-		else if (chanFound->getModes().find('k') != std::string::npos)
+		if (chanFound->getModes().find('k') != std::string::npos)
 		{
 			if (cmd.find(" ") == std::string::npos)
 				return ((void)sendRPL(ERR_BADCHANNELKEY(client.GetUser(), chanNam), client.GetSock()), false);
@@ -62,31 +59,41 @@ bool						IRC::join(client &client, std::string cmd)
 			if (key != chanFound->getModes())
 				return ((void)sendRPL(ERR_BADCHANNELKEY(client.GetUser(), chanNam), client.GetSock()), false);
 		}// Limit
-		else if (static_cast<int>(chanFound->getClients().size() + 1) > chanFound->getLimitClients())
+		if (static_cast<int>(chanFound->getClients().size() + 1) > chanFound->getLimitClients())
 			return ((void)sendRPL(ERR_CHANNELISFULL(client.GetUser(), chanNam), client.GetSock()), false);
-		else
+		
+		chanFound->setClients(client);
+		for (size_t i = 0; i < chanFound->getClients().size(); i++)
 		{
-			chanFound->setClients(client);
-			for (size_t i = 0; i < chanFound->getClients().size(); i++)
-			{
-				if (std::find(chanFound->getOperators().begin(), chanFound->getOperators().end(), chanFound->getClients()[i]) != chanFound->getOperators().end())
-					rplList += "@" + users[chanFound->getClients()[i]].GetUser();
-				else
-					rplList += users[chanFound->getClients()[i]].GetUser();
-			}
-			sendRPL(RPL_NAMREPLY(client.GetUser(), chanNam, rplList), client.GetSock());
-			sendRPL(RPL_TOPIC(client.GetUser(), chanNam, chanFound->getTopic()), client.GetSock());
-			sendRPL(RPL_ENDOFNAMES(client.GetUser(), chanNam), client.GetSock());
-			return (true);
+			if (std::find(chanFound->getOperators().begin(), chanFound->getOperators().end(), chanFound->getClients()[i]) != chanFound->getOperators().end())
+				rplList += "@" + users[chanFound->getClients()[i]].GetNick();
+			else
+				rplList += users[chanFound->getClients()[i]].GetNick();
 		}
+		std::cout << YELLOW << rplList << END_C << std::endl;
+		sendRPL(RPL_JOIN(client.GetNick(), chanNam), client.GetSock());
+		sendRPL(RPL_NAMREPLY(client.GetNick(), chanNam, rplList), client.GetSock());
+		sendRPL(RPL_TOPIC(client.GetNick(), chanNam, ""), client.GetSock());
+		sendRPL(RPL_ENDOFNAMES(client.GetNick(), chanNam), client.GetSock());
+		return (true);
 	}
+
 	// NO - CREATE channel
 	Channel newChannel(chanNam, client);
-	// channel limit reached ??
+	setChannels(newChannel);
+	// need to check limit
 	channels.push_back(newChannel);
-	sendRPL(RPL_NAMREPLY(client.GetUser(), chanNam, rplList), client.GetSock());
-	sendRPL(RPL_TOPIC(client.GetUser(), chanNam, ""), client.GetSock());
-	sendRPL(RPL_ENDOFNAMES(client.GetUser(), chanNam), client.GetSock());
+	for (size_t i = 0; i < newChannel.getClients().size(); i++)
+	{
+		if (std::find(newChannel.getOperators().begin(), newChannel.getOperators().end(), newChannel.getClients()[i]) != newChannel.getOperators().end())
+			rplList += "@" + users[newChannel.getClients()[i]].GetNick() + " ";
+		else
+			rplList += users[newChannel.getClients()[i]].GetNick() + " ";
+	}
+	std::cout << BLUE << rplList << END_C << std::endl;
+	sendRPL(RPL_JOIN(client.GetNick(), chanNam), client.GetSock());
+	sendRPL(RPL_NAMREPLY(client.GetNick(), chanNam, rplList), client.GetSock());
+	sendRPL(RPL_TOPIC(client.GetNick(), chanNam, ""), client.GetSock());
+	sendRPL(RPL_ENDOFNAMES(client.GetNick(), chanNam), client.GetSock());
 	return (true);
-	
 }
