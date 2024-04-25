@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/25 15:29:24 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/25 18:01:10 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void						IRC::Channel::setTopic(std::string& topic)
 	this->topic = topic;
 }
 
-void						IRC::Channel::setOperators(int& operateur)
+void						IRC::Channel::setOperators(int operateur)
 {
 	this->operators.push_back(operateur);
 }
@@ -140,14 +140,6 @@ bool						IRC::Channel::remove_client(int sock)
 		}
 	}
 	return (false);
-}
-
-void					IRC::Channel::private_msg_chan(std::string msg)
-{
-	for (std::vector<int>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
-	{
-		send(*it, msg.c_str(), msg.size(), 0);
-	}
 }
 
 bool	IRC::Channel::add_client(client &new_client)

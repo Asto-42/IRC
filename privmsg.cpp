@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:13:49 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 14:36:28 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/25 18:17:36 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,27 @@ bool	IRC::privmsg(client &clients, std::string cmd)
 	std::string msg;
 	std::string::size_type x;
 	std::string::size_type doubl_point;
-	std::string::size_type end;
+	// std::string::size_type end;
 
-	(void)clients;
+	std::cout << RED <<" in privmsg" << END_C << std::endl;
+	std::cout << BOLD << "Check " << cmd << END_C << std::endl;
+	//(void)clients;
 	if ((x = cmd.find("#", 0)) == std::string::npos)
 		return (0);
 	if ((doubl_point = cmd.find(":", 0)) == std::string::npos)
 		return (0);
-	if ((end = cmd.find("\r\n", 0)) == std::string::npos)
-		return (0);
-	chan = cmd.substr(x + 1, doubl_point);
-	msg = cmd.substr(doubl_point + 1, end);
+	// if ((end = cmd.find("\r\n", 0)) == std::string::npos)
+	// 	return (0);
+	std::cout << BOLD << "Check0" << END_C << std::endl;
+	chan = cmd.substr(x , doubl_point - 1);
+	msg = cmd.substr(doubl_point + 1, cmd.size());
 	//chan -> vector channel == chan
-	for (std::vector<Channel>::iterator it = this->channels.begin(); it != this->channels.end(); ++it)
-	{
-		if (it->getName() == chan)
-		{
-			it->private_msg_chan(msg);
-		}
-	}
+	// if (it->getName() == chan)
+	// 	{
+			private_msg_chan(msg, clients.GetNick(), chan);
+	std::cout << BOLD << "Check1" << END_C << std::endl;
+
+	//	}
+
 	return (1);
 }

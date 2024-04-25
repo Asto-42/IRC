@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/25 15:29:01 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/25 18:01:22 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,13 +111,12 @@ class IRC
 			void 					delModes(char c);
 			void					setName(std::string& name);
 			void					setTopic(std::string& topic);
-			void					setOperators(int& operateur);
+			void					setOperators(int operateur);
 			void					setClients(client& client);
 			bool					isClient(int sock);
 			bool					isOperator(client &client);
 			bool					add_client(client &new_client);
 			bool					remove_client(int sock);
-			void					private_msg_chan(std::string msg);
 			Channel(std::string name, client &creator);
 			~Channel();
 	};
@@ -142,6 +141,7 @@ class IRC
 		std::vector<Channel>		*getChannel(void);
 		// int							calloc_pollfd(int size);
 		// int 						add_poll_fds(int fd);
+		void						private_msg_chan(std::string msg, std::string sender, std::string channelName);
 		void 						launch_serv(void);
 		void 						manage_input(int fd);
 		void						initCommand(void);
@@ -166,8 +166,12 @@ class IRC
 		// void 					Invite(void);
 		// void 					Topic(void);
 		// void 					Mode(void);
+		void						private_msg_chan(std::string msg, std::string sender);
 		void						setChannels(Channel channels);
 		bool						ChannelExist(std::string name);
+		void						add_options(char c, int sign, std::string channelName);
+		int							getSockFromName(std::string name);
+		std::string					getNameFromSock(int fd);
 									IRC(int port, std::string mdp);
 									~IRC();
 

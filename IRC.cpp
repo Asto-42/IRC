@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/25 15:29:05 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/25 18:15:11 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,35 @@ IRC::IRC(int port, std::string mdp)
 	initCommand();
 };
 
+// void					IRC::private_msg_chan(std::string msg, std::string sender)
+// {
+// 	for (std::vector<int>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
+// 	{
+		
+// 		std::string tmp = ":" + sender + "!" + this->getName + "@" + sender + " PRIVMSG " + this->name + " :" + msg + "\r\n";
+// 		std::cout << tmp << std::endl;
+// 		send(*it, tmp.c_str(), tmp.size(), 0);
+// 	}
+// }
+void					IRC::private_msg_chan(std::string msg, std::string sender, std::string channel)
+{
+	std::cout << BLUE << "private_msg_chan" << END_C << std::endl;
+	for ( std::vector<Channel>::iterator it = this->channels.begin(); it != this->channels.end(); ++it)
+	{
+		std::cout << BLUE << channel << " || " << it->getName() << END_C << std::endl;
+		if (it->getName() == channel)
+		{
+			
+			for (size_t i = 0; i < it->getClients().size(); i++)
+			{
+				std::string nick = getNameFromSock(it->getClients()[i]);
+				std::string tmp = ":" + sender + "!" + nick + "@" + "localhost" + " PRIVMSG " + channel + " :" + msg + "\r\n";
+				std::cout << YELLOW << tmp << END_C << std::endl;
+				send(it->getClients()[i], tmp.c_str(), tmp.size(), 0);
+			}
+		}
+	}
+}
 // int IRC::calloc_pollfd(int size)
 // {
 // 	if (!this->poll_fds)

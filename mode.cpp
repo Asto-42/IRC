@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:39 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 18:07:44 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/25 17:45:43 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,20 @@ std::vector<std::string> split(const std::string& s, const std::string& delimite
     }
     return tokens;
 }
-bool IRC::mode(client &client, std::string cmd){
+
+void IRC::add_options(char c, int sign, std:: string channelName){
+	for (std::vector<Channel>::iterator ite = channels.begin(); ite != channels.end(); ite++)
+	{
+		if(ite->getName() == channelName){
+			if(sign == 1)
+				ite->setModes(c);
+			if(sign == 0)
+				ite->delModes(c);
+		}
+	}
+}
+
+bool IRC::mode(client &_client, std::string cmd){
 
 	std::cout << "mode param "<<cmd << std::endl;
 	std::vector<std::string> argument = split(cmd ," \r\n");
@@ -51,13 +64,13 @@ bool IRC::mode(client &client, std::string cmd){
 
 	if (cmd.size() == 0){
 		std::string tmp = "USER";
-		sendRPL(ERR_NOTENOUGHPARAM(err), client.GetSock());
+		sendRPL(ERR_NOTENOUGHPARAM(err), _client.GetSock());
 		return (0);
 	}
-	if(client.GetSetup() != 2 && client.GetSetup() != 4)
-		sendRPL(ERR_NOTREGISTERED(err), client.GetSock());
+	if(_client.GetSetup() != 2 && _client.GetSetup() != 4)
+		sendRPL(ERR_NOTREGISTERED(err), _client.GetSock());
 	if(argument.size() < 2 || cmd == "")
-		sendRPL(ERR_NOTENOUGHPARAM(err), client.GetSock());
+		sendRPL(ERR_NOTENOUGHPARAM(err), _client.GetSock());
 	// if(optCount == 0)
 	// 	return (0);
 	channelName = *it;
@@ -86,6 +99,8 @@ bool IRC::mode(client &client, std::string cmd){
 	if(optCount == 0)
 		return(0);
 	std::cout << "channelname " <<channelName << std::endl;
+	std::vector<std::string>::iterator pit = param.begin();
+	pit++;
 	for(std::vector<char>::iterator op = opt_vector.begin(); op < opt_vector.end() ; op++)
 	{
 		std::cout << " OP = "<<*op << std::endl;
@@ -100,16 +115,54 @@ bool IRC::mode(client &client, std::string cmd){
 				sign = 0;
 				break;
 			case 'i':
-					for(std::vector<Channel>::iterator ite = channels.begin(); ite != channels.end(); ite++)
-						if(ite->getName() == channelName){
-							if(sign == 1)
-								ite->setModes('i');
-							if(sign == 0)
-								ite->delModes('i');
+				add_options('i',sign,channelName);
+				return(true);
+			case 'k':
+				add_options('k',sign,channelName);
+				return(true);
+			case 'o':
+				for (std::vector<Channel>::iterator ite = channels.begin(); ite != channels.end(); ite++)
+				{
+					if(ite->getName() == channelName){
+						if(sign == 1){
+							for(std::map<int, client>::iterator it = users.begin(); it != users.end(); it++)
+							{
+								// std::cout << " pit = " << *pit << " fefefe" <<it->second.GetNick()  << std::endl;
+								if(it->second.GetNick() == *pit)
+								{
+									// std::cout << " pit = " << *pit << std::endl;
+									ite->setOperators(it->first);
+									
+								}
+							}
+							
 						}
-					return(true);
-				
+						if(sign == 0)
+							ite->delModes('o');
+				}
+	}
+				return(true);
 		}
 	}
 	return(true);
+}
+
+int	IRC::getSockFromName(std::string name)
+{
+	for(std::map<int, client>::iterator it = users.begin(); it != users.end(); it++)
+	{
+		if(it->second.GetNick() == name)
+			return(it->first);
+	}
+	return(-1);
+}
+
+std::string	IRC::getNameFromSock(int fd)
+{
+	for(std::map<int, client>::iterator it = users.begin(); it != users.end(); it++)
+	{
+		if(it->first == fd)
+			return(it->second.GetNick());
+	}
+	return("");
 }
