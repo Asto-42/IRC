@@ -6,7 +6,7 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/25 15:09:10 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/25 16:18:33 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ class IRC
 			void 					delModes(char c);
 			void					setName(std::string& name);
 			void					setTopic(std::string& topic);
-			void					setOperators(int& operateur);
+			void					setOperators(int operateur);
 			void					setClients(client& client);
 			bool					isClient(int sock);
 			bool					isOperator(client &client);
@@ -172,6 +172,8 @@ class IRC
 		// void 					Topic(void);
 		// void 					Mode(void);
 		bool						ChannelExist(std::string name);
+		void						add_options(char c, int sign, std::string channelName);
+		int							getSockFromName(std::string name);
 									IRC(int port, std::string mdp);
 									~IRC();
 

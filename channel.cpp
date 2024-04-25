@@ -6,7 +6,7 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/25 14:19:55 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/25 16:18:31 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void						IRC::Channel::setTopic(std::string& topic)
 	this->topic = topic;
 }
 
-void						IRC::Channel::setOperators(int& operateur)
+void						IRC::Channel::setOperators(int operateur)
 {
 	this->operators.push_back(operateur);
 }
