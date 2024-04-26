@@ -1,0 +1,22 @@
+<< CAP LS
+<< PASS mdp
+<< NICK lu
+<< USER josh josh localhost :Lucas BOUGUET
+>> :localhost 001 lu :Welcome to SUUUUUServer lu!~josh josh localhost :Lucas BOUGUET@127.0.0.1
+<< MODE lu +i
+<< PING localhost
+>> :localhost PONG localhost :josh josh localhost :Lucas BOUGUET
+--> lag pong
+<< JOIN #chan1
+>> --> lag pong:lu!lu@localhost JOIN #chan1
+>> :localhost 353 lu = #chan1 :@lu 
+>> : 332 lu #chan1 :
+>> :localhost 366 lu #chan1 :End of /NAMES list
+<< MODE #chan1
+>> : 461 localhost :Not enough parameters given
+<< PART #chan1
+<< PING localhost
+>> :localhost PONG localhost :josh josh localhost :Lucas BOUGUET
+--> lag pong
+<< PING localhost
+>> --> lag pong:localhost PONG localhost :josh josh localhost :Lucas BOUGUET

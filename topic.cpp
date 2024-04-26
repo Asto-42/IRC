@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:23 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 14:48:30 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/26 18:02:59 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ bool						IRC::topic(client &client, std::string cmd)
 	chanNam = cmd.substr(posHash,  posColon - posHash);
 	std::cout <<"Found channel name: " << MAGENTA << chanNam << END_C << std::endl;
 
+	if (channels.size() == 0)
+		return ((void)sendRPL(ERR_CHANNELNOTFOUND(cmd, chanNam), client.GetSock()), false);
 	// Checking existence of channel
 	size_t					i = 0;
 	for (size_t i = 0; i < this->channels.size(); i++)
@@ -39,7 +41,6 @@ bool						IRC::topic(client &client, std::string cmd)
 	if (posColon == std::string::npos)
 	{
 		// No topic set in channel
-		std::cout << BOLD << YELLOW << "No topic set in channel" <<  END_C <<std::endl;
 		if (this->channels[i].getName().empty())
 			return ((void)sendRPL(ERR_NOTOPIC(cmd, chanNam), client.GetSock()), false);
 		else
@@ -66,8 +67,17 @@ bool						IRC::topic(client &client, std::string cmd)
 	}
 	else
 	{	
+		std::cout << "AVAILABLE SOCKET IN CHANNEL: " << std::endl;
+		for (size_t i = 0; i < this->channels[i].getClients().size(); i++)
+			std::cout << GREEN << this->channels[i].getClients()[i] << END_C << std::endl;
 		this->channels[i].setTopic(topicNam);
-		sendRPL(RPL_TOPIC(client.GetNick(), this->channels[i].getName(), this->channels[i].getTopic()), client.GetSock());
+		for (size_t j = 0; j <= this->channels[i].getClients().size(); j++)
+		{
+			sendRPL(RPL_TOPIC(getNameFromSock(this->channels[i].getClients()[j]), this->channels[i].getName(), this->channels[i].getTopic()), this->channels[i].getClients()[j]);
+		//	sendRPL(RPL_TOPIC(client.GetNick(), this->channels[i].getName(), this->channels[i].getTopic()), client.GetSock());
+			std::cout << BOLD << GREEN << "Topic set" << END_C << std::endl;
+		}
+
 		return (true);
 	}
 	std::cout << BLUE << "CHECK 3"  << std::endl;

@@ -6,11 +6,23 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:14:55 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 12:43:54 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/26 17:49:20 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
+
+
+bool	isOperator(int& socket, std::vector<int> opertors)
+{
+	for (size_t i = 0; i < opertors.size(); i++)
+	{
+		if (opertors[i] == socket)
+			return (true);
+	}
+	return (false);
+}
+
 
 bool						IRC::join(client &client, std::string cmd)
 {
@@ -33,7 +45,6 @@ bool						IRC::join(client &client, std::string cmd)
 		if (this->channels[i].getName() == chanNam)	
 			chanFound = &this->channels[i];
 	}
-	
 	//Is the client already part of the channel ?
 	// if (std::find(chanFound->getClientSockets().begin(), chanFound->getClientSockets().end(), client.GetSock()) != chanFound->getClientSockets().end())
 	// 	return (1);
@@ -63,19 +74,21 @@ bool						IRC::join(client &client, std::string cmd)
 			return ((void)sendRPL(ERR_CHANNELISFULL(client.GetUser(), chanNam), client.GetSock()), false);
 		
 		chanFound->setClients(client);
+		// ADDING OPEATORS IN LIST
 		for (size_t i = 0; i < chanFound->getClients().size(); i++)
 		{
-			if (std::find(chanFound->getOperators().begin(), chanFound->getOperators().end(), chanFound->getClients()[i]) != chanFound->getOperators().end())
-				rplList += "@" + users[chanFound->getClients()[i]].GetNick();
+			if (isOperator(chanFound->getClients()[i], chanFound->getOperators()) == true)
+				rplList += "@" + users[chanFound->getClients()[i]].GetNick() + " ";
 			else
-				rplList += users[chanFound->getClients()[i]].GetNick();
+				rplList += users[chanFound->getClients()[i]].GetNick() + " ";
 		}
+		
 		//std::vector<int> clientsVec2 = chanFound->getClients();
 		//std::cout << BLUE << " 2 - JOINING CHANNEL" << END_C << std::endl;
 		//for (std::vector<int>::iterator ite = clientsVec2.begin(); ite != clientsVec2.end(); ite++)
 		//	std::cout << GREEN << *ite << END_C << std::endl;
 		
-		std::cout << YELLOW << rplList << END_C << std::endl;
+		//std::cout << YELLOW << rplList << END_C << std::endl;
 		sendRPL(RPL_JOIN(client.GetNick(), chanNam), client.GetSock());
 		sendRPL(RPL_NAMREPLY(client.GetNick(), chanNam, rplList), client.GetSock());
 		sendRPL(RPL_TOPIC(client.GetNick(), chanNam, ""), client.GetSock());
@@ -94,12 +107,12 @@ bool						IRC::join(client &client, std::string cmd)
 	//	std::cout << GREEN << *ite << END_C << std::endl;
 	for (size_t i = 0; i < newChannel.getClients().size(); i++)
 	{
-		if (std::find(newChannel.getOperators().begin(), newChannel.getOperators().end(), newChannel.getClients()[i]) != newChannel.getOperators().end())
+		if (isOperator(newChannel.getClients()[i], newChannel.getOperators()) == true)
 			rplList += "@" + users[newChannel.getClients()[i]].GetNick() + " ";
 		else
 			rplList += users[newChannel.getClients()[i]].GetNick() + " ";
 	}
-	std::cout << BLUE << rplList << END_C << std::endl;
+	//std::cout << BLUE << rplList << END_C << std::endl;
 	sendRPL(RPL_JOIN(client.GetNick(), chanNam), client.GetSock());
 	sendRPL(RPL_NAMREPLY(client.GetNick(), chanNam, rplList), client.GetSock());
 	sendRPL(RPL_TOPIC(client.GetNick(), chanNam, ""), client.GetSock());

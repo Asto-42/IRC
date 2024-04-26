@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 12:38:45 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/26 16:55:02 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ class IRC
 			std::string				getTopic(void);
 			std::vector<int>		getOperators(void);
 			std::vector<int>		getClients(void);
+			bool					isOperator(int socket, std::vector<int> operators);
 			int						getLimitClients(void);
 			std::vector<std::string> getInvitations(void);
 			std::string 			getModes(void);
@@ -157,7 +158,7 @@ class IRC
 		bool						mode(client &client, std::string cmd);
 		bool						ping(client &client, std::string cmd); // fait
 		bool						join(client &client, std::string cmd); // LUCAS
-		// bool						part(client &client, std::string cmd); // LUCAS
+		bool						part(client &client, std::string cmd); // LUCAS
 		// bool						whois(client &client, std::string cmd); // Pas obligatoire, on verra plus tard
 		bool						kick(client &client, std::string cmd); // fait MAIS a verifier + RPL a ajouter
 		// bool						quit(client &client, std::string cmd); // LUCAS
