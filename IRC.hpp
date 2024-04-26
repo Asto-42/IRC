@@ -6,13 +6,14 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 16:26:21 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/26 18:37:24 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef IRC_HPP
 # define IRC_HPP
 
+#include "colors.hpp"
 #include <iostream>
 #include <cstdio>
 #include <iomanip>
@@ -87,7 +88,6 @@ class IRC
 	class Channel
 	{
 		private:
-			bool					isProtected;
 			std::string				topic;
 			std::string				name;
 			std::string				modes;
@@ -96,7 +96,6 @@ class IRC
 			std::vector<int>		white_list;
 			std::vector<int>		clients;
 			int						limitClients;
-			bool					privacy;
 			Channel(void);
 
 		public:
@@ -105,20 +104,20 @@ class IRC
 			std::vector<int>		getOperators(void);
 			std::vector<int>		getClients(void);
 			int						getLimitClients(void);
-			bool					getIsPrivate(void);
 			std::vector<std::string> getInvitations(void);
 			std::string 			getModes(void);
 			void					setLimitClients(int limit);
+			void 					setModes(char c);
+			void 					delModes(char c);
 			void					setName(std::string& name);
 			void					setTopic(std::string& topic);
-			void					setOperators(int& operateur);
-			void					setClientSockets(int Socket);
+			void					setOperators(int operateur);
 			void					setClients(client& client);
 			bool					isClient(int sock);
 			bool					isOperator(client &client);
 			bool					add_client(client &new_client);
 			bool					remove_client(int sock);
-			void					private_msg_chan(std::string msg);
+			void					send_topic_rpl(std::string rpl);
 			Channel(std::string name, client &creator);
 			~Channel();
 	};
@@ -127,7 +126,7 @@ class IRC
 		std::string 				mdp;
 		socklen_t					peer_addr_size;
 		struct sockaddr_in 			server, peer_addr;
-		struct pollfd 				*poll_fds;
+		std::vector<struct pollfd>	poll_fds;
 		std::map<int, client>		users;
 		std::map<std::string, bool (IRC::*)(client&, std::string)>	cmd;
 		std::vector<Channel> 		channels;
@@ -141,34 +140,33 @@ class IRC
 
 	public :
 		std::vector<Channel>		*getChannel(void);
-		int							calloc_pollfd(int size);
-		int 						add_poll_fds(int fd);
+		// int							calloc_pollfd(int size);
+		// int 						add_poll_fds(int fd);
+		void						private_msg_chan(std::string msg, client &sender, std::string channelName);
 		void 						launch_serv(void);
 		void 						manage_input(int fd);
 		void						initCommand(void);
 		void 						sendRPL(std::string rpl, int fd);
 		int							cmd_used_name(std::string &name, int mode);
-		bool						capLs(client &client, std::string cmd);
-		bool						pass(client &client, std::string cmd);
-		bool						nick(client &client, std::string cmd);
-		bool						user(client &client, std::string cmd);
-		bool						privmsg(client &client, std::string cmd);
+		bool						capLs(client &client, std::string cmd);//OK
+		bool						pass(client &client, std::string cmd);//OK
+		bool						nick(client &client, std::string cmd);//OK
+		bool						user(client &client, std::string cmd);//OK
+		bool						privmsg(client &client, std::string cmd); // OK, a re-test
 		// bool						privmsg_user(client &client, std::string cmd);
-		bool						topic(client &client, std::string cmd);
-		bool						mode(client &client, std::string cmd);
-		bool						ping(client &client, std::string cmd); // fait, sans la gestion d'erreur mais normalement pas besoin parce qu'on doit pas faire le ping inter client
-		bool						join(client &client, std::string cmd); // LUCAS
-		// bool						part(client &client, std::string cmd); // LUCAS
-		// bool						whois(client &client, std::string cmd); // Pas obligatoire, on verra plus tard
-		bool						kick(client &client, std::string cmd); // fait MAIS a verifier + RPL a ajouter
+		bool						topic(client &client, std::string cmd); // Pb lie a join ?->initialisation du vector clients
+		bool						mode(client &client, std::string cmd); // Pas fini
+		bool						ping(client &client, std::string cmd); // OK
+		bool						join(client &client, std::string cmd); // Bientot fini
+		bool						part(client &clients, std::string cmd); // Fait dans l'idee mais je m'en sors pas avec le msg pour que irssi reagisse
+		bool						kick(client &client, std::string cmd); // fait MAIS a verifier + RPL a ajouter -> marche pas
 		bool						quit(client &client, std::string cmd); // fait
 		bool						invite(client &clients, std::string cmd); // RPL a ajouter
-		void						exec_mode(std::string channelName, std::string flag, std::string arg);
-		// void 					Kick(void);
-		// void 					Invite(void);
-		// void 					Topic(void);
-		// void 					Mode(void);
+		void						setChannels(Channel channels);
 		bool						ChannelExist(std::string name);
+		void						add_options(char c, int sign, std::string channelName);
+		int							getSockFromName(std::string name);
+		std::string					getNameFromSock(int fd);
 									IRC(int port, std::string mdp);
 									~IRC();
 

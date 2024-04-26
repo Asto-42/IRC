@@ -1,0 +1,62 @@
+<< CAP LS
+<< NICK Paul
+<< USER josh josh localhost :Lucas BOUGUET
+>> :irc1.ircgod.com 001 Paul :Welcome to the Internet Relay Network Paul
+<< MODE Paul +i
+>> :irc1.ircgod.com 002 Paul :Your host is irc1.ircgod.com, running version 1.0
+>> :irc1.ircgod.com 003 Paul :This server was created Thu Apr 25 17:27:31 2024
+>> :irc1.ircgod.com 004 Paul :irc1.ircgod.com 1.0 aiwroOs OovaimnpsrtklbeI
+>> :irc1.ircgod.com 375 Paul :- irc1.ircgod.com Message of the day - 
+>> :irc1.ircgod.com 372 Paul :- -------------------------------------------------------
+>> :irc1.ircgod.com 372 Paul :- Hello, welcome to irc.ircgod.com !
+>> :irc1.ircgod.com 372 Paul :- The first IRC server build by real gods.
+>> :irc1.ircgod.com 372 Paul :- Chat with this IRC and maybe you will become a god too.
+>> :irc1.ircgod.com 372 Paul :-                                          _.oo.
+>> :irc1.ircgod.com 372 Paul :-                  _.u[[/;:,.         .odMMMMMM'
+>> :irc1.ircgod.com 372 Paul :-               .o888UU[[[/;:-.  .o@P^    MMM^
+>> :irc1.ircgod.com 372 Paul :-              oN88888UU[[[/;::-.        dP^
+>> :irc1.ircgod.com 372 Paul :-             dNMMNN888UU[[[/;:--.   .o@P^
+>> :irc1.ircgod.com 372 Paul :-            ,MMMMMMN888UU[[/;::-. o@^
+>> :irc1.ircgod.com 372 Paul :-            NNMMMNN888UU[[[/~.o@P^
+>> :irc1.ircgod.com 372 Paul :-            888888888UU[[[/o@^-..
+>> :irc1.ircgod.com 372 Paul :-           oI8888UU[[[/o@P^:--..
+>> :irc1.ircgod.com 372 Paul :-        .@^  YUU[[[/o@^;::---..
+>> :irc1.ircgod.com 372 Paul :-      oMP     ^/o@P^;:::---..
+>> :irc1.ircgod.com 372 Paul :-   .dMMM    .o@^ ^;::---...
+>> :irc1.ircgod.com 372 Paul :-  dMMMMMMM@^`       `^^^^
+>> :irc1.ircgod.com 372 Paul :- YMMMUP^
+>> :irc1.ircgod.com 372 Paul :-  ^^
+>> :irc1.ircgod.com 376 Paul :End of MOTD command
+>> :irc1.ircgod.com 221 Paul +i
+<< PING irc1.ircgod.com
+>> :irc1.ircgod.com PONG irc1.ircgod.com :irc1.ircgod.com
+--> lag pong
+<< JOIN #chan45
+>> :Paul!josh@127.0.0.1 JOIN #chan45
+>> :irc1.ircgod.com 353 Paul = #chan45 :@Lucas  Paul 
+>> :irc1.ircgod.com 366 Paul #chan45 :End of NAMES list
+<< MODE #chan45
+>> :irc1.ircgod.com 329 Paul #chan45 1714058868
+>> :irc1.ircgod.com 324 Paul #chan45 +n 
+--> chanquery mode
+<< WHO #chan45
+>> :irc1.ircgod.com 352 Paul #chan45 josh 127.0.0.1 irc1.ircgod.com Lucas H@ :0 Lucas BOUGUET
+--> silent event who
+>> :irc1.ircgod.com 352 Paul #chan45 josh 127.0.0.1 irc1.ircgod.com Paul H :0 Lucas BOUGUET
+--> silent event who
+>> :irc1.ircgod.com 315 Paul #chan45 :End of WHO list
+--> chanquery who end
+<< MODE #chan45 b
+>> :irc1.ircgod.com 368 Paul #chan45 :End of list
+--> chanquery ban end
+<< PING irc1.ircgod.com
+>> :irc1.ircgod.com PONG irc1.ircgod.com :irc1.ircgod.com
+--> lag pong
+>> :Lucas!josh@127.0.0.1 PRIVMSG #chan45 :Yo
+>> PING :irc1.ircgod.com
+<< PONG :irc1.ircgod.com
+<< PING irc1.ircgod.com
+>> :irc1.ircgod.com PONG irc1.ircgod.com :irc1.ircgod.com
+--> lag pong
+>> :Lucas!josh@127.0.0.1 PART #chan45 :leaving
+<< QUIT :leaving

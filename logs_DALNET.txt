@@ -1,7 +1,8 @@
-<< JOIN #servtest
-<< MODE #servtest
-<< MODE #servtest b
-<< MODE #servtest +kl +o 20
-<< MODE #servtest +klo key 20 jquil
->> :jquil!~jquil@a2b1-6684-5e1b-c571-ce59.210.62.ip MODE #servtest +klo key 20 jquil
+
+<< JOIN #test
+
+<< JOIN #rgioNF
+>> :jquil!~jquil@5dc0-87b-e09c-1be2-a46.210.62.ip JOIN :#rgioNF
+<< KICK #rgioNF jquil_ :
+>> :jquil!~jquil@5dc0-87b-e09c-1be2-a46.210.62.ip KICK #rgioNF jquil_ :jquil
 << QUIT :leaving
