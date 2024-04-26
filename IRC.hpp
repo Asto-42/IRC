@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/25 18:01:22 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/26 12:38:45 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ class IRC
 		std::vector<Channel>		*getChannel(void);
 		// int							calloc_pollfd(int size);
 		// int 						add_poll_fds(int fd);
-		void						private_msg_chan(std::string msg, std::string sender, std::string channelName);
+		void						private_msg_chan(std::string msg, client &sender, std::string channelName);
 		void 						launch_serv(void);
 		void 						manage_input(int fd);
 		void						initCommand(void);
@@ -164,9 +164,8 @@ class IRC
 		bool						invite(client &clients, std::string cmd); // RPL a ajouter
 		// void 					Kick(void);
 		// void 					Invite(void);
-		// void 					Topic(void);
+		//void 						Topic(void);
 		// void 					Mode(void);
-		void						private_msg_chan(std::string msg, std::string sender);
 		void						setChannels(Channel channels);
 		bool						ChannelExist(std::string name);
 		void						add_options(char c, int sign, std::string channelName);

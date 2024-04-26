@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:14:55 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/25 15:11:30 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/26 12:43:54 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ bool						IRC::join(client &client, std::string cmd)
 	// YES - ADD client to channel 
 	if (chanFound != NULL)
 	{
-		std::cout << BLUE << "CHANNEL EXISTS" << END_C << std::endl;
+		//std::cout << BLUE << "CHANNEL EXISTS" << END_C << std::endl;
 		// Checks modes (i, k, l)
 			// Invitation only
 		if (chanFound->getModes().find('i') != std::string::npos)
@@ -70,6 +70,11 @@ bool						IRC::join(client &client, std::string cmd)
 			else
 				rplList += users[chanFound->getClients()[i]].GetNick();
 		}
+		//std::vector<int> clientsVec2 = chanFound->getClients();
+		//std::cout << BLUE << " 2 - JOINING CHANNEL" << END_C << std::endl;
+		//for (std::vector<int>::iterator ite = clientsVec2.begin(); ite != clientsVec2.end(); ite++)
+		//	std::cout << GREEN << *ite << END_C << std::endl;
+		
 		std::cout << YELLOW << rplList << END_C << std::endl;
 		sendRPL(RPL_JOIN(client.GetNick(), chanNam), client.GetSock());
 		sendRPL(RPL_NAMREPLY(client.GetNick(), chanNam, rplList), client.GetSock());
@@ -83,6 +88,10 @@ bool						IRC::join(client &client, std::string cmd)
 	setChannels(newChannel);
 	// need to check limit
 	channels.push_back(newChannel);
+	//std::cout << BLUE << " 1 - CHANNEL CREATED" << END_C << std::endl;
+	//std::vector<int> clientsVec = newChannel.getClients();
+	//for (std::vector<int>::iterator ite = clientsVec.begin(); ite != clientsVec.end(); ite++)
+	//	std::cout << GREEN << *ite << END_C << std::endl;
 	for (size_t i = 0; i < newChannel.getClients().size(); i++)
 	{
 		if (std::find(newChannel.getOperators().begin(), newChannel.getOperators().end(), newChannel.getClients()[i]) != newChannel.getOperators().end())

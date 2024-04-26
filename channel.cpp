@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/25 18:01:10 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/26 14:11:05 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void						IRC::Channel::setName(std::string& name)
 
 void						IRC::Channel::setTopic(std::string& topic)
 {
+	this->topic.clear();
 	this->topic = topic;
 }
 

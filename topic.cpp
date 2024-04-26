@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:23 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 14:41:05 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/26 14:48:30 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,32 @@
 
 bool						IRC::topic(client &client, std::string cmd)
 {
+	std::cout << BOLD << BLUE << "\tIn topic :" << END_C << std::endl;
 	std::string 			topicNam;
 	std::string 			chanNam;
 	std::string::size_type 	posHash = cmd.find('#');
-	std::string::size_type 	posSpace = cmd.find(posHash, ' ');
-	std::string::size_type 	posColon = cmd.find(posSpace, ':');
+	std::string::size_type 	posColon = cmd.find(':');
 	
-	// Need '#'
-	if (posHash == std::string::npos)
-		return ((void)sendRPL(ERR_NEEDMOREPARAMS(client.GetNick(), cmd), client.GetSock()), false);
 	
-	// Extracting channel name from cmd
-	chanNam = cmd.substr(posHash, posSpace - posHash - 1);
-	
+	chanNam = cmd.substr(posHash,  posColon - posHash);
+	std::cout <<"Found channel name: " << MAGENTA << chanNam << END_C << std::endl;
+
 	// Checking existence of channel
 	size_t					i = 0;
-	while (i < this->channels.size() || this->channels[i].getName() != chanNam)
-		i++;
-	
+	for (size_t i = 0; i < this->channels.size(); i++)
+	{
+		if (chanNam == this->channels[i].getName())
+			break;
+	}
 	// Channel not found
 	if (i == 10)
 		return ((void)sendRPL(ERR_CHANNELNOTFOUND(cmd, chanNam), client.GetSock()), false);
 
-	// No topic specified in client msg
+	//No topic specified in client msg
 	if (posColon == std::string::npos)
 	{
 		// No topic set in channel
+		std::cout << BOLD << YELLOW << "No topic set in channel" <<  END_C <<std::endl;
 		if (this->channels[i].getName().empty())
 			return ((void)sendRPL(ERR_NOTOPIC(cmd, chanNam), client.GetSock()), false);
 		else
@@ -67,7 +67,9 @@ bool						IRC::topic(client &client, std::string cmd)
 	else
 	{	
 		this->channels[i].setTopic(topicNam);
+		sendRPL(RPL_TOPIC(client.GetNick(), this->channels[i].getName(), this->channels[i].getTopic()), client.GetSock());
 		return (true);
 	}
+	std::cout << BLUE << "CHECK 3"  << std::endl;
 	return (false);
 }	
