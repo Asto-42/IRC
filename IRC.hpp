@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 12:38:45 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/26 15:23:16 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,14 +158,9 @@ class IRC
 		bool						ping(client &client, std::string cmd); // fait
 		bool						join(client &client, std::string cmd); // LUCAS
 		// bool						part(client &client, std::string cmd); // LUCAS
-		// bool						whois(client &client, std::string cmd); // Pas obligatoire, on verra plus tard
 		bool						kick(client &client, std::string cmd); // fait MAIS a verifier + RPL a ajouter
 		// bool						quit(client &client, std::string cmd); // LUCAS
 		bool						invite(client &clients, std::string cmd); // RPL a ajouter
-		// void 					Kick(void);
-		// void 					Invite(void);
-		//void 						Topic(void);
-		// void 					Mode(void);
 		void						setChannels(Channel channels);
 		bool						ChannelExist(std::string name);
 		void						add_options(char c, int sign, std::string channelName);
