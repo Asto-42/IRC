@@ -3,34 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: russelenc <russelenc@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:13:49 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 14:47:31 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/27 17:02:26 by russelenc        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
 
 
+IRC::client 						IRC::getclientfromsock(int sock){
+	for(std::map<int, client>::iterator ite = this->users.begin(); ite != users.end() ; ite++)
+	{
+		if(ite->first == sock)
+			return ite->second;
+	}
+	return 0;
+}
 
 void					IRC::private_msg_chan(std::string msg, client &sender, std::string channel)
 {
 	std::cout << BOLD << BLUE << "private_msg_chan" << END_C << std::endl;
 	Channel *chanFound = NULL;
-	
+	// int isad = -1;
+	// std::vector<int>		op;
 	// Search for the corresponding channel object
 	for (std::vector<Channel>::iterator it = this->channels.begin(); it != this->channels.end(); ++it)
 	{
 		if (it->getName() == channel)
 			chanFound = &*it;
 	}
+	// op = chanFound->getOperators();
 	for (size_t i = 0; i < chanFound->getClients().size(); i++)
 	{
 		// Only send message to destination clients
 		if (chanFound->getClients()[i] != sender.GetSock())
 		{
-			std::string nick = getNameFromSock(chanFound->getClients()[i]);
+			std::string nick = getNameFromSock(chanFound->getClients()[i]);;
+			// if(chanFound->isOperator(chanFound->getClients()[i]))
+			// 	nick = "@" + nick;
+			// std::cout << "NICK " << nick << std::endl;
 			std::string tmp = ":" + sender.GetNick() + "!" + nick + "@" + "localhost" + " PRIVMSG " + channel + " :" + msg;
 			sendRPL(RPL_PRIVMSG(sender.GetNick(), nick, channel, msg), chanFound->getClients()[i]);
 		}
@@ -60,7 +73,7 @@ bool	IRC::privmsg(client &clients, std::string cmd)
 	//chan -> vector channel == chan
 	// if (it->getName() == chan)
 	// 	{
-		private_msg_chan(msg, clients, chan);
+	private_msg_chan(msg, clients, chan);
 	std::cout << BOLD << "Check1" << END_C << std::endl;
 
 	//	}

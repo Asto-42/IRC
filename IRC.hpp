@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: russelenc <russelenc@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 15:23:16 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/29 19:11:07 by russelenc        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@
 #include <unistd.h>  // close
 #include <cerrno>
 #include <poll.h>
-#include <sys/epoll.h>
+// #include <sys/epoll.h>
 #include "rpl.hpp"
 
 class Channel;
@@ -95,6 +95,7 @@ class IRC
 			std::vector<int>		operators;
 			std::vector<int>		white_list;
 			std::vector<int>		clients;
+			std::string				channelPassword;
 			int						limitClients;
 			Channel(void);
 
@@ -108,15 +109,19 @@ class IRC
 			std::string 			getModes(void);
 			void					setLimitClients(int limit);
 			void 					setModes(char c);
+			void 					setPassword(std::string password);
 			void 					delModes(char c);
 			void					setName(std::string& name);
 			void					setTopic(std::string& topic);
 			void					setOperators(int operateur);
+			void					delOperators(int operateur);
 			void					setClients(client& client);
 			bool					isClient(int sock);
 			bool					isOperator(client &client);
+			bool					isOperator(int sock);
 			bool					add_client(client &new_client);
 			bool					remove_client(int sock);
+			
 			Channel(std::string name, client &creator);
 			~Channel();
 	};
@@ -163,9 +168,13 @@ class IRC
 		bool						invite(client &clients, std::string cmd); // RPL a ajouter
 		void						setChannels(Channel channels);
 		bool						ChannelExist(std::string name);
+		IRC::client 				getclientfromsock(int sock);
 		void						add_options(char c, int sign, std::string channelName);
 		int							getSockFromName(std::string name);
 		std::string					getNameFromSock(int fd);
+		//	MODE
+		bool						mode_opt(std::string channelName, int sign , std::string pit , client &_client, char op);
+		void 						handle_mode(client &_client, std::vector<char> opt_vector, std::string channelName, std::vector<std::string> param);
 									IRC(int port, std::string mdp);
 									~IRC();
 

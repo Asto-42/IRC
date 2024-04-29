@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: russelenc <russelenc@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 14:11:05 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/29 19:11:05 by russelenc        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ IRC::Channel::Channel(std::string name, client &creator)
 	this->topic.clear();
 	this->modes.clear();
 	this->limitClients = 10;
+	this->channelPassword = "";
 }
 
 IRC::Channel::~Channel()
@@ -72,7 +73,19 @@ void						IRC::Channel::setTopic(std::string& topic)
 
 void						IRC::Channel::setOperators(int operateur)
 {
+	std::cout << GREEN << "New operator added" << END_C << std::endl;
 	this->operators.push_back(operateur);
+}
+
+void						IRC::Channel::delOperators(int operateur)
+{
+	std::cout << GREEN << "operator deleted" << END_C << std::endl;
+	for (std::vector<int>::iterator it = this->operators.begin(); it != this->operators.end(); ++it) {
+    	if (*it == operateur) {
+    	    this->operators.erase(it);
+    	    break;
+    	}
+    }
 }
 
 int							IRC::Channel::getLimitClients(void)
@@ -91,6 +104,12 @@ void							IRC::Channel::setModes(char c)
 	if(modes.find(c) == std::string::npos)
 		modes += c;
 	std::cout << "MODES STRING = " << modes << std::endl;
+	return ;
+}
+
+void							IRC::Channel::setPassword(std::string pass)
+{
+	this->channelPassword = pass;
 	return ;
 }
 
@@ -117,6 +136,17 @@ bool						IRC::Channel::isOperator(client &client)
 	}
 	return (false);
 }
+
+bool						IRC::Channel::isOperator(int sock)
+{
+	for (std::vector<int>::iterator it = this->operators.begin(); it != this->operators.end(); ++it)
+	{
+		if (*it == sock)
+			return (true);
+	}
+	return (false);
+}
+
 bool						IRC::Channel::isClient(int sock)
 {
 	for (std::vector<int>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
