@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 15:23:16 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/26 18:37:24 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,13 @@ class IRC
 	class client
 	{
 		private :
-			std::string 	pass;
-			std::string 	nick;
-			std::string 	user;
-			std::string		buffer;
-			int				setup;
-			int				sock;
-			std::string		current_channel;
+			std::string					pass;
+			std::string					nick;
+			std::string					user;
+			std::string					buffer;
+			int							setup;
+			int							sock;
+			std::vector<std::string>	current_channel;
 
 		public :
 
@@ -118,6 +118,7 @@ class IRC
 			bool					isOperator(client &client);
 			bool					add_client(client &new_client);
 			bool					remove_client(int sock);
+			void					send_topic_rpl(std::string rpl);
 			Channel(std::string name, client &creator);
 			~Channel();
 	};
@@ -148,19 +149,19 @@ class IRC
 		void						initCommand(void);
 		void 						sendRPL(std::string rpl, int fd);
 		int							cmd_used_name(std::string &name, int mode);
-		bool						capLs(client &client, std::string cmd);
-		bool						pass(client &client, std::string cmd);
-		bool						nick(client &client, std::string cmd);
-		bool						user(client &client, std::string cmd);
-		bool						privmsg(client &client, std::string cmd);
+		bool						capLs(client &client, std::string cmd);//OK
+		bool						pass(client &client, std::string cmd);//OK
+		bool						nick(client &client, std::string cmd);//OK
+		bool						user(client &client, std::string cmd);//OK
+		bool						privmsg(client &client, std::string cmd); // OK, a re-test
 		// bool						privmsg_user(client &client, std::string cmd);
-		bool						topic(client &client, std::string cmd);
-		bool						mode(client &client, std::string cmd);
-		bool						ping(client &client, std::string cmd); // fait
-		bool						join(client &client, std::string cmd); // LUCAS
-		// bool						part(client &client, std::string cmd); // LUCAS
-		bool						kick(client &client, std::string cmd); // fait MAIS a verifier + RPL a ajouter
-		// bool						quit(client &client, std::string cmd); // LUCAS
+		bool						topic(client &client, std::string cmd); // Pb lie a join ?->initialisation du vector clients
+		bool						mode(client &client, std::string cmd); // Pas fini
+		bool						ping(client &client, std::string cmd); // OK
+		bool						join(client &client, std::string cmd); // Bientot fini
+		bool						part(client &clients, std::string cmd); // Fait dans l'idee mais je m'en sors pas avec le msg pour que irssi reagisse
+		bool						kick(client &client, std::string cmd); // fait MAIS a verifier + RPL a ajouter -> marche pas
+		bool						quit(client &client, std::string cmd); // fait
 		bool						invite(client &clients, std::string cmd); // RPL a ajouter
 		void						setChannels(Channel channels);
 		bool						ChannelExist(std::string name);
@@ -170,6 +171,5 @@ class IRC
 									IRC(int port, std::string mdp);
 									~IRC();
 
-	bool check_pass(client cl);
 };
 #endif

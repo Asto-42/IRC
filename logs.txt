@@ -1,0 +1,9 @@
+<< JOIN #test
+>> --> lag pong:jquil!jquil@localhost JOIN #test
+>> :localhost 353 jquil = #test :@jquil
+>> : 332 jquil #test :
+>> :localhost 366 jquil #test :End of /NAMES list
+<< MODE #test
+>> : 461 localhost :Not enough parameters given
+<< KICK #test jquil_ :
+<< QUIT :leaving

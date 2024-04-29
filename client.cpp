@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:05:17 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 14:49:24 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/24 16:26:45 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,6 @@ std::string	IRC::client::GetBuffer() const
 	return this->buffer;
 }
 
-std::string	IRC::client::GetCurrentChannel() const
-{
-	return this->current_channel;
-}
-
 int	IRC::client::GetSetup() const
 {
 	return this->setup;
@@ -83,9 +78,4 @@ void IRC::client::SetUser(std::string use)
 void IRC::client::SetSetup(int x)
 {
 	this->setup = x;
-}
-
-void IRC::client::SetCurrentChannel(std::string str)
-{
-	this->current_channel = str;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:39 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/25 17:45:43 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/26 15:28:29 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,24 @@ typedef struct t_option {
     char	opt;
 } s_option;
 
-std::vector<std::string> split(const std::string& s, const std::string& delimiters) {
-    std::vector<std::string> tokens;
-    size_t start = 0, end = 0;
+std::vector<std::string> split(const std::string& s, const std::string& delimiters)
+{
+	std::vector<std::string> tokens;
+	size_t start = 0, end = 0;
 
-    while ((start = s.find_first_not_of(delimiters, end)) != std::string::npos) {
-        end = s.find_first_of(delimiters, start);
-        if (end == std::string::npos) {
-            tokens.push_back(s.substr(start));
-        } else {
-            tokens.push_back(s.substr(start, end - start));
-        }
-    }
-    return tokens;
+	while ((start = s.find_first_not_of(delimiters, end)) != std::string::npos)
+	{
+		end = s.find_first_of(delimiters, start);
+		if (end == std::string::npos)
+			tokens.push_back(s.substr(start));
+		else
+			tokens.push_back(s.substr(start, end - start));
+	}
+	return tokens;
 }
 
-void IRC::add_options(char c, int sign, std:: string channelName){
+void IRC::add_options(char c, int sign, std:: string channelName)
+{
 	for (std::vector<Channel>::iterator ite = channels.begin(); ite != channels.end(); ite++)
 	{
 		if(ite->getName() == channelName){
@@ -80,7 +82,7 @@ bool IRC::mode(client &_client, std::string cmd){
 	}
 	for(;it != argument.end() ; it++)
 	{
-		
+
 		std::string opt = *it;
 		if(opt[0] == '-' || opt[0] == '+')
 		{
@@ -95,7 +97,6 @@ bool IRC::mode(client &_client, std::string cmd){
 		else
 			param.push_back(opt);
 	}
-	
 	if(optCount == 0)
 		return(0);
 	std::cout << "channelname " <<channelName << std::endl;
@@ -132,10 +133,10 @@ bool IRC::mode(client &_client, std::string cmd){
 								{
 									// std::cout << " pit = " << *pit << std::endl;
 									ite->setOperators(it->first);
-									
+
 								}
 							}
-							
+
 						}
 						if(sign == 0)
 							ite->delModes('o');
