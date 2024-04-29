@@ -28,3 +28,9 @@
 #define RPL_JOIN(nick, channelName) (":" + nick + "!" + nick + "@" + "localhost" + " JOIN " + channelName + CRLF)
 #define RPL_PRIVMSG(nick, user, target, msg) (":" + nick + "!" + user + "@localhost PRIVMSG " + target + " :" + msg + CRLF)
 //# define userID(nickname, username) (":" + nickname + "!" + username + "@localhost")
+
+//#define RPL_PARTNOTICE1(client, channel) (":localhost NOTICE " + client + " :You have left the channel " + channel + CRLF)
+
+#define RPL_PARTNOTICE1(client, channel) (":localhost NOTICE " + channel + " :" + client + " has left the channel" + CRLF)
+
+#define RPL_PARTNOTICE2(client, channel) (":localhost NOTICE " + client + " :You're not in the channel " + channel + CRLF)

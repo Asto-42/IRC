@@ -78,6 +78,7 @@ bool						IRC::join(client &client, std::string cmd)
 			return ((void)sendRPL(ERR_CHANNELISFULL(client.GetUser(), chanNam), client.GetSock()), false);
 
 		this->channels[idxChan].setClients(client);
+		
 		// RPL LIST
 		for (size_t i = 0; i < this->channels[idxChan].getClients().size(); i++)
 		{

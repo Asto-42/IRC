@@ -54,7 +54,7 @@ std::vector<int>			IRC::Channel::getOperators(void)
 	return (this->operators);
 }
 
-std::vector<int>			IRC::Channel::getClients(void)
+std::vector<int>&			IRC::Channel::getClients(void)
 {
 	return (this->clients);
 }

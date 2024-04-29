@@ -102,7 +102,7 @@ class IRC
 			std::string				getName(void);
 			std::string				getTopic(void);
 			std::vector<int>		getOperators(void);
-			std::vector<int>		getClients(void);
+			std::vector<int>		&getClients(void);
 			bool					isOperator(int socket, std::vector<int> operators);
 			int						getLimitClients(void);
 			std::vector<std::string> getInvitations(void);
@@ -159,7 +159,7 @@ class IRC
 		bool						mode(client &client, std::string cmd); // Pas fini
 		bool						ping(client &client, std::string cmd); // OK
 		bool						join(client &client, std::string cmd); // Bientot fini
-		bool						part(client &clients, std::string cmd); // Fait dans l'idee mais je m'en sors pas avec le msg pour que irssi reagisse
+		bool						part(client &client, std::string cmd); // Fait dans l'idee mais je m'en sors pas avec le msg pour que irssi reagisse
 		bool						kick(client &client, std::string cmd); // fait MAIS a verifier + RPL a ajouter -> marche pas
 		bool						quit(client &client, std::string cmd); // fait
 		bool						invite(client &clients, std::string cmd); // RPL a ajouter
