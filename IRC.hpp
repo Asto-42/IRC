@@ -163,7 +163,7 @@ class IRC
 		bool						kick(client &client, std::string cmd); // fait MAIS a verifier + RPL a ajouter -> marche pas
 		bool						quit(client &client, std::string cmd); // fait
 		bool						invite(client &clients, std::string cmd); // RPL a ajouter
-		void						setChannels(Channel channels);
+		void						setChannels(Channel &channels);
 		bool						ChannelExist(std::string name);
 		void						add_options(char c, int sign, std::string channelName);
 		int							getSockFromName(std::string name);

@@ -16,24 +16,29 @@
 
 void					IRC::private_msg_chan(std::string msg, client &sender, std::string channel)
 {
-	std::cout << BOLD << BLUE << "private_msg_chan" << END_C << std::endl;
-	Channel *chanFound = NULL;
+	std::cout << BOLD << BLUE << "\tIn  private_msg_chan(): " << END_C << std::endl;
+	size_t	idxChan = 0;
+	//Channel *chanFound = NULL;
 	
 	// Search for the corresponding channel object
-	for (std::vector<Channel>::iterator it = this->channels.begin(); it != this->channels.end(); ++it)
+	// for (std::vector<Channel>::iterator it = this->channels.begin(); it != this->channels.end(); ++it)
+	// {
+	// 	if (it->getName() == channel)
+	// 		chanFound = &*it;
+	// }
+	while (idxChan < this->channels.size())
 	{
-		if (it->getName() == channel)
-			chanFound = &*it;
+		if (channels[idxChan].getName() == channel)
+			break;
+		idxChan++;
 	}
-	for (size_t i = 0; i < chanFound->getClients().size(); i++)
+	for (size_t i = 0; i < this->channels[idxChan].getClients().size(); i++)
 	{
-		// Only send message to destination clients
-		if (chanFound->getClients()[i] != sender.GetSock())
-		{
-			std::string nick = getNameFromSock(chanFound->getClients()[i]);
-			std::string tmp = ":" + sender.GetNick() + "!" + nick + "@" + "localhost" + " PRIVMSG " + channel + " :" + msg;
-			sendRPL(RPL_PRIVMSG(sender.GetNick(), nick, channel, msg), chanFound->getClients()[i]);
-		}
+
+			std::string nick = getNameFromSock(this->channels[idxChan].getClients()[i]);
+			//std::string tmp = ":" + sender.GetNick() + "!" + nick + "@" + "localhost" + " PRIVMSG " + channel + " :" + msg;
+			if (nick != sender.GetNick())
+				sendRPL(RPL_PRIVMSG(sender.GetNick(), nick, channel, msg), this->channels[idxChan].getClients()[i]);
 	}
 }
 

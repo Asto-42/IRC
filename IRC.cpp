@@ -61,6 +61,7 @@ IRC::~IRC()
 
 void IRC::launch_serv(void)
 {
+		std::cout << BLUE << BOLD << "\tIn launch_serv(): " << END_C << std::endl;
 	if (this->secure == 1)
 	{
 		std::cout << "Initialisation failure, exit the program" << std::endl;
@@ -71,6 +72,7 @@ void IRC::launch_serv(void)
 	std::cout << "Server launched, listening on port : " << this->port << std::endl;
 	while (42)
 	{
+		std::cout << "\twhile(42) loop" << std::endl;
 		int status = poll(&poll_fds[0], poll_fds.size(), -1);
 		if (status == -1)
 		{
@@ -103,6 +105,7 @@ void IRC::launch_serv(void)
 
 void IRC::manage_input(int x)
 {
+	std::cout << BLUE << BOLD <<  "\tIn manage_input(): " << END_C << std::endl;
 	char server_recv[512];
 	int fd = this->poll_fds[x].fd;
 	memset(&server_recv, '\0', sizeof(server_recv));
@@ -170,7 +173,7 @@ void IRC::sendRPL(std::string rpl, int fd)
 
 }
 
-void					IRC::setChannels(Channel newChannel)
+void					IRC::setChannels(Channel &newChannel)
 {
 	channels.push_back(newChannel);
 }

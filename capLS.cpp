@@ -14,9 +14,14 @@
 
 bool	IRC::capLs(client &client, std::string cmd)
 {
-	if (cmd != "LS")
+	std::cout << BLUE << "In capls(): " << END_C << std::endl;
+	if (cmd.find("LS") == std::string::npos)
 		return (0);
 	if (client.GetSetup() == 0)
+	{	
+		std::cout << "Setting up" << std::endl;
 		client.SetSetup(1);
+		sendRPL(RPL_CAPLS(), client.GetSock());
+	}
 	return (1);
 }

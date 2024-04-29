@@ -14,27 +14,28 @@
 
 bool						IRC::topic(client &client, std::string cmd)
 {
-	std::cout << BOLD << BLUE << "\tIn topic :" << END_C << std::endl;
 	std::string 			topicNam;
 	std::string 			chanNam;
 	std::string::size_type 	posHash = cmd.find('#');
 	std::string::size_type 	posColon = cmd.find(':');
 
 
-	chanNam = cmd.substr(posHash,  posColon - posHash);
-	std::cout <<"Found channel name: " << MAGENTA << chanNam << END_C << std::endl;
 
+	std::cout << BOLD << BLUE << "\tIn topic :" << END_C << std::endl;
 	if (channels.size() == 0)
 		return ((void)sendRPL(ERR_CHANNELNOTFOUND(cmd, chanNam), client.GetSock()), false);
+	chanNam = cmd.substr(posHash,  posColon - posHash - 1);
+	std::cout <<"Found channel name: \"" << MAGENTA << chanNam << END_C <<"\""<< std::endl;
 	// Checking existence of channel
 	size_t					i = 0;
-	for (size_t i = 0; i < this->channels.size(); i++)
+	while (i < this->channels.size())
 	{
 		if (chanNam == this->channels[i].getName())
 			break;
+		i++;
 	}
 	// Channel not found
-	if (i == 10)
+	if (i == this->channels.size())
 		return ((void)sendRPL(ERR_CHANNELNOTFOUND(cmd, chanNam), client.GetSock()), false);
 
 	//No topic specified in client msg
@@ -72,7 +73,12 @@ bool						IRC::topic(client &client, std::string cmd)
 	else
 	{
 		this->channels[i].setTopic(topicNam);
-		this->channels[i].send_topic_rpl(RPL_TOPIC(client.GetNick(), this->channels[i].getName(), this->channels[i].getTopic()));
+		//Send new topic to all clients
+		for (size_t j = 0; j < this->channels[i].getClients().size(); j++)
+		{	
+			std::cout << "Sending topic... " << std::endl;
+			sendRPL(RPL_TOPIC(getNameFromSock(this->channels[i].getClients()[j]), this->channels[i].getName(), this->channels[i].getTopic()), this->channels[i].getClients()[j] );
+		}
 		//sendRPL(RPL_TOPIC(client.GetNick(), this->channels[i].getName(), this->channels[i].getTopic()), client.GetSock());
 		return (true);
 	}

@@ -1,8 +1,0 @@
-
-<< JOIN #test
-
-<< JOIN #rgioNF
->> :jquil!~jquil@5dc0-87b-e09c-1be2-a46.210.62.ip JOIN :#rgioNF
-<< KICK #rgioNF jquil_ :
->> :jquil!~jquil@5dc0-87b-e09c-1be2-a46.210.62.ip KICK #rgioNF jquil_ :jquil
-<< QUIT :leaving

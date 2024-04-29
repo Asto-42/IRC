@@ -24,7 +24,7 @@
 #define RPL_NAMREPLY(client, channel, list) (":localhost 353 " + client + " = " + channel + " :" + list + CRLF)
 
 #define RPL_ENDOFNAMES(client, channel) (":localhost 366 " + client + " " + channel + " :End of /NAMES list" + CRLF)
-
+#define RPL_CAPLS()(":localhost 451 * :You have not registered \r\n")
 #define RPL_JOIN(nick, channelName) (":" + nick + "!" + nick + "@" + "localhost" + " JOIN " + channelName + CRLF)
 #define RPL_PRIVMSG(nick, user, target, msg) (":" + nick + "!" + user + "@localhost PRIVMSG " + target + " :" + msg + CRLF)
 //# define userID(nickname, username) (":" + nickname + "!" + username + "@localhost")
