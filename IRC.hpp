@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: russelenc <russelenc@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
 /*   Updated: 2024/04/26 18:37:24 by jquil            ###   ########.fr       */
@@ -46,7 +46,7 @@
 #include <unistd.h>  // close
 #include <cerrno>
 #include <poll.h>
-#include <sys/epoll.h>
+// #include <sys/epoll.h>
 #include "rpl.hpp"
 
 class Channel;
@@ -91,34 +91,47 @@ class IRC
 			std::string				topic;
 			std::string				name;
 			std::string				modes;
-			std::vector<std::string> invitations;
+			std::vector<int> 		invitations;
 			std::vector<int>		operators;
 			std::vector<int>		white_list;
 			std::vector<int>		clients;
+			std::string				channelPassword;
 			int						limitClients;
 			Channel(void);
 
 		public:
+		//------------------- Getters -----------------------------------------//
 			std::string				getName(void);
 			std::string				getTopic(void);
 			std::vector<int>		getOperators(void);
-			std::vector<int>		&getClients(void);
-			bool					isOperator(int socket, std::vector<int> operators);
+			std::vector<int>&		getClients(void);
 			int						getLimitClients(void);
-			std::vector<std::string> getInvitations(void);
+			std::vector<int>&		getInvitations(void);
 			std::string 			getModes(void);
+			std::string&			getChannelPassword();
+
+		//------------------- Setters -----------------------------------------//
+			void					setInvitations(int& socket);
 			void					setLimitClients(int limit);
 			void 					setModes(char c);
-			void 					delModes(char c);
 			void					setName(std::string& name);
+			void 					setPassword(std::string password);
 			void					setTopic(std::string& topic);
-			void					setOperators(int operateur);
 			void					setClients(client& client);
+			void					setOperators(int operateur);
+			void 					delModes(char c);
+			void					delOperators(int operateur);
+
+		//------------------- Utils ------------------------------------------//
+			bool					isOperator(int socket, std::vector<int> operators);
 			bool					isClient(int sock);
 			bool					isOperator(client &client);
+			bool					isOperator(int sock);
 			bool					add_client(client &new_client);
 			bool					remove_client(int sock);
 			void					send_topic_rpl(std::string rpl);
+
+			
 			Channel(std::string name, client &creator);
 			~Channel();
 	};
@@ -165,9 +178,13 @@ class IRC
 		bool						invite(client &clients, std::string cmd); // RPL a ajouter
 		void						setChannels(Channel &channels);
 		bool						ChannelExist(std::string name);
+		IRC::client 				getclientfromsock(int sock);
 		void						add_options(char c, int sign, std::string channelName);
 		int							getSockFromName(std::string name);
 		std::string					getNameFromSock(int fd);
+		//	MODE
+		bool						mode_opt(std::string channelName, int sign , std::string pit , client &_client, char op);
+		void 						handle_mode(client &_client, std::vector<char> opt_vector, std::string channelName, std::vector<std::string> param);
 									IRC(int port, std::string mdp);
 									~IRC();
 

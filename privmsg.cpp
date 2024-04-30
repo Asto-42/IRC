@@ -3,16 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: russelenc <russelenc@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:13:49 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 14:47:31 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/27 17:02:26 by russelenc        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
 
 
+IRC::client 						IRC::getclientfromsock(int sock){
+	for(std::map<int, client>::iterator ite = this->users.begin(); ite != users.end() ; ite++)
+	{
+		if(ite->first == sock)
+			return ite->second;
+	}
+	return 0;
+}
 
 void					IRC::private_msg_chan(std::string msg, client &sender, std::string channel)
 {

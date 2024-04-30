@@ -21,6 +21,7 @@ IRC::Channel::Channel(std::string name, client &creator)
 	this->topic.clear();
 	this->modes.clear();
 	this->limitClients = 10;
+	this->channelPassword = "";
 }
 
 IRC::Channel::~Channel()
@@ -29,87 +30,13 @@ IRC::Channel::~Channel()
 	return ;
 }
 
-std::vector<std::string> IRC::Channel::getInvitations(void)
+//-------------------- Utils ------------------------------------------------//
+void				IRC::Channel::setInvitations(int &socket)
 {
-	return (this->invitations);
+	invitations.push_back(socket);
 }
 
-std::string IRC::Channel::getModes(void)
-{
-	return (this->modes);
-}
-
-std::string					IRC::Channel::getName(void)
-{
-	return (this->name);
-}
-
-std::string					IRC::Channel::getTopic(void)
-{
-	return (this->topic);
-}
-
-std::vector<int>			IRC::Channel::getOperators(void)
-{
-	return (this->operators);
-}
-
-std::vector<int>&			IRC::Channel::getClients(void)
-{
-	return (this->clients);
-}
-
-void						IRC::Channel::setName(std::string& name)
-{
-	this->name = name;
-}
-
-void						IRC::Channel::setTopic(std::string& topic)
-{
-	this->topic.clear();
-	this->topic = topic;
-}
-
-void						IRC::Channel::setOperators(int operateur)
-{
-	this->operators.push_back(operateur);
-}
-
-int							IRC::Channel::getLimitClients(void)
-{
-	return (this->limitClients);
-}
-
-void						IRC::Channel::setLimitClients(int limit)
-{
-	this->limitClients = limit;
-
-}
-
-void							IRC::Channel::setModes(char c)
-{
-	if(modes.find(c) == std::string::npos)
-		modes += c;
-	std::cout << "MODES STRING = " << modes << std::endl;
-	return ;
-}
-
-void							IRC::Channel::delModes(char c)
-{
-	std::size_t position_c = modes.find(c);
-	if(position_c != std::string::npos)
-		modes.erase(position_c);
-	std::cout << "MODES STRING = " << modes << std::endl;
-	return ;
-}
-
-void	IRC::Channel::setClients(client& client)
-{
-	std::cout << "Client " << client.GetSock() << " added to " << this->getName();
-	this->clients.push_back(client.GetSock());
-}
-
-bool						IRC::Channel::isOperator(client &client)
+bool				IRC::Channel::isOperator(client &client)
 {
 	for (std::vector<int>::iterator it = this->operators.begin(); it != this->operators.end(); ++it)
 	{
@@ -118,7 +45,18 @@ bool						IRC::Channel::isOperator(client &client)
 	}
 	return (false);
 }
-bool						IRC::Channel::isClient(int sock)
+
+bool				IRC::Channel::isOperator(int sock)
+{
+	for (std::vector<int>::iterator it = this->operators.begin(); it != this->operators.end(); ++it)
+	{
+		if (*it == sock)
+			return (true);
+	}
+	return (false);
+}
+
+bool			IRC::Channel::isClient(int sock)
 {
 	for (std::vector<int>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
 	{
@@ -128,7 +66,7 @@ bool						IRC::Channel::isClient(int sock)
 	return (false);
 }
 
-bool	IRC::Channel::remove_client(int sock)
+bool			IRC::Channel::remove_client(int sock)
 {
 	if (this->isClient(sock) == 1)
 	{
@@ -144,7 +82,7 @@ bool	IRC::Channel::remove_client(int sock)
 	return (false);
 }
 
-bool	IRC::Channel::add_client(client &new_client)
+bool			IRC::Channel::add_client(client &new_client)
 {
 	if (this->isClient(new_client.GetSock()) == 0)
 	{
@@ -157,7 +95,7 @@ bool	IRC::Channel::add_client(client &new_client)
 	return (false);
 }
 
-void	IRC::Channel::send_topic_rpl(std::string rpl)
+void			IRC::Channel::send_topic_rpl(std::string rpl)
 {
 	int bytes = 0;
 	for (std::vector<int>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
@@ -168,6 +106,110 @@ void	IRC::Channel::send_topic_rpl(std::string rpl)
 			std::cout << "Error sending data to client." << std::endl;
 	}
 }
+void				IRC::Channel::delOperators(int operateur)
+{
+	std::cout << GREEN << "operator deleted" << END_C << std::endl;
+	for (std::vector<int>::iterator it = this->operators.begin(); it != this->operators.end(); ++it) {
+    	if (*it == operateur) {
+    	    this->operators.erase(it);
+    	    break;
+    	}
+    }
+}
+
+void				IRC::Channel::delModes(char c)
+{
+	std::size_t position_c = modes.find(c);
+	if(position_c != std::string::npos)
+		modes.erase(position_c);
+	std::cout << "MODES STRING = " << modes << std::endl;
+	return ;
+}
+
+//-------------------- Getters ----------------------------------------------//
+std::string			IRC::Channel::getModes(void)
+{
+	return (this->modes);
+}
+
+std::string			IRC::Channel::getName(void)
+{
+	return (this->name);
+}
+
+std::string			IRC::Channel::getTopic(void)
+{
+	return (this->topic);
+}
+
+std::vector<int>	IRC::Channel::getOperators(void)
+{
+	return (this->operators);
+}
+
+std::vector<int>&	IRC::Channel::getClients(void)
+{
+	return (this->clients);
+}
+
+int					IRC::Channel::getLimitClients(void)
+{
+	return (this->limitClients);
+}
+
+std::vector<int>&	IRC::Channel::getInvitations(void)
+{
+	return (this->invitations);
+}
+
+std::string&		IRC::Channel::getChannelPassword(void)
+{
+	return (this->channelPassword);
+}
+//-------------------- Setters ----------------------------------------------//
+void				IRC::Channel::setName(std::string& name)
+{
+	this->name = name;
+}
+
+void				IRC::Channel::setTopic(std::string& topic)
+{
+	this->topic.clear();
+	this->topic = topic;
+}
+
+void				IRC::Channel::setOperators(int operateur)
+{
+	std::cout << GREEN << "New operator added" << END_C << std::endl;
+	this->operators.push_back(operateur);
+}
+
+void				IRC::Channel::setLimitClients(int limit)
+{
+	this->limitClients = limit;
+	return ;
+}
+
+void				IRC::Channel::setModes(char c)
+{
+	if(modes.find(c) == std::string::npos)
+		modes += c;
+	std::cout << "MODES STRING = " << modes << std::endl;
+	return ;
+}
+
+void				IRC::Channel::setPassword(std::string pass)
+{
+	this->channelPassword = pass;
+	return ;
+}
+
+void				IRC::Channel::setClients(client& client)
+{
+	std::cout << "Client " << client.GetSock() << " added to " << this->getName();
+	this->clients.push_back(client.GetSock());
+}
+
 // bool							IRC::Channel::isOperator(int fd){
 // 	for (std::vector<int>::iterator it = operators.begin(); it != operators.end(); ++it){
 // 		if (*it == fd)

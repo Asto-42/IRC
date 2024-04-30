@@ -12,42 +12,78 @@
 
 #include "IRC.hpp"
 
-bool	IRC::invite(client &clients, std::string cmd)
+bool	IRC::invite(client &client, std::string cmd)
 {
+	std::cout << BOLD << "\tIn invite(): " << END_C << std::endl;
 	std::string chan;
 	std::string user;
-	std::string::size_type x;
-	std::string::size_type space;
-	std::string::size_type end;
-	if ((x = cmd.find("#", 0)) == std::string::npos)
-		return (0);
-	if ((space = cmd.find(" ", 0)) == std::string::npos)
-		return (0);
-	if ((end = cmd.find("\r\n", 0)) == std::string::npos)
-		return (0);
-	chan = cmd.substr(x + 1, space);
-	user = cmd.substr(space + 1, end);
-	for (std::vector<Channel>::iterator it = (this->channels.begin()); it != (this->channels.end()); ++it)
-	{
-		if (chan == it->getName())
-		{
-			if (it->isOperator(clients) == 1)
-			{
-				//if user existe, add au chan
-				for (std::map<int, client>::iterator it2 = this->users.begin(); it2 != this->users.end(); it2++)
-				{
-					if (it2->second.GetUser() == user)
-					{
-						it->add_client(it2->second);
-						//std::string msg =   "<client> <nick> <channel>"
-						//send(clients.GetSock(), )
-						return (true);
-					}
-					return (false);
-				}
-			}
-		}
+	size_t		idxChan = 0;
+	int 		socketInvited;
 
+	std::cout << "cmd :" << cmd << std::endl;
+	if (cmd.find("#") == std::string::npos)
+		return (0);
+	std::cout << "CHECK0" << std::endl;
+	if (cmd.find(" ") == std::string::npos)
+		return (0);
+	std::cout << "CHECK1" << std::endl;
+	// if ((end = cmd.find("\r\n")) == std::string::npos)
+	// 	return (0);
+	std::cout << "CHECK2" << std::endl;
+	chan = cmd.substr(cmd.find('#'), cmd.find(' ') - cmd.find('#'));
+	std::cout << "chan: \"" << MAGENTA << chan << END_C << "\"" << std::endl;
+	user = cmd.substr(0, cmd.find('#') - 1);
+	std::cout << "user: \"" << MAGENTA << user << END_C << "\"" << std::endl;
+	while (idxChan < this->channels.size())
+	{
+		if (chan == this->channels[idxChan].getName())
+			break;
+		idxChan++;
 	}
+	if (idxChan == this->channels.size())
+		return ((void)sendRPL(ERR_CHANNELNOTFOUND(client.GetNick(), chan), client.GetSock()), false);
+	
+	//is the client operator of the channel ?
+	for (size_t i = 0; i <= this->channels[idxChan].getOperators().size(); i++)
+	{
+		if (i == this->channels[idxChan].getOperators().size())
+			return ((void)sendRPL(ERR_CHANOPRIVSNEEDED(client.GetNick(), chan), client.GetSock()), false);
+		if (client.GetSock() == this->channels[idxChan].getOperators()[i])
+			break;
+	}
+
+	// add user to invitations
+	if ((socketInvited = getSockFromName(user)) == -1)
+		return ((void)sendRPL(ERR_NOSUCHNICK(client.GetNick(), user), client.GetSock()), false);
+	// checking if the user being invited is already in invitations
+	for (size_t i = 0; i <= this->channels[idxChan].getInvitations().size(); i++)
+	{
+		if (i == this->channels[idxChan].getInvitations().size())
+			break;
+		if (socketInvited == this->channels[idxChan].getInvitations()[i])
+			return ((void)sendRPL(ERR_USERONCHANNEL(client.GetNick(), user, chan), client.GetSock()), false);
+	}
+	this->channels[idxChan].setInvitations(socketInvited);
+	return ((void)sendRPL(RPL_INVITING(client.GetNick(), user, chan), client.GetSock()), false);
+	// for (std::vector<Channel>::iterator it = (this->channels.begin()); it != (this->channels.end()); ++it)
+	// {
+	// 	if (chan == it->getName())
+	// 	{
+	// 		if (it->isOperator(clients) == 1)
+	// 		{
+	// 			//if user existe, add au chan
+	// 			for (std::map<int, client>::iterator it2 = this->users.begin(); it2 != this->users.end(); it2++)
+	// 			{
+	// 				if (it2->second.GetUser() == user)
+	// 				{
+	// 					it->add_client(it2->second);
+	// 					//std::string msg =   "<client> <nick> <channel>"
+	// 					//send(clients.GetSock(), )
+	// 					return (true);
+	// 				}
+	// 				return (false);
+	// 			}
+	// 		}
+	// 	}
 	return (false);
 }

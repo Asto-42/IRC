@@ -1,3 +1,6 @@
 *.o
 *.d
 ircserv
+*.txt
+*.json
+*.vscode

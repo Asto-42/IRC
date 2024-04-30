@@ -26,56 +26,64 @@ bool	isOperator(int& socket, std::vector<int> opertors)
 
 bool						IRC::join(client &client, std::string cmd)
 {
-	//Channel			*chanFound = NULL;
 	std::string 	chanNam("");
 	std::string		rplList;
 	size_t				idxChan = 0;
 
 	
-	std::cout << BLUE << BOLD<< "\tIn join(): " << END_C  << std::endl;
+	std::cout << BOLD<< "\tIn join(): " << END_C  << std::endl;
 	std::cout << "Content cmd: \"" << cmd <<  "\""<< std::endl;
 	if (cmd.empty())
 		return ((void)sendRPL(ERR_NOTENOUGHPARAM(client.GetUser()), client.GetSock()), false);
-	// Extract channel name and key
 	if (cmd.find("#") == std::string::npos)
 		return (0);
 	else if(cmd.find(' ') == std::string::npos)
 		chanNam = cmd.substr(cmd.find('#'), cmd.find(' ') - cmd.find('#') - 1);
 	else
 		chanNam = cmd.substr(cmd.find('#'), cmd.find('\r') - cmd.find('#') - 1);
-	// Does channel exists ?
 	while (idxChan < this->channels.size())
 	{
 		if (this->channels[idxChan].getName() == chanNam)
 			break;
 		idxChan++;
 	}
-	//Is the client already part of the channel ?
-	// if (std::find(chanFound->getClientSockets().begin(), chanFound->getClientSockets().end(), client.GetSock()) != chanFound->getClientSockets().end())
-	// 	return (1);
-	// YES - ADD client to channel
+	
+	// ADD client to existing channel
 	if (idxChan != this->channels.size())
 	{
-		//std::cout << BLUE << "CHANNEL EXISTS" << END_C << std::endl;
-		// Checks modes (i, k, l)
-			// Invitation only
-		if (this->channels[idxChan].getModes().find('i') != std::string::npos)
+		//checking if client is already in channel
+		for (size_t i = 0; i <= this->channels[idxChan].getClients().size(); i++)
 		{
-			// Checks if client has the invitation
-				// No
-			if (std::find(this->channels[idxChan].getInvitations().begin(), this->channels[idxChan].getInvitations().end(), client.GetUser()) == this->channels[idxChan].getInvitations().end()) // NO
-				return ((void)sendRPL(ERR_INVITEONLYCHAN(client.GetUser(), chanNam), client.GetSock()), false);
-		}// Key
+			if (i == this->channels[idxChan].getClients().size())
+				break;
+			if (client.GetSock() == this->channels[idxChan].getClients()[i])
+			{	
+				std::cout << YELLOW << BOLD << "ALREADY IN CHANNEL" << END_C << std::endl;
+				return (false);
+			}
+		}
+		if (this->channels[idxChan].getModes().find('i') != std::string::npos)// I
+		{
+			std::cout << YELLOW << "in Mode i check: " << chanNam << END_C <<std::endl;
+			for (size_t i = 0; i <= this->channels[idxChan].getInvitations().size(); i++)
+			{
+				if (i == this->channels[idxChan].getInvitations().size())
+					return ((void)sendRPL(ERR_INVITEONLYCHAN(client.GetNick(), chanNam), client.GetSock()), false);
+				if (client.GetSock() == this->channels[idxChan].getInvitations()[i])
+					break;
+			}
+		}// K
 		if (this->channels[idxChan].getModes().find('k') != std::string::npos)
 		{
-			if (cmd.find(" ") == std::string::npos)
-				return ((void)sendRPL(ERR_BADCHANNELKEY(client.GetUser(), chanNam), client.GetSock()), false);
 			std::string key = cmd.substr(cmd.find(" ") + 1, cmd.find('\r') - cmd.find(" ") - 1);
-			if (key != this->channels[idxChan].getModes())
-				return ((void)sendRPL(ERR_BADCHANNELKEY(client.GetUser(), chanNam), client.GetSock()), false);
-		}// Limit
+			std::cout << "key entered: \"" << MAGENTA << key << END_C << "\"" << std::endl;
+			std::cout << "key of channel: \"" << MAGENTA << this->channels[idxChan].getChannelPassword() << END_C << "\"" << std::endl;
+			
+			if (key != this->channels[idxChan].getChannelPassword())
+				return ((void)sendRPL(ERR_BADCHANNELKEY(client.GetNick(), chanNam), client.GetSock()), false);
+		}// L
 		if (static_cast<int>(this->channels[idxChan].getClients().size() + 1) > this->channels[idxChan].getLimitClients())
-			return ((void)sendRPL(ERR_CHANNELISFULL(client.GetUser(), chanNam), client.GetSock()), false);
+			return ((void)sendRPL(ERR_CHANNELISFULL(client.GetNick(), chanNam), client.GetSock()), false);
 
 		this->channels[idxChan].setClients(client);
 		
@@ -105,9 +113,10 @@ bool						IRC::join(client &client, std::string cmd)
 
 	// NO - CREATE channel
 	Channel newChannel(chanNam, client);
+	newChannel.setOperators(client.GetSock());
 	setChannels(newChannel);
 	// need to check limit
-	channels.push_back(newChannel);
+	//channels.push_back(newChannel);
 	//std::cout << BLUE << " 1 - CHANNEL CREATED" << END_C << std::endl;
 	//std::vector<int> clientsVec = newChannel.getClients();
 	//for (std::vector<int>::iterator ite = clientsVec.begin(); ite != clientsVec.end(); ite++)
