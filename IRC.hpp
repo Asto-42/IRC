@@ -6,7 +6,7 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/30 17:50:49 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/30 18:36:27 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ class IRC
 			std::vector<int>		clients;
 			std::string				channelPassword;
 			int						limitClients;
+			static bool				_signal;
 			Channel(void);
 
 		public:
@@ -123,6 +124,7 @@ class IRC
 			bool					add_client(client &new_client);
 			bool					remove_client(int sock);
 			void					send_topic_rpl(std::string rpl);
+			void					SignalHandler(int signum);
 			Channel(std::string name, client &creator);
 			~Channel();
 	};
@@ -142,6 +144,7 @@ class IRC
 		int							bind_sock;
 		int							lstn;
 		bool							secure;
+		static bool					_signal;
 
 	public :
 		void						ClearClients(int fd);
@@ -174,6 +177,8 @@ class IRC
 		void						add_options(char c, int sign, std::string channelName);
 		int							getSockFromName(std::string name);
 		std::string					getNameFromSock(int fd);
+		void						CloseFds();
+		static void						SignalHandler(int signum);
 		//	MODE
 		bool						mode_opt(size_t idxChan, int sign , std::string pit , client &_client, char op);
 		void 						handle_mode(client &_client, std::vector<char> opt_vector, std::string channelName, std::vector<std::string> param);

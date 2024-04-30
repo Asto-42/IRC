@@ -6,7 +6,7 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/30 17:58:25 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/30 18:37:29 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,26 @@ IRC::~IRC()
 	std::cout << "Default destructor called" << std::endl;
 };
 
+bool IRC::_signal = false;
+
+void IRC::CloseFds()
+{
+	std::cout << GREEN << "FDS CORRECTLY CLOSED" << END_C << std::endl;
+	if(users.size() > 1)
+	{
+		for(size_t i = 0 ; i < users.size(); i++){
+			std::cout << users.size() << std::endl;
+				std::cout << "Client " << users[i].GetSock() << " is disconnected" << std::endl;
+				close(users[i].GetSock());
+
+		}
+	}
+	if (sock != -1){ //-> close the server socket
+		std::cout << "Server " << sock << " is Disconnected" << std::endl;
+		close(sock);
+	}
+}
+
 void IRC::launch_serv(void)
 {
 		std::cout << BLUE << BOLD << "\tIn launch_serv(): " << END_C << std::endl;
@@ -70,11 +90,11 @@ void IRC::launch_serv(void)
 	char server_recv[200];
 	memset(server_recv, '\0', 200);
 	std::cout << "Server launched, listening on port : " << this->port << std::endl;
-	while (42)
+	while (IRC::_signal == false)
 	{
 		std::cout << "\twhile(42) loop" << std::endl;
 		int status = poll(&poll_fds[0], poll_fds.size(), -1);
-		if (status == -1)
+		if (status == -1 && IRC::_signal == false)
 		{
 			std::cout << "Poll failure" << std::endl;
 			return;
@@ -102,6 +122,7 @@ void IRC::launch_serv(void)
 				manage_input(x);
 		}
 	}
+	CloseFds();
 }
 void IRC::ClearClients(int fd)
 {
@@ -211,6 +232,14 @@ void IRC::initCommand(void)
 // 	this->poll_count++;
 // 	return (1);
 // }
+
+void IRC::SignalHandler(int signum)
+{
+	(void)signum;
+	std::cout << " Signal received" << std::endl;
+	_signal = true;
+}
+
 
 bool						IRC::ChannelExist(std::string name){
 	for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it){
