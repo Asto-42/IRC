@@ -6,7 +6,7 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:39 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/30 17:16:14 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/30 17:18:39 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,10 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 	if (std::find(admin.begin(), admin.end(), _client.GetSock()) == admin.end())
 		return(sendRPL(ERR_NOTOPERATOR(channelName), _client.GetSock()));
 	param.erase(param.begin());
-	for(std::vector<char>::iterator op = opt_vector.begin(); op < opt_vector.end() ; op++)
+	// PRINTER
+
+	//boucle 
+	for(std::vector<char>::iterator op = opt_vector.begin(); op < opt_vector.end() ; op++){
 
 		switch(*op)
 		{
