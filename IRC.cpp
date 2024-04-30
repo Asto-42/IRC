@@ -6,7 +6,7 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/30 16:38:14 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/30 17:58:25 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,19 @@ void IRC::launch_serv(void)
 		}
 	}
 }
+void IRC::ClearClients(int fd)
+{
+	for(size_t i = 0 ; i < poll_fds.size(); i++)
+		if(poll_fds[i].fd == fd){
+			poll_fds.erase(poll_fds.begin() + i);
+			break;
+		}
+	std::map<int, client>::iterator it = users.find(fd);
+    if (it != users.end()) {
+        users.erase(it);
+    }
+
+}
 
 void IRC::manage_input(int x)
 {
@@ -114,7 +127,9 @@ void IRC::manage_input(int x)
 	if (recv(fd, server_recv, sizeof(server_recv), 0) <= 0)
 	{
 		std::cout << server_recv << std::endl;
-		sleep(1);
+		std::cout << RED << "Client <" << fd << "> Disconnected" << END_C << std::endl;
+		ClearClients(fd);
+		close(fd);
 		// del user
 		// close le fd
 		// delete du poll de fd
@@ -124,7 +139,6 @@ void IRC::manage_input(int x)
 		
 		std::string line = users.find(fd)->second.GetBuffer() + server_recv;
 		this->users.find(fd)->second.SetBuffer("");
-		std::cout << YELLOW <<line << END_C << std::endl;
 		std::string input;
 		std::string tmp;
 		std::string::size_type end;
@@ -133,6 +147,9 @@ void IRC::manage_input(int x)
 		{
 			input = line.substr(0, end);
 			line.erase(0 ,end + 2);
+			std::cout << YELLOW << "=========== CMD RECEIVE =========== " << std::endl;
+			std::cout << "\""<< input << "\"" << std::endl;
+			std::cout << "=================================== " << END_C << std::endl;
 			if ((space = input.find(" ", 0)) != std::string::npos)
 			{
 				tmp = input.substr(0, space);
@@ -146,26 +163,6 @@ void IRC::manage_input(int x)
 		}
 	}
 }
-
-//void IRC::Kick(void)
-// {
-// 	std::cout << "Enter Kick function" << std::endl;
-// }
-
-// void IRC::Invite(void)
-// {
-// 	std::cout << "Enter Invite function" << std::endl;
-// }
-
-// void IRC::Topic(void)
-// {
-// 	std::cout << "Enter Topic function" << std::endl;
-// }
-
-// void IRC::Mode(void)
-// {
-// 	std::cout << "Enter Mode function" << std::endl;
-// }
 
 void IRC::sendRPL(std::string rpl, int fd)
 {

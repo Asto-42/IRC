@@ -6,7 +6,7 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/30 15:53:43 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/30 17:50:49 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ class IRC
 		bool							secure;
 
 	public :
+		void						ClearClients(int fd);
 		std::vector<Channel>		*getChannel(void);
 		// int							calloc_pollfd(int size);
 		// int 						add_poll_fds(int fd);

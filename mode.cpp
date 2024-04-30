@@ -6,7 +6,7 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:39 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/30 17:18:39 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/30 18:23:19 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,11 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 	}
 	
 	admin = channels[idxChan].getOperators();
-	if (std::find(admin.begin(), admin.end(), _client.GetSock()) == admin.end())
+	for (std::vector<int>::iterator aa = admin.begin() ; aa != admin.end(); aa++)
+	{
+		std::cout << *aa <<std::endl;
+	}
+	if (channels[idxChan].isOperator(_client) == false)
 		return(sendRPL(ERR_NOTOPERATOR(channelName), _client.GetSock()));
 	param.erase(param.begin());
 	// PRINTER
@@ -160,19 +164,17 @@ bool						IRC::mode_opt(size_t idxChan, int sign , std::string pit , client &_cl
 		for(std::map<int, client>::iterator iter = users.begin(); iter != users.end(); iter++)
 			if(pit == iter->second.GetNick() && channels[idxChan].isClient(iter->first))
 				found = true;
-		for(std::map<int, client>::iterator it = users.begin(); it != users.end(); it++)
+		if(found)
 		{
-			if(found)
-			{
-				std::string hostname = _client.GetNick() + "!" + _client.GetUser();
-				if(sign == 1)
-					return(this->channels[idxChan].setOperators(it->first), true);
-				else
-					return(this->channels[idxChan].delModes(it->first), true);
-			}
-			else
-				return(sendRPL(ERR_NOSUCHNICK(this->channels[idxChan].getName(), pit), _client.GetSock()), false);
+			std::string hostname = _client.GetNick() + "!" + _client.GetUser();
+			// std::cout << RED << ;
+			if(sign == 1)
+				return(this->channels[idxChan].setOperators(this->getSockFromName(pit)), true);
+			else if(sign == 0)
+				return(this->channels[idxChan].delModes(this->getSockFromName(pit)), true);
 		}
+		else
+			return(sendRPL(ERR_NOSUCHNICK(this->channels[idxChan].getName(), pit), _client.GetSock()), false);
 	}
 	if(op == 'k'){
 		if(sign == 1)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   capLS.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:11:56 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/22 18:12:12 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/30 17:59:39 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ bool	IRC::capLs(client &client, std::string cmd)
 	{	
 		std::cout << "Setting up" << std::endl;
 		client.SetSetup(1);
-		sendRPL(RPL_CAPLS(), client.GetSock());
+		// sendRPL(RPL_CAPLS(), client.GetSock());
 	}
 	return (1);
 }

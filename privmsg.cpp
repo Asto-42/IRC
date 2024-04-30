@@ -6,7 +6,7 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:13:49 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/30 15:34:27 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/30 18:10:08 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,13 @@ void					IRC::private_msg_chan(std::string msg, client &sender, std::string chan
 		return ;
 	for (size_t i = 0; i < this->channels[idxChan].getClients().size(); i++)
 	{
-
+			
 			std::string nick = getNameFromSock(this->channels[idxChan].getClients()[i]);
+			// if(channels[idxChan].isOperator(sender))
+			// {
+			// 	nick = "@" + nick;
+			// 	sendRPL(RPL_NAMREPLY(sender.GetNick(), channels[idxChan].getName() , nick), sender.GetSock());
+			// }
 			if (nick != sender.GetNick())
 				sendRPL(RPL_PRIVMSG(sender.GetNick(), nick, channel, msg), this->channels[idxChan].getClients()[i]);
 	}
