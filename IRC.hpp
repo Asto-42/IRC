@@ -105,7 +105,7 @@ class IRC
 			std::string				getTopic(void);
 			std::vector<int>		getOperators(void);
 			std::vector<int>&		getClients(void);
-			int						getLimitClients(void);
+			int&					getLimitClients(void);
 			std::vector<int>&		getInvitations(void);
 			std::string 			getModes(void);
 			std::string&			getChannelPassword();

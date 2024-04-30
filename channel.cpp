@@ -56,7 +56,7 @@ bool				IRC::Channel::isOperator(int sock)
 	return (false);
 }
 
-bool			IRC::Channel::isClient(int sock)
+bool				IRC::Channel::isClient(int sock)
 {
 	for (std::vector<int>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
 	{
@@ -66,7 +66,7 @@ bool			IRC::Channel::isClient(int sock)
 	return (false);
 }
 
-bool			IRC::Channel::remove_client(int sock)
+bool				IRC::Channel::remove_client(int sock)
 {
 	if (this->isClient(sock) == 1)
 	{
@@ -82,7 +82,7 @@ bool			IRC::Channel::remove_client(int sock)
 	return (false);
 }
 
-bool			IRC::Channel::add_client(client &new_client)
+bool				IRC::Channel::add_client(client &new_client)
 {
 	if (this->isClient(new_client.GetSock()) == 0)
 	{
@@ -95,7 +95,7 @@ bool			IRC::Channel::add_client(client &new_client)
 	return (false);
 }
 
-void			IRC::Channel::send_topic_rpl(std::string rpl)
+void				IRC::Channel::send_topic_rpl(std::string rpl)
 {
 	int bytes = 0;
 	for (std::vector<int>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
@@ -152,7 +152,7 @@ std::vector<int>&	IRC::Channel::getClients(void)
 	return (this->clients);
 }
 
-int					IRC::Channel::getLimitClients(void)
+int&				IRC::Channel::getLimitClients(void)
 {
 	return (this->limitClients);
 }
@@ -166,6 +166,7 @@ std::string&		IRC::Channel::getChannelPassword(void)
 {
 	return (this->channelPassword);
 }
+
 //-------------------- Setters ----------------------------------------------//
 void				IRC::Channel::setName(std::string& name)
 {

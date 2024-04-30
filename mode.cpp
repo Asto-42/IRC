@@ -131,6 +131,7 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 					param.erase(param.begin());
 					break ;
 				}
+				//RPL KEY SET
 				mode_opt(channelName, sign, *pit, _client, *op);
 				break;
 			case 'o':
@@ -182,7 +183,7 @@ bool						IRC::mode_opt(std::string channelName, int sign , std::string pit , cl
 				else
 					ite->setPassword("");
 			}
-			if(op == 'k'){
+			if(op == 'l'){
 				if(sign == 1)
 					ite->setLimitClients(atoi(pit.c_str()));
 				else

@@ -28,7 +28,7 @@ bool						IRC::join(client &client, std::string cmd)
 {
 	std::string 	chanNam("");
 	std::string		rplList;
-	size_t				idxChan = 0;
+	size_t			idxChan = 0;
 
 	
 	std::cout << BOLD<< "\tIn join(): " << END_C  << std::endl;
@@ -37,10 +37,11 @@ bool						IRC::join(client &client, std::string cmd)
 		return ((void)sendRPL(ERR_NOTENOUGHPARAM(client.GetUser()), client.GetSock()), false);
 	if (cmd.find("#") == std::string::npos)
 		return (0);
-	else if(cmd.find(' ') == std::string::npos)
-		chanNam = cmd.substr(cmd.find('#'), cmd.find(' ') - cmd.find('#') - 1);
+	else if(cmd.find(' ') != std::string::npos)
+		chanNam = cmd.substr(cmd.find('#'), cmd.find(' ') - cmd.find('#'));
 	else
-		chanNam = cmd.substr(cmd.find('#'), cmd.find('\r') - cmd.find('#') - 1);
+		chanNam = cmd.substr(cmd.find('#'), cmd.find('\r') - cmd.find('#'));
+	std::cout << "chanNam : " << chanNam << std::endl; 
 	while (idxChan < this->channels.size())
 	{
 		if (this->channels[idxChan].getName() == chanNam)
@@ -51,6 +52,7 @@ bool						IRC::join(client &client, std::string cmd)
 	// ADD client to existing channel
 	if (idxChan != this->channels.size())
 	{
+		std::cout << "CLIENT LIMIT 1: " <<  this->channels[idxChan].getLimitClients() << std::endl;
 		//checking if client is already in channel
 		for (size_t i = 0; i <= this->channels[idxChan].getClients().size(); i++)
 		{
@@ -75,16 +77,22 @@ bool						IRC::join(client &client, std::string cmd)
 		}// K
 		if (this->channels[idxChan].getModes().find('k') != std::string::npos)
 		{
-			std::string key = cmd.substr(cmd.find(" ") + 1, cmd.find('\r') - cmd.find(" ") - 1);
+			std::string key = cmd.substr(cmd.find(" ") + 1, cmd.find(cmd.size()) - cmd.find(" "));
 			std::cout << "key entered: \"" << MAGENTA << key << END_C << "\"" << std::endl;
 			std::cout << "key of channel: \"" << MAGENTA << this->channels[idxChan].getChannelPassword() << END_C << "\"" << std::endl;
 			
 			if (key != this->channels[idxChan].getChannelPassword())
+			{	
+				std::cout << RED << "WRONG KEY" << END_C << std::endl;
 				return ((void)sendRPL(ERR_BADCHANNELKEY(client.GetNick(), chanNam), client.GetSock()), false);
+			}
 		}// L
-		if (static_cast<int>(this->channels[idxChan].getClients().size() + 1) > this->channels[idxChan].getLimitClients())
+		if ((static_cast<int>(this->channels[idxChan].getClients().size()) + 1) > this->channels[idxChan].getLimitClients())
+		{	
+			std::cout << "CLIENT LIMIT 2: " <<  this->channels[idxChan].getLimitClients() << std::endl;
+			std::cout << RED << "CHANNEL IS FULL" << END_C << std::endl;
 			return ((void)sendRPL(ERR_CHANNELISFULL(client.GetNick(), chanNam), client.GetSock()), false);
-
+		}
 		this->channels[idxChan].setClients(client);
 		
 		// RPL LIST
@@ -114,6 +122,7 @@ bool						IRC::join(client &client, std::string cmd)
 	// NO - CREATE channel
 	Channel newChannel(chanNam, client);
 	newChannel.setOperators(client.GetSock());
+	std::cout << "CLIENT LIMIT 3: " <<  newChannel.getLimitClients() << std::endl;
 	setChannels(newChannel);
 	// need to check limit
 	//channels.push_back(newChannel);
