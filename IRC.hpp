@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: russelenc <russelenc@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/29 19:11:07 by russelenc        ###   ########.fr       */
+/*   Updated: 2024/04/30 15:53:43 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,13 @@ class IRC
 	class client
 	{
 		private :
-			std::string 	pass;
-			std::string 	nick;
-			std::string 	user;
-			std::string		buffer;
-			int				setup;
-			int				sock;
-			std::string		current_channel;
+			std::string					pass;
+			std::string					nick;
+			std::string					user;
+			std::string					buffer;
+			int							setup;
+			int							sock;
+			std::vector<std::string>	current_channel;
 
 		public :
 
@@ -103,7 +103,8 @@ class IRC
 			std::string				getName(void);
 			std::string				getTopic(void);
 			std::vector<int>		getOperators(void);
-			std::vector<int>		getClients(void);
+			std::vector<int>		&getClients(void);
+			bool					isOperator(int socket, std::vector<int> operators);
 			int						getLimitClients(void);
 			std::vector<std::string> getInvitations(void);
 			std::string 			getModes(void);
@@ -121,7 +122,7 @@ class IRC
 			bool					isOperator(int sock);
 			bool					add_client(client &new_client);
 			bool					remove_client(int sock);
-			
+			void					send_topic_rpl(std::string rpl);
 			Channel(std::string name, client &creator);
 			~Channel();
 	};
@@ -152,32 +153,31 @@ class IRC
 		void						initCommand(void);
 		void 						sendRPL(std::string rpl, int fd);
 		int							cmd_used_name(std::string &name, int mode);
-		bool						capLs(client &client, std::string cmd);
-		bool						pass(client &client, std::string cmd);
-		bool						nick(client &client, std::string cmd);
-		bool						user(client &client, std::string cmd);
-		bool						privmsg(client &client, std::string cmd);
+		bool						capLs(client &client, std::string cmd);//OK
+		bool						pass(client &client, std::string cmd);//OK
+		bool						nick(client &client, std::string cmd);//OK
+		bool						user(client &client, std::string cmd);//OK
+		bool						privmsg(client &client, std::string cmd); // OK, a re-test
 		// bool						privmsg_user(client &client, std::string cmd);
-		bool						topic(client &client, std::string cmd);
-		bool						mode(client &client, std::string cmd);
-		bool						ping(client &client, std::string cmd); // fait
-		bool						join(client &client, std::string cmd); // LUCAS
-		// bool						part(client &client, std::string cmd); // LUCAS
-		bool						kick(client &client, std::string cmd); // fait MAIS a verifier + RPL a ajouter
-		// bool						quit(client &client, std::string cmd); // LUCAS
+		bool						topic(client &client, std::string cmd); // Pb lie a join ?->initialisation du vector clients
+		bool						mode(client &client, std::string cmd); // Pas fini
+		bool						ping(client &client, std::string cmd); // OK
+		bool						join(client &client, std::string cmd); // Bientot fini
+		bool						part(client &client, std::string cmd); // Fait dans l'idee mais je m'en sors pas avec le msg pour que irssi reagisse
+		bool						kick(client &client, std::string cmd); // fait MAIS a verifier + RPL a ajouter -> marche pas
+		bool						quit(client &client, std::string cmd); // fait
 		bool						invite(client &clients, std::string cmd); // RPL a ajouter
-		void						setChannels(Channel channels);
+		void						setChannels(Channel &channels);
 		bool						ChannelExist(std::string name);
 		IRC::client 				getclientfromsock(int sock);
 		void						add_options(char c, int sign, std::string channelName);
 		int							getSockFromName(std::string name);
 		std::string					getNameFromSock(int fd);
 		//	MODE
-		bool						mode_opt(std::string channelName, int sign , std::string pit , client &_client, char op);
+		bool						mode_opt(size_t idxChan, int sign , std::string pit , client &_client, char op);
 		void 						handle_mode(client &_client, std::vector<char> opt_vector, std::string channelName, std::vector<std::string> param);
 									IRC(int port, std::string mdp);
 									~IRC();
 
-	bool check_pass(client cl);
 };
 #endif

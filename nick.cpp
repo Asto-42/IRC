@@ -6,22 +6,25 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:12:57 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:19:42 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/26 16:11:54 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "IRC.hpp"
 
-int IRC::cmd_used_name(std::string &name, int mode){
-	if(mode == 1){
+int IRC::cmd_used_name(std::string &name, int mode)
+{
+	if(mode == 1)
+	{
 		for(std::map<int, client>::iterator it = users.begin(); it != users.end(); it++)
 		{
 			if(name == it->second.GetUser())
 				return (1);
 		}
 	}
-	if(mode == 0){
+	if(mode == 0)
+	{
 		for(std::map<int, client>::iterator it = users.begin(); it != users.end(); it++)
 		{
 			if(name == it->second.GetNick())
@@ -34,7 +37,8 @@ int IRC::cmd_used_name(std::string &name, int mode){
 bool	IRC::nick(client &client, std::string cmd)
 {
 	std::string err = "localhost";
-	if (cmd.size() == 0){
+	if (cmd.size() == 0)
+	{
 		std::string tmp = "USER";
 		sendRPL(ERR_NOTENOUGHPARAM(err), client.GetSock());
 		return (0);
@@ -43,13 +47,20 @@ bool	IRC::nick(client &client, std::string cmd)
 		sendRPL(ERR_NOTREGISTERED(err), client.GetSock());
 	else if(cmd == "")
 		sendRPL(ERR_NOTENOUGHPARAM(err), client.GetSock());
-	else if(cmd_used_name(cmd, 1))
+	else if(cmd_used_name(cmd, 0) == 1)
+	{
 		sendRPL(ERR_ALREADYREGISTERED(err), client.GetSock());
+		cmd.insert(cmd.end(), '_');
+		nick(client, cmd);
+		return (1);
+	}
 	else if((cmd)[0] == '#')
 		sendRPL(ERR_ERRONEUSNICK(err), client.GetSock());
 	else{
 		client.SetNick(cmd);
 		client.SetSetup(3);
+		//std::string msg = :jquil!~jquil@5dc0-87b-e09c-1be2-a46.210.62.ip NICK :testeuuuuuuuuuuuuuuur;
+		//send();
 		return (1);
 	}
 	return (1);

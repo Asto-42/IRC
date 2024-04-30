@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: russelenc <russelenc@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/29 19:11:05 by russelenc        ###   ########.fr       */
+/*   Updated: 2024/04/30 15:33:08 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ std::vector<int>			IRC::Channel::getOperators(void)
 	return (this->operators);
 }
 
-std::vector<int>			IRC::Channel::getClients(void)
+std::vector<int>&			IRC::Channel::getClients(void)
 {
 	return (this->clients);
 }
@@ -124,6 +124,7 @@ void							IRC::Channel::delModes(char c)
 
 void	IRC::Channel::setClients(client& client)
 {
+	std::cout << "Client " << client.GetSock() << " added to " << this->getName();
 	this->clients.push_back(client.GetSock());
 }
 
@@ -157,7 +158,7 @@ bool						IRC::Channel::isClient(int sock)
 	return (false);
 }
 
-bool						IRC::Channel::remove_client(int sock)
+bool	IRC::Channel::remove_client(int sock)
 {
 	if (this->isClient(sock) == 1)
 	{
@@ -165,7 +166,7 @@ bool						IRC::Channel::remove_client(int sock)
 		{
 			if (*it == sock)
 			{
-				delete(&it);
+				this->clients.erase(it);
 				return (true);
 			}
 		}
@@ -184,6 +185,18 @@ bool	IRC::Channel::add_client(client &new_client)
 	else
 		std::cout << new_client.GetUser() << " is already in " << this->getName() << std::endl;
 	return (false);
+}
+
+void	IRC::Channel::send_topic_rpl(std::string rpl)
+{
+	int bytes = 0;
+	for (std::vector<int>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
+	{
+		std::cout << "Response sent to " << *it << ": " << rpl << std::endl;
+		bytes = send(*it, rpl.c_str(), rpl.size(), 0);
+		if (bytes < 0)
+			std::cout << "Error sending data to client." << std::endl;
+	}
 }
 // bool							IRC::Channel::isOperator(int fd){
 // 	for (std::vector<int>::iterator it = operators.begin(); it != operators.end(); ++it){

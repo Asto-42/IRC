@@ -23,9 +23,15 @@
 #define ERR_CHANNELISFULL(client, channel) (":localhost 471 " + client + " " + channel + " :Cannot join channel (+l)" + "\r\n")
 // #define ERR_NOTOPERATOR(channelname) (": 482 #" + channelname + " :You're not a channel operator" + CRLF)
 #define RPL_NAMREPLY(client, channel, list) (":localhost 353 " + client + " = " + channel + " :" + list + CRLF)
-#define ERR_NOSUCHNICK(channelname, name) (": 401 #" + channelname + " " + name + " :No such nick/channel" + CRLF )
+#define ERR_NOSUCHNICK(channelname, name) (": 401 " + channelname + " " + name + " :No such nick/channel" + CRLF )
 #define RPL_ENDOFNAMES(client, channel) (":localhost 366 " + client + " " + channel + " :End of /NAMES list" + CRLF)
-
+#define RPL_CAPLS()(":localhost 451 * :You have not registered \r\n")
 #define RPL_JOIN(nick, channelName) (":" + nick + "!" + nick + "@" + "localhost" + " JOIN " + channelName + CRLF)
 #define RPL_PRIVMSG(nick, user, target, msg) (":" + nick + "!" + user + "@localhost PRIVMSG " + target + " :" + msg + CRLF)
 //# define userID(nickname, username) (":" + nickname + "!" + username + "@localhost")
+
+//#define RPL_PARTNOTICE1(client, channel) (":localhost NOTICE " + client + " :You have left the channel " + channel + CRLF)
+
+#define RPL_PARTNOTICE1(client, channel) (":localhost NOTICE " + channel + " :" + client + " has left the channel" + CRLF)
+
+#define RPL_PARTNOTICE2(client, channel) (":localhost NOTICE " + client + " :You're not in the channel " + channel + CRLF)

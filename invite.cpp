@@ -6,7 +6,7 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:16:25 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 19:00:45 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/24 15:10:39 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ bool	IRC::invite(client &clients, std::string cmd)
 					if (it2->second.GetUser() == user)
 					{
 						it->add_client(it2->second);
+						//std::string msg =   "<client> <nick> <channel>"
+						//send(clients.GetSock(), )
 						return (true);
 					}
 					return (false);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 14:47:23 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/04/30 16:38:14 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ IRC::IRC(int port, std::string mdp)
 {
 	std::cout << "Default IRC constructor" << std::endl;
 	memset(&this->server, 0, sizeof(this->server));
-	this->server.sin_addr.s_addr = htonl(INADDR_LOOPBACK); // 127.0.0.1, localhost
+	this->server.sin_addr.s_addr = INADDR_ANY; // 127.0.0.1, localhost
 	this->server.sin_port = htons(port);
 	this->poll_count = 1;
 	this->poll_size = 2;
@@ -52,33 +52,6 @@ IRC::IRC(int port, std::string mdp)
 	initCommand();
 };
 
-// void					IRC::private_msg_chan(std::string msg, std::string sender)
-// {
-// 	for (std::vector<int>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
-// 	{
-		
-// 		std::string tmp = ":" + sender + "!" + this->getName + "@" + sender + " PRIVMSG " + this->name + " :" + msg + "\r\n";
-// 		std::cout << tmp << std::endl;
-// 		send(*it, tmp.c_str(), tmp.size(), 0);
-// 	}
-// }
-
-
-
-
-
-
-// int IRC::calloc_pollfd(int size)
-// {
-// 	if (!this->poll_fds)
-// 	{
-// 		this->poll_fds = (struct pollfd *)calloc(size + 1, sizeof *this->poll_fds);
-// 		if (!this->poll_fds)
-// 			return (0);
-// 	}
-// 	return (1);
-// }
-
 IRC::~IRC()
 {
 	// free(this->poll_fds);
@@ -88,6 +61,7 @@ IRC::~IRC()
 
 void IRC::launch_serv(void)
 {
+		std::cout << BLUE << BOLD << "\tIn launch_serv(): " << END_C << std::endl;
 	if (this->secure == 1)
 	{
 		std::cout << "Initialisation failure, exit the program" << std::endl;
@@ -98,6 +72,7 @@ void IRC::launch_serv(void)
 	std::cout << "Server launched, listening on port : " << this->port << std::endl;
 	while (42)
 	{
+		std::cout << "\twhile(42) loop" << std::endl;
 		int status = poll(&poll_fds[0], poll_fds.size(), -1);
 		if (status == -1)
 		{
@@ -120,6 +95,7 @@ void IRC::launch_serv(void)
 					poll_fds.push_back(pollStruct);
 					class client cl(client);
 					this->users[client] = cl;
+					std::cout << GREEN << "Client added to vector" << END_C << std::endl;
 				}
 			}
 			else
@@ -130,9 +106,11 @@ void IRC::launch_serv(void)
 
 void IRC::manage_input(int x)
 {
+	std::cout << BLUE << BOLD <<  "\tIn manage_input(): " << END_C << std::endl;
 	char server_recv[512];
 	int fd = this->poll_fds[x].fd;
 	memset(&server_recv, '\0', sizeof(server_recv));
+	
 	if (recv(fd, server_recv, sizeof(server_recv), 0) <= 0)
 	{
 		std::cout << server_recv << std::endl;
@@ -143,8 +121,10 @@ void IRC::manage_input(int x)
 	}
 	else
 	{
+		
 		std::string line = users.find(fd)->second.GetBuffer() + server_recv;
 		this->users.find(fd)->second.SetBuffer("");
+		std::cout << YELLOW <<line << END_C << std::endl;
 		std::string input;
 		std::string tmp;
 		std::string::size_type end;
@@ -157,11 +137,11 @@ void IRC::manage_input(int x)
 			{
 				tmp = input.substr(0, space);
 				input.erase(0, space + 1);
-				std::cout << input << std::endl;
+				// std::cout << input << std::endl;
 				if (this->cmd.find(tmp) != this->cmd.end())
 					(this->*cmd[tmp])(this->users.find(fd)->second, input);
 				tmp.clear();
-			
+
 			}
 		}
 	}
@@ -192,12 +172,12 @@ void IRC::sendRPL(std::string rpl, int fd)
 	int bytes = 0;
 	std::cout << "Response sent to " << fd << ": " << rpl << std::endl;
 	send(fd, rpl.c_str(), rpl.size(), 0);
-	if (bytes < 0) 
+	if (bytes < 0)
 		std::cout << "Error sending data to client." << std::endl;
-	
+
 }
 
-void					IRC::setChannels(Channel newChannel)
+void					IRC::setChannels(Channel &newChannel)
 {
 	channels.push_back(newChannel);
 }
@@ -209,14 +189,14 @@ void IRC::initCommand(void)
 	this->cmd["USER"] = &IRC::user;
 	this->cmd["PASS"] = &IRC::pass;
 	this->cmd["PING"]    = &IRC::ping;
-	// this->cmd["QUIT"]    = &IRC::quit;
+	this->cmd["QUIT"]    = &IRC::quit;
 	this->cmd["JOIN"]    = &IRC::join;
 	this->cmd["PRIVMSG"] = &IRC::privmsg;
 	this->cmd["KICK"]    = &IRC::kick;
 	this->cmd["TOPIC"]   = &IRC::topic;
 	this->cmd["MODE"]    = &IRC::mode;
 	this->cmd["INVITE"]  = &IRC::invite;
-	// this->cmd["PART"]    = &IRC::part;
+	this->cmd["PART"]    = &IRC::part;
 	// this->cmd["OPER"]    = &Server::oper;
 }
 

@@ -52,6 +52,11 @@
 		"sstream": "cpp",
 		"stdexcept": "cpp",
 		"streambuf": "cpp",
+<<<<<<< HEAD
+		"typeinfo": "cpp"
+	},
+	"C_Cpp.errorSquiggles": "disabled"
+=======
 		"typeinfo": "cpp",
 		"list": "cpp",
 		"cinttypes": "cpp",
@@ -77,4 +82,5 @@
 		"stack": "cpp",
 		"variant": "cpp"
 	}
+>>>>>>> main
 }

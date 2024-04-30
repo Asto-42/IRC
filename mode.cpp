@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: russelenc <russelenc@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:39 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/29 19:10:45 by russelenc        ###   ########.fr       */
+/*   Updated: 2024/04/30 17:10:36 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,20 @@ typedef struct t_option {
     char	opt;
 } s_option;
 
-std::vector<std::string> split(const std::string& s, const std::string& delimiters) {
-    std::vector<std::string> tokens;
-    size_t start = 0, end = 0;
+std::vector<std::string> split(const std::string& s, const std::string& delimiters)
+{
+	std::vector<std::string> tokens;
+	size_t start = 0, end = 0;
 
-    while ((start = s.find_first_not_of(delimiters, end)) != std::string::npos) {
-        end = s.find_first_of(delimiters, start);
-        if (end == std::string::npos) {
-            tokens.push_back(s.substr(start));
-        } else {
-            tokens.push_back(s.substr(start, end - start));
-        }
-    }
-    return tokens;
+	while ((start = s.find_first_not_of(delimiters, end)) != std::string::npos)
+	{
+		end = s.find_first_of(delimiters, start);
+		if (end == std::string::npos)
+			tokens.push_back(s.substr(start));
+		else
+			tokens.push_back(s.substr(start, end - start));
+	}
+	return tokens;
 }
 void IRC::add_options(char c, int sign, std:: string channelName){
 	for (std::vector<Channel>::iterator ite = channels.begin(); ite != channels.end(); ite++)
@@ -74,7 +75,7 @@ bool IRC::mode(client &_client, std::string cmd){
 			param.push_back(opt);
 	}
 	if(optCount == 0)
-		return (sendRPL(ERR_NOTENOUGHPARAM(err), _client.GetSock()), 0);
+		return (0);
 	
 	if(*argument.begin() == _client.GetNick())
 		return (true);
@@ -88,11 +89,16 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 	std::vector<std::string>::iterator pit = param.begin();
 	std::vector<int> admin;
 	int sign = -1;
-	for (std::vector<Channel>::iterator ite = channels.begin(); ite != channels.end(); ite++)
+	size_t	idxChan = 0;
+	
+	while (idxChan < this->channels.size())
 	{
-		if(ite->getName() == channelName)
-			admin = ite->getOperators();
+		if (channels[idxChan].getName() == channelName)
+			break;
+		idxChan++;
 	}
+	
+	admin = channels[idxChan].getOperators();
 	if (std::find(admin.begin(), admin.end(), _client.GetSock()) == admin.end())
 		return(sendRPL(ERR_NOTOPERATOR(channelName), _client.GetSock()));
 	param.erase(param.begin());
@@ -104,6 +110,7 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 	//boucle 
 	for(std::vector<char>::iterator op = opt_vector.begin(); op < opt_vector.end() ; op++)
 	{
+		std::cout << "in for loop" << std::endl;
 		switch(*op)
 		{
 
@@ -126,7 +133,7 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 					param.erase(param.begin());
 					break ;
 				}
-				mode_opt(channelName, sign, *pit, _client, *op);
+				mode_opt(idxChan, sign, *pit, _client, *op);
 				break;
 			case 'o':
 				if(*pit == "" || pit->empty()){
@@ -134,7 +141,7 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 					param.erase(param.begin());
 					break ;
 				}
-				mode_opt(channelName, sign, *pit, _client, *op);
+				mode_opt(idxChan, sign, *pit, _client, *op);
 				param.erase(param.begin());
 				break;
 			case 'l':
@@ -144,46 +151,46 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 					param.erase(param.begin());
 					break ;
 				}
-				mode_opt(channelName, sign, *pit, _client, *op);
+				mode_opt(idxChan, sign, *pit, _client, *op);
 				param.erase(param.begin());
 				break;
 		}
 	}
 }
 
-bool						IRC::mode_opt(std::string channelName, int sign , std::string pit , client &_client, char op){
-	std::cout << " LA " << channelName << " " << sign  << " "  << pit   << " " << op   << " " << std::endl;
-	for (std::vector<Channel>::iterator ite = channels.begin(); ite != channels.end(); ite++)
-	{
-		if(ite->getName() == channelName){
-			if(op == 'o'){
-					for(std::map<int, client>::iterator it = users.begin(); it != users.end(); it++)
-					{
-						if(it->second.GetNick() == pit)
-						{
-							std::string hostname = _client.GetNick() + "!" + _client.GetUser();
-							if(sign == 1)
-								return(ite->setOperators(it->first), true);
-							else
-								return(ite->delModes(it->first), true);
-						}
-						else
-							return(sendRPL(ERR_NOSUCHNICK(channelName, pit), _client.GetSock()), false);
-					}
-			}
-			if(op == 'k'){
+bool						IRC::mode_opt(size_t idxChan, int sign , std::string pit , client &_client, char op){
+	std::cout << " LA " << idxChan << " " << sign  << " "  << pit   << " " << op   << " " << std::endl;
+	bool found = false;
+	if (op == 'o'){
+		for(std::map<int, client>::iterator iter = users.begin(); iter != users.end(); iter++)
+			if(pit == iter->second.GetNick() && channels[idxChan].isClient(iter->first))
+				found = true;
+		for(std::map<int, client>::iterator it = users.begin(); it != users.end(); it++)
+		{
+			if(found)
+			{
+				std::cout << "here" << std::endl;
+				std::string hostname = _client.GetNick() + "!" + _client.GetUser();
 				if(sign == 1)
-					ite->setPassword(pit);
+					return(this->channels[idxChan].setOperators(it->first), true);
 				else
-					ite->setPassword("");
+					return(this->channels[idxChan].delModes(it->first), true);
 			}
-			if(op == 'k'){
-				if(sign == 1)
-					ite->setLimitClients(atoi(pit.c_str()));
-				else
-					ite->setLimitClients(10);
-			}
+			else
+				return(sendRPL(ERR_NOSUCHNICK(this->channels[idxChan].getName(), pit), _client.GetSock()), false);
 		}
+	}
+	if(op == 'k'){
+		if(sign == 1)
+			this->channels[idxChan].setPassword(pit);
+		else
+			this->channels[idxChan].setPassword("");
+	}
+	if(op == 'l'){
+		if(sign == 1)
+			this->channels[idxChan].setLimitClients(atoi(pit.c_str()));
+		else
+			this->channels[idxChan].setLimitClients(10);
 	}
 	return(true);
 }
