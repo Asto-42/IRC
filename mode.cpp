@@ -6,7 +6,7 @@
 /*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:39 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/30 17:10:36 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/04/30 17:16:14 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,15 +102,8 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 	if (std::find(admin.begin(), admin.end(), _client.GetSock()) == admin.end())
 		return(sendRPL(ERR_NOTOPERATOR(channelName), _client.GetSock()));
 	param.erase(param.begin());
-	// PRINTER
-	for(std::vector<std::string>::iterator pi = param.begin(); pi != param.end(); pi++)
-		std::cout<< "PIT = " << *pi << std::endl;
 	for(std::vector<char>::iterator op = opt_vector.begin(); op < opt_vector.end() ; op++)
-		std::cout << "OP = " << *op << std::endl;
-	//boucle 
-	for(std::vector<char>::iterator op = opt_vector.begin(); op < opt_vector.end() ; op++)
-	{
-		std::cout << "in for loop" << std::endl;
+
 		switch(*op)
 		{
 
@@ -159,7 +152,6 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 }
 
 bool						IRC::mode_opt(size_t idxChan, int sign , std::string pit , client &_client, char op){
-	std::cout << " LA " << idxChan << " " << sign  << " "  << pit   << " " << op   << " " << std::endl;
 	bool found = false;
 	if (op == 'o'){
 		for(std::map<int, client>::iterator iter = users.begin(); iter != users.end(); iter++)
@@ -169,7 +161,6 @@ bool						IRC::mode_opt(size_t idxChan, int sign , std::string pit , client &_cl
 		{
 			if(found)
 			{
-				std::cout << "here" << std::endl;
 				std::string hostname = _client.GetNick() + "!" + _client.GetUser();
 				if(sign == 1)
 					return(this->channels[idxChan].setOperators(it->first), true);
