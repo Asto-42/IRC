@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:16:25 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 12:25:33 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/01 12:42:01 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ bool	IRC::invite(client &client, std::string cmd)
 	std::cout << "chan: \"" << MAGENTA << chan << END_C << "\"" << std::endl;
 	user = cmd.substr(0, cmd.find('#') - 1);
 	std::cout << "user: \"" << MAGENTA << user << END_C << "\"" << std::endl;
+	
 	while (idxChan < this->channels.size())
 	{
 		if (chan == this->channels[idxChan].getName())
-			sendRPL(RPL_INVITINGCHANMSG(client.GetNick(), chan), client.GetSock());
-	break;
+			break;
 		idxChan++;
 	}
 	if (idxChan == this->channels.size())
@@ -64,6 +64,7 @@ bool	IRC::invite(client &client, std::string cmd)
 		if (socketInvited == this->channels[idxChan].getInvitations()[i])
 			return ((void)sendRPL(ERR_USERONCHANNEL(client.GetNick(), user, chan), client.GetSock()), false);
 	}
+			//sendRPL(RPL_INVITINGCHANMSG(client.GetNick(), chan), client.GetSock());
 	this->channels[idxChan].setInvitations(socketInvited);
 	return ((void)sendRPL(RPL_INVITING(client.GetNick(), user, chan), client.GetSock()), false);
 	return (false);

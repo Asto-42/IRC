@@ -30,7 +30,7 @@
 
 #define RPL_INVITING(client, nick, channel) (":localhost 341 " + client + " " + nick + " " + channel + CRLF)
 
-//#define RPL_INVITINGCHANMSG(client, chan) (":localhost 341 " + client + " " + chan + " :HEYYYYYYY" + CRLF)
+#define RPL_INVITINGCHANMSG(client, chan) (":localhost 341 " + client + " " + chan + " :HEYYYYYYY" + CRLF)
 
 #define ERR_USERONCHANNEL(client, nick, channel) (":localhost 343 " + client + " " + nick + " " + channel + " :is already on channel" + CRLF)
 #define ERR_INVITEONLYCHAN(nickname, channel) (":localhost 473 " + nickname + " " + channel + " :Cannot join channel (+i)" + CRLF)

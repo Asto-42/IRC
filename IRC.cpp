@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 18:02:25 by jquil            ###   ########.fr       */
+/*   Updated: 2024/05/01 12:56:48 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ IRC::IRC(int port, std::string mdp)
 {
 	std::cout << "Default IRC constructor" << std::endl;
 	memset(&this->server, 0, sizeof(this->server));
-	this->server.sin_addr.s_addr = htonl(INADDR_LOOPBACK); // 127.0.0.1, localhost
+	this->server.sin_addr.s_addr = INADDR_ANY; // 127.0.0.1, localhost
 	this->server.sin_port = htons(port);
 	this->poll_count = 1;
 	this->poll_size = 2;
@@ -59,6 +59,26 @@ IRC::~IRC()
 	std::cout << "Default destructor called" << std::endl;
 };
 
+bool IRC::_signal = false;
+
+void IRC::CloseFds()
+{
+	std::cout << GREEN << "FDS CORRECTLY CLOSED" << END_C << std::endl;
+	if(users.size() > 1)
+	{
+		for(size_t i = 0 ; i < users.size(); i++){
+			std::cout << users.size() << std::endl;
+				std::cout << "Client " << users[i].GetSock() << " is disconnected" << std::endl;
+				close(users[i].GetSock());
+
+		}
+	}
+	if (sock != -1){ //-> close the server socket
+		std::cout << "Server " << sock << " is Disconnected" << std::endl;
+		close(sock);
+	}
+}
+
 void IRC::launch_serv(void)
 {
 		std::cout << BLUE << BOLD << "\tIn launch_serv(): " << END_C << std::endl;
@@ -70,11 +90,11 @@ void IRC::launch_serv(void)
 	char server_recv[200];
 	memset(server_recv, '\0', 200);
 	std::cout << "Server launched, listening on port : " << this->port << std::endl;
-	while (42)
+	while (IRC::_signal == false)
 	{
 		std::cout << "\twhile(42) loop" << std::endl;
-		int status = poll(&poll_fds[0], poll_fds.size(), -1);
-		if (status == -1)
+		int status = poll(&poll_fds[0], poll_fds.size(), 900);
+		if (status == -1 && IRC::_signal == false)
 		{
 			std::cout << "Poll failure" << std::endl;
 			return;
@@ -95,12 +115,27 @@ void IRC::launch_serv(void)
 					poll_fds.push_back(pollStruct);
 					class client cl(client);
 					this->users[client] = cl;
+					std::cout << GREEN << "Client added to vector" << END_C << std::endl;
 				}
 			}
 			else
 				manage_input(x);
 		}
 	}
+	CloseFds();
+}
+void IRC::ClearClients(int fd)
+{
+	for(size_t i = 0 ; i < poll_fds.size(); i++)
+		if(poll_fds[i].fd == fd){
+			poll_fds.erase(poll_fds.begin() + i);
+			break;
+		}
+	std::map<int, client>::iterator it = users.find(fd);
+    if (it != users.end()) {
+        users.erase(it);
+    }
+
 }
 
 void IRC::manage_input(int x)
@@ -109,16 +144,20 @@ void IRC::manage_input(int x)
 	char server_recv[512];
 	int fd = this->poll_fds[x].fd;
 	memset(&server_recv, '\0', sizeof(server_recv));
+	
 	if (recv(fd, server_recv, sizeof(server_recv), 0) <= 0)
 	{
 		std::cout << server_recv << std::endl;
-		sleep(1);
+		std::cout << RED << "Client <" << fd << "> Disconnected" << END_C << std::endl;
+		ClearClients(fd);
+		close(fd);
 		// del user
 		// close le fd
 		// delete du poll de fd
 	}
 	else
 	{
+		
 		std::string line = users.find(fd)->second.GetBuffer() + server_recv;
 		this->users.find(fd)->second.SetBuffer("");
 		std::string input;
@@ -129,11 +168,14 @@ void IRC::manage_input(int x)
 		{
 			input = line.substr(0, end);
 			line.erase(0 ,end + 2);
+			std::cout << YELLOW << "=========== CMD RECEIVE =========== " << std::endl;
+			std::cout << "\""<< input << "\"" << std::endl;
+			std::cout << "=================================== " << END_C << std::endl;
 			if ((space = input.find(" ", 0)) != std::string::npos)
 			{
 				tmp = input.substr(0, space);
 				input.erase(0, space + 1);
-				std::cout << input << std::endl;
+				// std::cout << input << std::endl;
 				if (this->cmd.find(tmp) != this->cmd.end())
 					(this->*cmd[tmp])(this->users.find(fd)->second, input);
 				tmp.clear();
@@ -142,26 +184,6 @@ void IRC::manage_input(int x)
 		}
 	}
 }
-
-//void IRC::Kick(void)
-// {
-// 	std::cout << "Enter Kick function" << std::endl;
-// }
-
-// void IRC::Invite(void)
-// {
-// 	std::cout << "Enter Invite function" << std::endl;
-// }
-
-// void IRC::Topic(void)
-// {
-// 	std::cout << "Enter Topic function" << std::endl;
-// }
-
-// void IRC::Mode(void)
-// {
-// 	std::cout << "Enter Mode function" << std::endl;
-// }
 
 void IRC::sendRPL(std::string rpl, int fd)
 {
@@ -210,6 +232,14 @@ void IRC::initCommand(void)
 // 	this->poll_count++;
 // 	return (1);
 // }
+
+void IRC::SignalHandler(int signum)
+{
+	(void)signum;
+	std::cout << " Signal received" << std::endl;
+	_signal = true;
+}
+
 
 bool						IRC::ChannelExist(std::string name){
 	for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it){

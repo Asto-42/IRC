@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: russelenc <russelenc@student.42.fr>        +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 18:37:24 by jquil            ###   ########.fr       */
+/*   Updated: 2024/05/01 12:38:28 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ class IRC
 			std::vector<int>		clients;
 			std::string				channelPassword;
 			int						limitClients;
+			static bool				_signal;
 			Channel(void);
 
 		public:
@@ -132,12 +133,12 @@ class IRC
 			bool					add_client(client &new_client);
 			bool					remove_client(int sock);
 			void					send_topic_rpl(std::string rpl);
-
-		//------------------- Cons/Des --------------------------------------//
-									Channel(std::string name, client &creator);
-									~Channel();
+			void					SignalHandler(int signum);
+			Channel(std::string name, client &creator);
+			~Channel();
 	};
 
+	
 		int							poll_count;
 		int							poll_size;
 		int							port;
@@ -152,14 +153,19 @@ class IRC
 		std::vector<struct pollfd>	poll_fds;
 		std::vector<Channel> 		channels;
 		bool						secure;
+		static bool					_signal;
+
+	// public :
+	// 	//------------------- Setters ---------------------------------------//
+
+	// 	//------------------- Getters ---------------------------------------//
+	// 	int							getSockFromName(std::string name);
+	// 	std::string					getNameFromSock(int fd);
+		//bool						secure;
 
 	public :
-		//------------------- Setters ---------------------------------------//
 		void						setChannels(Channel &channels);
-
-		//------------------- Getters ---------------------------------------//
-		int							getSockFromName(std::string name);
-		std::string					getNameFromSock(int fd);
+		void						ClearClients(int fd);
 		std::vector<Channel>		*getChannel(void);
 		IRC::client					getclientfromsock(int sock);
 
@@ -188,7 +194,12 @@ class IRC
 		int							cmd_used_name(std::string &name, int mode);
 		bool						ChannelExist(std::string name);
 		void						add_options(char c, int sign, std::string channelName);
-		bool						mode_opt(std::string channelName, int sign , std::string pit , client &_client, char op);
+		int							getSockFromName(std::string name);
+		std::string					getNameFromSock(int fd);
+		void						CloseFds();
+		static void						SignalHandler(int signum);
+		//	MODE
+		bool						mode_opt(size_t idxChan, int sign , std::string pit , client &_client, char op);
 		void 						handle_mode(client &_client, std::vector<char> opt_vector, std::string channelName, std::vector<std::string> param);
 		
 		//------------------- Cons/Des --------------------------------------//

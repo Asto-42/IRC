@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 15:41:53 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/03 16:58:41 by jquil            ###   ########.fr       */
+/*   Updated: 2024/04/30 18:29:08 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ int	main(int argc, char **argv)
 		return (0);
 	}
 	IRC serv(atoi(argv[1]), argv[2]);
+	signal(SIGINT, IRC::SignalHandler); //-> catch the signal (ctrl + c)
+  	signal(SIGQUIT, IRC::SignalHandler); //-> catch the signal (ctrl + \)
 	serv.launch_serv();
 	return (0);
 }

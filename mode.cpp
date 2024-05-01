@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:39 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 15:28:29 by jquil            ###   ########.fr       */
+/*   Updated: 2024/05/01 12:34:43 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ bool IRC::mode(client &_client, std::string cmd){
 			param.push_back(opt);
 	}
 	if(optCount == 0)
-		return (sendRPL(ERR_NOTENOUGHPARAM(err), _client.GetSock()), 0);
+		return (0);
 	
 	if(*argument.begin() == _client.GetNick())
 		return (true);
@@ -89,22 +89,28 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 	std::vector<std::string>::iterator pit = param.begin();
 	std::vector<int> admin;
 	int sign = -1;
-	for (std::vector<Channel>::iterator ite = channels.begin(); ite != channels.end(); ite++)
+	size_t	idxChan = 0;
+	
+	while (idxChan < this->channels.size())
 	{
-		if(ite->getName() == channelName)
-			admin = ite->getOperators();
+		if (channels[idxChan].getName() == channelName)
+			break;
+		idxChan++;
 	}
-	if (std::find(admin.begin(), admin.end(), _client.GetSock()) == admin.end())
+	
+	admin = channels[idxChan].getOperators();
+	for (std::vector<int>::iterator aa = admin.begin() ; aa != admin.end(); aa++)
+	{
+		std::cout << *aa <<std::endl;
+	}
+	if (channels[idxChan].isOperator(_client) == false)
 		return(sendRPL(ERR_NOTOPERATOR(channelName), _client.GetSock()));
 	param.erase(param.begin());
 	// PRINTER
-	for(std::vector<std::string>::iterator pi = param.begin(); pi != param.end(); pi++)
-		std::cout<< "PIT = " << *pi << std::endl;
-	for(std::vector<char>::iterator op = opt_vector.begin(); op < opt_vector.end() ; op++)
-		std::cout << "OP = " << *op << std::endl;
+
 	//boucle 
-	for(std::vector<char>::iterator op = opt_vector.begin(); op < opt_vector.end() ; op++)
-	{
+	for(std::vector<char>::iterator op = opt_vector.begin(); op < opt_vector.end() ; op++){
+
 		switch(*op)
 		{
 
@@ -131,8 +137,7 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 					param.erase(param.begin());
 					break ;
 				}
-				//RPL KEY SET
-				mode_opt(channelName, sign, *pit, _client, *op);
+				mode_opt(idxChan, sign, *pit, _client, *op);
 				break;
 			case 'o':
 				if(*pit == "" || pit->empty()){
@@ -140,7 +145,7 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 					param.erase(param.begin());
 					break ;
 				}
-				mode_opt(channelName, sign, *pit, _client, *op);
+				mode_opt(idxChan, sign, *pit, _client, *op);
 				param.erase(param.begin());
 				break;
 			case 'l':
@@ -150,46 +155,42 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 					param.erase(param.begin());
 					break ;
 				}
-				mode_opt(channelName, sign, *pit, _client, *op);
+				mode_opt(idxChan, sign, *pit, _client, *op);
 				param.erase(param.begin());
 				break;
 		}
 	}
 }
 
-bool						IRC::mode_opt(std::string channelName, int sign , std::string pit , client &_client, char op){
-	std::cout << " LA " << channelName << " " << sign  << " "  << pit   << " " << op   << " " << std::endl;
-	for (std::vector<Channel>::iterator ite = channels.begin(); ite != channels.end(); ite++)
-	{
-		if(ite->getName() == channelName){
-			if(op == 'o'){
-					for(std::map<int, client>::iterator it = users.begin(); it != users.end(); it++)
-					{
-						if(it->second.GetNick() == pit)
-						{
-							std::string hostname = _client.GetNick() + "!" + _client.GetUser();
-							if(sign == 1)
-								return(ite->setOperators(it->first), true);
-							else
-								return(ite->delModes(it->first), true);
-						}
-						else
-							return(sendRPL(ERR_NOSUCHNICK(channelName, pit), _client.GetSock()), false);
-					}
-			}
-			if(op == 'k'){
-				if(sign == 1)
-					ite->setPassword(pit);
-				else
-					ite->setPassword("");
-			}
-			if(op == 'l'){
-				if(sign == 1)
-					ite->setLimitClients(atoi(pit.c_str()));
-				else
-					ite->setLimitClients(10);
-			}
+bool						IRC::mode_opt(size_t idxChan, int sign , std::string pit , client &_client, char op){
+	bool found = false;
+	if (op == 'o'){
+		for(std::map<int, client>::iterator iter = users.begin(); iter != users.end(); iter++)
+			if(pit == iter->second.GetNick() && channels[idxChan].isClient(iter->first))
+				found = true;
+		if(found)
+		{
+			std::string hostname = _client.GetNick() + "!" + _client.GetUser();
+			// std::cout << RED << ;
+			if(sign == 1)
+				return(this->channels[idxChan].setOperators(this->getSockFromName(pit)), true);
+			else if(sign == 0)
+				return(this->channels[idxChan].delModes(this->getSockFromName(pit)), true);
 		}
+		else
+			return(sendRPL(ERR_NOSUCHNICK(this->channels[idxChan].getName(), pit), _client.GetSock()), false);
+	}
+	if(op == 'k'){
+		if(sign == 1)
+			this->channels[idxChan].setPassword(pit);
+		else
+			this->channels[idxChan].setPassword("");
+	}
+	if(op == 'l'){
+		if(sign == 1)
+			this->channels[idxChan].setLimitClients(atoi(pit.c_str()));
+		else
+			this->channels[idxChan].setLimitClients(10);
 	}
 	return(true);
 }
