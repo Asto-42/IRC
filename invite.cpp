@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:16:25 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 12:24:04 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/01 12:25:33 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ bool	IRC::invite(client &client, std::string cmd)
 	while (idxChan < this->channels.size())
 	{
 		if (chan == this->channels[idxChan].getName())
-			break;
+			sendRPL(RPL_INVITINGCHANMSG(client.GetNick(), chan), client.GetSock());
+	break;
 		idxChan++;
 	}
 	if (idxChan == this->channels.size())
