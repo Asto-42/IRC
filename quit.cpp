@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:16:16 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 15:37:53 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/01 19:07:15 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 bool	IRC::quit(client &client, std::string cmd)
 {
 	(void)cmd;
+
 	// Deleting sockets in channels
 	for (size_t i = 0; i < this->channels.size(); i++)
 	{

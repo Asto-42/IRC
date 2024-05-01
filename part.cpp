@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:09 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 18:32:08 by jquil            ###   ########.fr       */
+/*   Updated: 2024/05/01 19:00:51 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,18 +43,11 @@ bool	IRC::part(client &client, std::string cmd)
 	{
 		if (client.GetSock() == this->channels[idxChan].getClients()[i])
 		{
-			std::cerr << BOLD << "ERASING !!!" << END_C << std::endl;
-			std::string tmp = client.GetNick() + " has left the channel: " + chan;
+			this->channels[idxChan].getClients().erase(this->channels[idxChan].getClients().begin() + i);
+			sendRPL(RPL_PART(userID(client.GetNick(), client.GetNick()), chan, "because vous puez la merde"), client.GetSock());
 			// Broadcasting msg to all clients in channel
 			for (size_t j = 0; j < this->channels[idxChan].getClients().size(); j++)
-				sendRPL(RPL_PARTNOTICE1(client.GetNick(), chan), this->channels[idxChan].getClients()[j]);
-			
-			this->channels[idxChan].getClients().erase(this->channels[idxChan].getClients().begin() + i);
-			std::cout << RED << "Clients left in channel" << END_C << std::endl;
-			for (size_t k = 0; k < this->channels[idxChan].getClients().size(); k++)
-			{
-				std::cout << RED << this->channels[idxChan].getClients()[k] << END_C << std::endl;
-			}
+				sendRPL(RPL_PART(userID(client.GetNick(), client.GetNick()), chan, "because vous puez la merde"), this->channels[idxChan].getClients()[j]);
 			break;
 		}
 		i++;

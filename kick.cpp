@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:16:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 19:06:32 by jquil            ###   ########.fr       */
+/*   Updated: 2024/05/01 19:49:33 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ bool	IRC::kick(client &clients, std::string cmd)
 						std::string msg;
 						if (it->remove_client(it2->second.GetSock()) == 0)
 						{
-							std::cout << clients.GetUser() << " is not in " << chan << std::endl;
+							std::cout << clients.GetNick() << " is not in " << chan << std::endl;
 							msg = ":localhost 442 " + clients.GetNick() + chan + " :You're not on that channel";
 							std::cout << msg << std::endl;
 							send(clients.GetSock(), msg.c_str(), msg.size(), 0);
@@ -57,9 +57,10 @@ bool	IRC::kick(client &clients, std::string cmd)
 						}
 						else
 						{
-							msg = ":" + clients.GetNick() + "!~" + clients.GetUser() + " PART " + chan;
-							std::cout << msg << std::endl;
-							send(clients.GetSock(), msg.c_str(), msg.size(), 0);
+						//	msg = ":" + clients.GetNick() + "!~" + clients.GetNick() + " PART " + chan;
+						//	std::cout << msg << std::endl;
+						//	send(clients.GetSock(), msg.c_str(), msg.size(), 0);
+						sendRPL(RPL_KICK(userID(clients.GetNick(), clients.GetNick()), chan, user, "because il casse les couilles"), clients.GetSock());
 							//	:jquil!~jquil@5dc0-87b-e09c-1be2-a46.210.62.ip PART #testjeubnssodf
 							return (true);
 						}

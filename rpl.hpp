@@ -30,7 +30,6 @@
 # define RPL_INVITE(user_id, invited, channel) (user_id + " INVITE " + invited + " :" + channel + "\r\n")
 # define RPL_INVITING(client, nick, channel) (":localhost 341 " + client + " " + nick + " " + channel + "\r\n")
 
-
 //#define RPL_INVITING(client, nick, channel) (":localhost 341 " + client + " " + nick + " " + channel + CRLF)
 
 #define RPL_INVITINGCHANMSG(client, chan) (":localhost 341 " + client + " " + chan + " :HEYYYYYYY" + CRLF)
@@ -60,10 +59,10 @@
 
 #define RPL_OP(nick, user, channel, modset, target) (":" + nick + "!" + user + "@localhost MODE " + channel + " " + modset + " " + target + CRLF)
 
-
-
+# define RPL_PART(user_id, channel, reason) (user_id + " PART " + channel + " " + reason + "\r\n")
+# define RPL_KICK(user_id, channel, kicked, reason) (user_id + " KICK " + channel + " " + kicked + " " + reason + "\r\n")
 
 #define RPL_MODE(user_id, channel, modeset, target) (user_id + " MODE " + channel + " " + modeset + " " + target + "\r\n")
 #define userID(nickname, username) (":" + nickname + "!" + username + "@localhost")
-
+# define RPL_QUIT(user_id, reason) (user_id + " QUIT " + reason + "\r\n")
 //#define RPL_SERVMSG()(":" + "localhost" + " PRIVMSG " + receiver_nick + " :" + message_content, target_client);

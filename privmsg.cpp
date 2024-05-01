@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:13:49 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 15:52:26 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/01 18:39:13 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void					IRC::private_msg_chan(std::string msg, client &sender, std::string chan
 {
 	std::cout << BOLD << BLUE << "\tIn  private_msg_chan(): " << END_C << std::endl;
 	size_t	idxChan = 0;
+	std::string senderNick;
 	
 	while (idxChan < this->channels.size())
 	{
@@ -56,7 +57,12 @@ void					IRC::private_msg_chan(std::string msg, client &sender, std::string chan
 			// }
 			if (nick != sender.GetNick())
 			{
-				sendRPL(RPL_PRIVMSG(sender.GetNick(), nick, channel, msg), this->channels[idxChan].getClients()[i]);
+				if (this->channels[idxChan].isOperator(this->channels[idxChan].getClients()[i], this->channels[idxChan].getOperators()))
+					senderNick = "@" + sender.GetNick();
+				else
+					senderNick = sender.GetNick();
+				std::cout << BOLD << "nick: " << nick << END_C << std::endl;
+				sendRPL(RPL_PRIVMSG(senderNick, nick, channel, msg), this->channels[idxChan].getClients()[i]);
 			}
 	}
 }
