@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 12:56:48 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/01 15:38:22 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ void IRC::launch_serv(void)
 	std::cout << "Server launched, listening on port : " << this->port << std::endl;
 	while (IRC::_signal == false)
 	{
-		std::cout << "\twhile(42) loop" << std::endl;
 		int status = poll(&poll_fds[0], poll_fds.size(), 900);
 		if (status == -1 && IRC::_signal == false)
 		{
@@ -128,6 +127,7 @@ void IRC::ClearClients(int fd)
 {
 	for(size_t i = 0 ; i < poll_fds.size(); i++)
 		if(poll_fds[i].fd == fd){
+			close(poll_fds[i].fd);
 			poll_fds.erase(poll_fds.begin() + i);
 			break;
 		}

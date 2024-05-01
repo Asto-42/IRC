@@ -3,25 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:14:55 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/30 16:40:02 by rencarna         ###   ########.fr       */
+/*   Updated: 2024/05/01 16:47:08 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
 
 
-bool	isOperator(int& socket, std::vector<int> opertors)
-{
-	for (size_t i = 0; i < opertors.size(); i++)
-	{
-		if (opertors[i] == socket)
-			return (true);
-	}
-	return (false);
-}
+// bool	isOperator(int& socket, std::vector<int> opertors)
+// {
+// 	for (size_t i = 0; i < opertors.size(); i++)
+// 	{
+// 		if (opertors[i] == socket)
+// 			return (true);
+// 	}
+// 	return (false);
+// }
 
 
 bool						IRC::join(client &client, std::string cmd)
@@ -98,7 +98,7 @@ bool						IRC::join(client &client, std::string cmd)
 		// RPL LIST
 		for (size_t i = 0; i < this->channels[idxChan].getClients().size(); i++)
 		{
-			if (isOperator(this->channels[idxChan].getClients()[i], this->channels[idxChan].getOperators()) == true)
+			if (this->channels[idxChan].isOperator(this->channels[idxChan].getClients()[i], this->channels[idxChan].getOperators()) == true)
 				rplList += "@" + users[this->channels[idxChan].getClients()[i]].GetNick() + " ";
 			else
 				rplList += users[this->channels[idxChan].getClients()[i]].GetNick() + " ";
@@ -132,15 +132,16 @@ bool						IRC::join(client &client, std::string cmd)
 	//	std::cout << GREEN << *ite << END_C << std::endl;
 	for (size_t i = 0; i < newChannel.getClients().size(); i++)
 	{
-		if (isOperator(newChannel.getClients()[i], newChannel.getOperators()) == true)
+		if (this->channels[idxChan].isOperator(newChannel.getClients()[i], newChannel.getOperators()) == true)
 			rplList += "@" + users[newChannel.getClients()[i]].GetNick() + " ";
 		else
 			rplList += users[newChannel.getClients()[i]].GetNick() + " ";
 	}
 	//std::cout << BLUE << rplList << END_C << std::endl;
-	sendRPL(RPL_JOIN(client.GetNick(), chanNam), client.GetSock());
-	sendRPL(RPL_NAMREPLY(client.GetNick(), chanNam, rplList), client.GetSock());
-	sendRPL(RPL_TOPIC(client.GetNick(), chanNam, ""), client.GetSock());
-	sendRPL(RPL_ENDOFNAMES(client.GetNick(), chanNam), client.GetSock());
+	
+		sendRPL(RPL_JOIN(client.GetNick(), chanNam), client.GetSock());
+		sendRPL(RPL_NAMREPLY(client.GetNick(), chanNam, rplList), client.GetSock());
+		sendRPL(RPL_TOPIC(client.GetNick(), chanNam, ""), client.GetSock());
+		sendRPL(RPL_ENDOFNAMES(client.GetNick(), chanNam), client.GetSock());
 	return (true);
 }

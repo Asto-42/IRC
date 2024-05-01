@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:16:25 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 12:42:01 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/01 16:28:41 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,9 @@ bool	IRC::invite(client &client, std::string cmd)
 	}
 			//sendRPL(RPL_INVITINGCHANMSG(client.GetNick(), chan), client.GetSock());
 	this->channels[idxChan].setInvitations(socketInvited);
-	return ((void)sendRPL(RPL_INVITING(client.GetNick(), user, chan), client.GetSock()), false);
+	//return ((void)sendRPL(RPL_INVITING(client.GetNick(), user, chan), client.GetSock()), false);
+	//sendRPL(, client.GetSock());
+	sendRPL(RPL_INVITING(client.GetNick(), user, chan), client.GetSock());
+	sendRPL(RPL_INVITE(userID(client.GetNick(), client.GetUser()), user, chan), client.GetSock());
 	return (false);
 }

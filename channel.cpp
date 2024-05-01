@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 12:33:15 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/01 16:09:27 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,25 @@ bool				IRC::Channel::isOperator(client &client)
 	return (false);
 }
 
-bool				IRC::Channel::isOperator(int sock)
+bool				IRC::Channel::isOperator(int& socket, std::vector<int> opertors)
 {
-	for (std::vector<int>::iterator it = this->operators.begin(); it != this->operators.end(); ++it)
+	for (size_t i = 0; i < opertors.size(); i++)
 	{
-		if (*it == sock)
+		if (opertors[i] == socket)
 			return (true);
 	}
 	return (false);
 }
+
+// bool				IRC::Channel::isOperator(int sock)
+// {
+// 	for (std::vector<int>::iterator it = this->operators.begin(); it != this->operators.end(); ++it)
+// 	{
+// 		if (*it == sock)
+// 			return (true);
+// 	}
+// 	return (false);
+// }
 
 bool				IRC::Channel::isClient(int sock)
 {
@@ -142,7 +152,7 @@ std::string			IRC::Channel::getTopic(void)
 	return (this->topic);
 }
 
-std::vector<int>	IRC::Channel::getOperators(void)
+std::vector<int>&	IRC::Channel::getOperators(void)
 {
 	return (this->operators);
 }

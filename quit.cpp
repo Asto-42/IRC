@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:16:16 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 13:10:55 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/01 15:37:53 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,29 @@
 
 bool	IRC::quit(client &client, std::string cmd)
 {
-	std::string::size_type x;
-	if ((x = cmd.find(" ", 0)) == std::string::npos)
-		return (0);
-	ClearClients(client.GetSock());
-	// 
-	cmd = cmd.substr(0, x);
-	if (cmd == "QUIT")
+	(void)cmd;
+	// Deleting sockets in channels
+	for (size_t i = 0; i < this->channels.size(); i++)
 	{
-		delete(&client);
-		return (1);
+		// from operators
+		for (size_t j = 0; j < this->channels[i].getOperators().size(); j++)
+		{
+			if (this->channels[i].getOperators()[j] == client.GetSock())
+			{
+				this->channels[i].getOperators().erase(this->channels[i].getOperators().begin() + j);
+				break;
+			}
+		}
+		// from clients channel
+		for (size_t j = 0; j < this->channels[i].getClients().size(); j++)
+		{
+			if (this->channels[i].getClients()[j] == client.GetSock())
+			{
+				this->channels[i].getClients().erase(this->channels[i].getClients().begin() + j);
+				break;
+			}
+		}
 	}
+	ClearClients(client.GetSock());
 	return (0);
 }

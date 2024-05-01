@@ -27,13 +27,19 @@
 
 //---- /INVITE
 //#define RPL_INVITE(client, invited, channel) (":localhost ")
+# define RPL_INVITE(user_id, invited, channel) (user_id + " INVITE " + invited + " :" + channel + "\r\n")
+# define RPL_INVITING(client, nick, channel) (":localhost 341 " + client + " " + nick + " " + channel + "\r\n")
 
-#define RPL_INVITING(client, nick, channel) (":localhost 341 " + client + " " + nick + " " + channel + CRLF)
+
+//#define RPL_INVITING(client, nick, channel) (":localhost 341 " + client + " " + nick + " " + channel + CRLF)
 
 #define RPL_INVITINGCHANMSG(client, chan) (":localhost 341 " + client + " " + chan + " :HEYYYYYYY" + CRLF)
 
 #define ERR_USERONCHANNEL(client, nick, channel) (":localhost 343 " + client + " " + nick + " " + channel + " :is already on channel" + CRLF)
 #define ERR_INVITEONLYCHAN(nickname, channel) (":localhost 473 " + nickname + " " + channel + " :Cannot join channel (+i)" + CRLF)
+
+
+
 
 
 #define ERR_BADCHANNELKEY(client, channel) (":localhost 475 " + client + " " + channel + " :Cannot join channel (+k)" + CRLF)
@@ -50,5 +56,14 @@
 //#define RPL_PARTNOTICE1(client, channel) (":localhost NOTICE " + client + " :You have left the channel " + channel + CRLF)
 
 #define RPL_PARTNOTICE1(client, channel) (":localhost NOTICE " + channel + " :" + client + " has left the channel" + CRLF)
-
 #define RPL_PARTNOTICE2(client, channel) (":localhost NOTICE " + client + " :You're not in the channel " + channel + CRLF)
+
+#define RPL_OP(nick, user, channel, modset, target) (":" + nick + "!" + user + "@localhost MODE " + channel + " " + modset + " " + target + CRLF)
+
+
+
+
+#define RPL_MODE(user_id, channel, modeset, target) (user_id + " MODE " + channel + " " + modeset + " " + target + "\r\n")
+#define userID(nickname, username) (":" + nickname + "!" + username + "@localhost")
+
+//#define RPL_SERVMSG()(":" + "localhost" + " PRIVMSG " + receiver_nick + " :" + message_content, target_client);

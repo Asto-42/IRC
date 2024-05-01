@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 12:38:28 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/01 16:10:01 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ class IRC
 		//------------------- Getters ---------------------------------------//
 			std::string				getName(void);
 			std::string				getTopic(void);
-			std::vector<int>		getOperators(void);
+			std::vector<int>&		getOperators(void);
 			std::vector<int>&		getClients(void);
 			int&					getLimitClients(void);
 			std::vector<int>&		getInvitations(void);
@@ -126,10 +126,10 @@ class IRC
 			void					delOperators(int operateur);
 
 		//------------------- Utils -----------------------------------------//
-			bool					isOperator(int socket, std::vector<int> operators);
+			bool					isOperator(int& socket, std::vector<int> operators);
 			bool					isClient(int sock);
 			bool					isOperator(client &client);
-			bool					isOperator(int sock);
+			//bool					isOperator(int sock);
 			bool					add_client(client &new_client);
 			bool					remove_client(int sock);
 			void					send_topic_rpl(std::string rpl);
