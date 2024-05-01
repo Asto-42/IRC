@@ -53,6 +53,7 @@ class Channel;
 
 class IRC
 {
+	private :
 	class client
 	{
 		private :
@@ -65,9 +66,7 @@ class IRC
 			std::vector<std::string>	current_channel;
 
 		public :
-
-							client();
-							client(int sock);
+		//------------------- Getters ---------------------------------------//
 			int				GetSock();
 			int				GetSetup() const;
 			std::string 	GetPass();
@@ -75,16 +74,19 @@ class IRC
 			std::string 	GetUser();
 			std::string		GetBuffer() const;
 			std::string		GetCurrentChannel() const;
+
+		//------------------- Setters ---------------------------------------//
+			void			SetPass(std::string pas);
+			void 			SetNick(std::string nic);
+			void 			SetUser(std::string use);
+			void			SetSetup(int x);
+			void			SetCurrentChannel(std::string str);
 			void			SetBuffer(std::string buf);
-			void		SetPass(std::string pas);
-			void 		SetNick(std::string nic);
-			void 		SetUser(std::string use);
-			void		SetSetup(int x);
-			void		SetCurrentChannel(std::string str);
 
-
+		//------------------- Cons/Des --------------------------------------//
+							client();
+							client(int sock);
 	};
-
 	class Channel
 	{
 		private:
@@ -100,7 +102,7 @@ class IRC
 			Channel(void);
 
 		public:
-		//------------------- Getters -----------------------------------------//
+		//------------------- Getters ---------------------------------------//
 			std::string				getName(void);
 			std::string				getTopic(void);
 			std::vector<int>		getOperators(void);
@@ -110,7 +112,7 @@ class IRC
 			std::string 			getModes(void);
 			std::string&			getChannelPassword();
 
-		//------------------- Setters -----------------------------------------//
+		//------------------- Setters ---------------------------------------//
 			void					setInvitations(int& socket);
 			void					setLimitClients(int limit);
 			void 					setModes(char c);
@@ -122,7 +124,7 @@ class IRC
 			void 					delModes(char c);
 			void					delOperators(int operateur);
 
-		//------------------- Utils ------------------------------------------//
+		//------------------- Utils -----------------------------------------//
 			bool					isOperator(int socket, std::vector<int> operators);
 			bool					isClient(int sock);
 			bool					isOperator(client &client);
@@ -131,37 +133,37 @@ class IRC
 			bool					remove_client(int sock);
 			void					send_topic_rpl(std::string rpl);
 
-			
-			Channel(std::string name, client &creator);
-			~Channel();
+		//------------------- Cons/Des --------------------------------------//
+									Channel(std::string name, client &creator);
+									~Channel();
 	};
 
-	private :
-		std::string 				mdp;
-		socklen_t					peer_addr_size;
-		struct sockaddr_in 			server, peer_addr;
-		std::vector<struct pollfd>	poll_fds;
-		std::map<int, client>		users;
-		std::map<std::string, bool (IRC::*)(client&, std::string)>	cmd;
-		std::vector<Channel> 		channels;
 		int							poll_count;
 		int							poll_size;
 		int							port;
 		int							sock;
 		int							bind_sock;
 		int							lstn;
-		bool							secure;
+		std::string 				mdp;
+		socklen_t					peer_addr_size;
+		struct sockaddr_in 			server, peer_addr;
+		std::map<int, client>		users;
+		std::map<std::string, bool (IRC::*)(client&, std::string)>	cmd;
+		std::vector<struct pollfd>	poll_fds;
+		std::vector<Channel> 		channels;
+		bool						secure;
 
 	public :
+		//------------------- Setters ---------------------------------------//
+		void						setChannels(Channel &channels);
+
+		//------------------- Getters ---------------------------------------//
+		int							getSockFromName(std::string name);
+		std::string					getNameFromSock(int fd);
 		std::vector<Channel>		*getChannel(void);
-		// int							calloc_pollfd(int size);
-		// int 						add_poll_fds(int fd);
-		void						private_msg_chan(std::string msg, client &sender, std::string channelName);
-		void 						launch_serv(void);
-		void 						manage_input(int fd);
-		void						initCommand(void);
-		void 						sendRPL(std::string rpl, int fd);
-		int							cmd_used_name(std::string &name, int mode);
+		IRC::client					getclientfromsock(int sock);
+
+		//------------------- Modes -----------------------------------------//
 		bool						capLs(client &client, std::string cmd);//OK
 		bool						pass(client &client, std::string cmd);//OK
 		bool						nick(client &client, std::string cmd);//OK
@@ -176,17 +178,26 @@ class IRC
 		bool						kick(client &client, std::string cmd); // fait MAIS a verifier + RPL a ajouter -> marche pas
 		bool						quit(client &client, std::string cmd); // fait
 		bool						invite(client &clients, std::string cmd); // RPL a ajouter
-		void						setChannels(Channel &channels);
+		
+		//------------------- Funcs -----------------------------------------//
+		void 						launch_serv(void);
+		void						private_msg_chan(std::string msg, client &sender, std::string channelName);
+		void 						manage_input(int fd);
+		void						initCommand(void);
+		void 						sendRPL(std::string rpl, int fd);
+		int							cmd_used_name(std::string &name, int mode);
 		bool						ChannelExist(std::string name);
-		IRC::client 				getclientfromsock(int sock);
 		void						add_options(char c, int sign, std::string channelName);
-		int							getSockFromName(std::string name);
-		std::string					getNameFromSock(int fd);
-		//	MODE
 		bool						mode_opt(std::string channelName, int sign , std::string pit , client &_client, char op);
 		void 						handle_mode(client &_client, std::vector<char> opt_vector, std::string channelName, std::vector<std::string> param);
+		
+		//------------------- Cons/Des --------------------------------------//
 									IRC(int port, std::string mdp);
 									~IRC();
+
+		// int							calloc_pollfd(int size);
+		// int 						add_poll_fds(int fd);
+		//	MODE
 
 };
 #endif
