@@ -36,7 +36,7 @@ bool						IRC::join(client &client, std::string cmd)
 	if (cmd.empty())
 		return ((void)sendRPL(ERR_NOTENOUGHPARAM(client.GetUser()), client.GetSock()), false);
 	if (cmd.find("#") == std::string::npos)
-		return (0);
+		return ((void)sendRPL(ERR_NOTENOUGHPARAM(client.GetUser()), client.GetSock()), false);
 	else if(cmd.find(' ') != std::string::npos)
 		chanNam = cmd.substr(cmd.find('#'), cmd.find(' ') - cmd.find('#'));
 	else

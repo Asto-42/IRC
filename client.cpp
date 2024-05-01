@@ -12,6 +12,7 @@
 
 #include "IRC.hpp"
 
+//-------------------- Cons/Des ---------------------------------------------//
 IRC::client::client()
 {
 	this->sock = 0;
@@ -25,7 +26,8 @@ IRC::client::client(int sock)
 	this->setup = 0;
 };
 
-int IRC::client::GetSock()
+//-------------------- Getters ---------------------------------------------//
+int 		IRC::client::GetSock()
 {
 	return (this->sock);
 }
@@ -50,32 +52,33 @@ std::string	IRC::client::GetBuffer() const
 	return this->buffer;
 }
 
-int	IRC::client::GetSetup() const
+int			IRC::client::GetSetup() const
 {
 	return this->setup;
 }
 
-void IRC::client::SetBuffer(std::string buf)
+//-------------------- Setters ---------------------------------------------//
+void 		IRC::client::SetBuffer(std::string buf)
 {
 	this->buffer = buf;
 }
 
-void IRC::client::SetPass(std::string pas)
+void 		IRC::client::SetPass(std::string pas)
 {
 	this->pass = pas;
 }
 
-void IRC::client::SetNick(std::string nic)
+void 		IRC::client::SetNick(std::string nic)
 {
 	this->nick = nic;
 }
 
-void IRC::client::SetUser(std::string use)
+void 		IRC::client::SetUser(std::string use)
 {
 	this->user = use;
 }
 
-void IRC::client::SetSetup(int x)
+void 		IRC::client::SetSetup(int x)
 {
 	this->setup = x;
 }

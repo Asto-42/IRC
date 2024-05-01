@@ -137,8 +137,6 @@ class IRC
 			Channel(std::string name, client &creator);
 			~Channel();
 	};
-
-	
 		int							poll_count;
 		int							poll_size;
 		int							port;
@@ -154,15 +152,9 @@ class IRC
 		std::vector<Channel> 		channels;
 		bool						secure;
 		static bool					_signal;
-
-	// public :
-	// 	//------------------- Setters ---------------------------------------//
-
-	// 	//------------------- Getters ---------------------------------------//
-	// 	int							getSockFromName(std::string name);
-	// 	std::string					getNameFromSock(int fd);
-		//bool						secure;
-
+	//------------------- SubClasses -----------------------------------------//
+	
+	
 	public :
 		void						setChannels(Channel &channels);
 		void						ClearClients(int fd);
@@ -205,10 +197,5 @@ class IRC
 		//------------------- Cons/Des --------------------------------------//
 									IRC(int port, std::string mdp);
 									~IRC();
-
-		// int							calloc_pollfd(int size);
-		// int 						add_poll_fds(int fd);
-		//	MODE
-
 };
 #endif

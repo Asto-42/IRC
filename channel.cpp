@@ -12,6 +12,7 @@
 
 #include "IRC.hpp"
 
+//-------------------- Cons/Des ----------------------------------------------//
 IRC::Channel::Channel(std::string name, client &creator)
 {
 	std::cout << "Parametric constructor called for Channel " << this->name << " destructor called" << std::endl;
@@ -30,7 +31,7 @@ IRC::Channel::~Channel()
 	return ;
 }
 
-//-------------------- Utils ------------------------------------------------//
+//-------------------- Funcs -------------------------------------------------//
 void				IRC::Channel::setInvitations(int &socket)
 {
 	invitations.push_back(socket);

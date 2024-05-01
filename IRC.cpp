@@ -12,6 +12,9 @@
 
 #include "IRC.hpp"
 
+bool IRC::_signal = false;
+
+//------------------- Cons/Des -----------------------------------------------//
 IRC::IRC(int port, std::string mdp)
 {
 	std::cout << "Default IRC constructor" << std::endl;
@@ -59,7 +62,14 @@ IRC::~IRC()
 	std::cout << "Default destructor called" << std::endl;
 };
 
-bool IRC::_signal = false;
+
+//------------------- Funcs --------------------------------------------------//
+void IRC::SignalHandler(int signum)
+{
+	(void)signum;
+	std::cout << " Signal received" << std::endl;
+	_signal = true;
+}
 
 void IRC::CloseFds()
 {
@@ -195,11 +205,6 @@ void IRC::sendRPL(std::string rpl, int fd)
 
 }
 
-void					IRC::setChannels(Channel &newChannel)
-{
-	channels.push_back(newChannel);
-}
-
 void IRC::initCommand(void)
 {
 	this->cmd["CAP"] = &IRC::capLs;
@@ -218,29 +223,6 @@ void IRC::initCommand(void)
 	// this->cmd["OPER"]    = &Server::oper;
 }
 
-
-// int IRC::add_poll_fds(int new_fd)
-// {
-// 	if (this->poll_count == this->poll_size)
-// 	{
-// 		this->poll_fds = (struct pollfd *)realloc(this->poll_fds, sizeof(*(this->poll_fds)) * (this->poll_size));
-// 		if (!this->poll_fds)
-// 			return (0);
-// 	}
-// 	this->poll_fds[this->poll_count].fd = new_fd;
-// 	this->poll_fds[this->poll_count].events = POLLIN;
-// 	this->poll_count++;
-// 	return (1);
-// }
-
-void IRC::SignalHandler(int signum)
-{
-	(void)signum;
-	std::cout << " Signal received" << std::endl;
-	_signal = true;
-}
-
-
 bool						IRC::ChannelExist(std::string name){
 	for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it){
 		if (it->getName() == name)
@@ -248,3 +230,10 @@ bool						IRC::ChannelExist(std::string name){
 	}
 	return (false);
 }
+//------------------- Setters ------------------------------------------------//
+void					IRC::setChannels(Channel &newChannel)
+{
+	channels.push_back(newChannel);
+}
+
+//------------------- Getters ------------------------------------------------//
