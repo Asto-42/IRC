@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:16:25 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 15:10:39 by jquil            ###   ########.fr       */
+/*   Updated: 2024/05/01 12:24:04 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,25 +65,5 @@ bool	IRC::invite(client &client, std::string cmd)
 	}
 	this->channels[idxChan].setInvitations(socketInvited);
 	return ((void)sendRPL(RPL_INVITING(client.GetNick(), user, chan), client.GetSock()), false);
-	// for (std::vector<Channel>::iterator it = (this->channels.begin()); it != (this->channels.end()); ++it)
-	// {
-	// 	if (chan == it->getName())
-	// 	{
-	// 		if (it->isOperator(clients) == 1)
-	// 		{
-	// 			//if user existe, add au chan
-	// 			for (std::map<int, client>::iterator it2 = this->users.begin(); it2 != this->users.end(); it2++)
-	// 			{
-	// 				if (it2->second.GetUser() == user)
-	// 				{
-	// 					it->add_client(it2->second);
-	// 					//std::string msg =   "<client> <nick> <channel>"
-	// 					//send(clients.GetSock(), )
-	// 					return (true);
-	// 				}
-	// 				return (false);
-	// 			}
-	// 		}
-	// 	}
 	return (false);
 }
