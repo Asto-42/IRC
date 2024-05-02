@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:14:55 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 16:47:08 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/02 14:18:25 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ bool						IRC::join(client &client, std::string cmd)
 		chanNam = cmd.substr(cmd.find('#'), cmd.find(' ') - cmd.find('#'));
 	else
 		chanNam = cmd.substr(cmd.find('#'), cmd.find('\r') - cmd.find('#'));
-	std::cout << "chanNam : " << chanNam << std::endl; 
+	std::cout << "chanNam : " << "\"" << chanNam << "\"" << std::endl; 
 	while (idxChan < this->channels.size())
 	{
 		if (this->channels[idxChan].getName() == chanNam)

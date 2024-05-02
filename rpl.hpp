@@ -18,6 +18,9 @@
 #define RPL_INVITING(client, nick, channel) (":localhost 341 " + client + " " + nick + " " + channel + "\r\n")
 #define RPL_INVITINGCHANMSG(client, chan) (":localhost 341 " + client + " " + chan + " :HEYYYYYYY" + CRLF)
 //#define RPL_INVITING(client, nick, channel) (":localhost 341 " + client + " " + nick + " " + channel + CRLF)
+//:server 341 <nick of inviter> <nick of invitee> <channel>
+#define RPL_INVITING2(inviter, invitee, channel) (":localhost 341 " + inviter + " " + invitee + " " + channel + "\r\n")
+#define RPL_INVITENOTICE(client, channel) (":localhost NOTICE " + channel + " :" + client + " has been invited the channel" + CRLF)
 
 //---------- /JOIN
 #define RPL_JOIN(nick, channelName) (":" + nick + "!" + nick + "@" + "localhost" + " JOIN " + channelName + CRLF)
@@ -50,7 +53,8 @@
 #define ERR_ALREADYREGISTERED(nickname) (": 462 " + nickname + " :You may not reregister !" + CRLF )
 #define ERR_ERRONEUSNICK(nickname) (": 432 " + nickname + " :Erroneus nickname" + CRLF)
 #define ERR_NONICKNAME(nickname) (": 431 " + nickname + " :No nickname given" + CRLF )
-#define ERR_NOTOPERATOR(nickname) (": 482 #" + nickname + " :You're not a channel operator" + CRLF)
+#define ERR_NOTOPERATOR(nickname) (": 482 " + nickname + " :You're not a channel operator" + CRLF)
+#define ERR_NOSUCHCHANNEL(channel) (":localhost 403 " + channel + " :No such channel" + "\r\n")
 #define ERR_CHANNELNOTFOUND(nickname, channelname) (": 403 " + nickname + " " + channelname + " :No such channel" + CRLF)
 #define ERR_CHANOPRIVSNEEDED(nickname, channelname) (": 482 " + nickname + " " + channelname + " :You're not channel operator" + CRLF)
 #define ERR_NEEDMOREPARAMS(nickname, cmd) (": 461 " + nickname + " " + cmd + " :Not enough parameters" + CRLF)

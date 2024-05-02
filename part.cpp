@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:09 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 19:00:51 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/02 15:13:03 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,21 @@ bool	IRC::part(client &client, std::string cmd)
 {
 	std::cout << BLUE << BOLD << "In part(): " <<  END_C << "cmd: " << cmd << std::endl;
 	std::string chan;
-	std::string::size_type x;
+	size_t idxChan = 0;
+	//std::string::size_type x;
 
-	if ((x = cmd.find("#", 0)) == std::string::npos)
-	{
-		std::cout << "# not found" << std::endl;
-		return (0);
-	}
-	chan = cmd.substr(x, cmd.size());
-
+	if (cmd.find("#") == std::string::npos)
+		return ((void)sendRPL(ERR_NOTENOUGHPARAM(client.GetNick()), client.GetSock()), false);
+	if (cmd.find(":") != std::string::npos)
+		chan = cmd.substr(cmd.find("#"), cmd.find(":") - cmd.find("#") - 2);
+	else
+		chan = cmd.substr(cmd.find("#"), cmd.size());
+	
+	std::cout << "chan: " << chan << std::endl;
 	// do channels exit ?
 	if (!this->channels.size())
 		return 0;
 	// find channel
-	size_t idxChan = 0;
 	while (idxChan < this->channels.size())
 	{
 		if (chan == this->channels[idxChan].getName())

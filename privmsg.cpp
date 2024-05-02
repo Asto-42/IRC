@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:13:49 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 18:39:13 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/02 12:41:28 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void					IRC::private_msg_chan(std::string msg, client &sender, std::string chan
 	std::cout << BOLD << BLUE << "\tIn  private_msg_chan(): " << END_C << std::endl;
 	size_t	idxChan = 0;
 	std::string senderNick;
+	std::string receiverNick;
 	
 	while (idxChan < this->channels.size())
 	{
@@ -46,24 +47,30 @@ void					IRC::private_msg_chan(std::string msg, client &sender, std::string chan
 
 	if (i == this->channels[idxChan].getClients().size())
 		return ;
+	if (this->channels[idxChan].isOperator(sender.GetSock(), this->channels[idxChan].getOperators()))
+	{
+		senderNick = "@" + sender.GetNick();
+	}
+	else
+		senderNick = sender.GetNick();
 	for (size_t i = 0; i < this->channels[idxChan].getClients().size(); i++)
 	{
 			
-			std::string nick = getNameFromSock(this->channels[idxChan].getClients()[i]);
-			// if(channels[idxChan].isOperator(sender))
+			// std::string nick = getNameFromSock(this->channels[idxChan].getClients()[i]);
+			// if (nick != sender.GetNick())
 			// {
-			// 	nick = "@" + nick;
-			// 	sendRPL(RPL_NAMREPLY(sender.GetNick(), channels[idxChan].getName() , nick), sender.GetSock());
-			// }
-			if (nick != sender.GetNick())
-			{
-				if (this->channels[idxChan].isOperator(this->channels[idxChan].getClients()[i], this->channels[idxChan].getOperators()))
-					senderNick = "@" + sender.GetNick();
-				else
-					senderNick = sender.GetNick();
-				std::cout << BOLD << "nick: " << nick << END_C << std::endl;
-				sendRPL(RPL_PRIVMSG(senderNick, nick, channel, msg), this->channels[idxChan].getClients()[i]);
+			// 	if (this->channels[idxChan].isOperator(this->channels[idxChan].getClients()[i], this->channels[idxChan].getOperators()) == true)
+			// 	{	
+			// 		senderNick = "@" + sender.GetNick();
+			// 	}
+			// 	else
+			// 		senderNick = sender.GetNick();
+			if (this->channels[idxChan].getClients()[i] != sender.GetSock())
+			{	
+				std::cout << BOLD << "nick: " << senderNick << END_C << std::endl;
+				sendRPL(RPL_PRIVMSG(senderNick, sender.GetNick(), channel, msg), this->channels[idxChan].getClients()[i]);
 			}
+			//}
 	}
 }
 

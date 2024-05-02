@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:39 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 18:23:03 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/02 14:58:43 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 
 		switch(*op)
 		{
-
 			case '+' :
 				sign = 1;
 				break;
@@ -130,11 +129,9 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 				else if (sign == 0)
 					tmp = "-";
 				tmp += *op;
-				sendRPL(RPL_MODE(userID(_client.GetNick(), _client.GetNick()), channelName, tmp, ""), _client.GetSock());
-			//	if (sign == 1)
-			//		sendRPL(RPL_INVEXLIST1(_client.GetNick(), channelName), _client.GetSock());
-			//	else if (sign == 0)
-			//		sendRPL(RPL_INVEXLIST2(_client.GetNick(), channelName), _client.GetSock());
+				// BROADCAST
+				for (size_t i = 0; i < this->channels[idxChan].getClients().size(); i++)
+					sendRPL(RPL_MODE(userID(_client.GetNick(), _client.GetNick()), channelName, tmp, ""), this->channels[idxChan].getClients()[i]);
 				break;
 			case 't':
 				add_options('t',sign,channelName);
@@ -143,7 +140,9 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 				else if (sign == 0)
 					tmp = "-";
 				tmp += *op;
-				sendRPL(RPL_MODE(userID(_client.GetNick(), _client.GetNick()), channelName, tmp, ""), _client.GetSock());
+				// BROADCAST
+				for (size_t i = 0; i < this->channels[idxChan].getClients().size(); i++)
+					sendRPL(RPL_MODE(userID(_client.GetNick(), _client.GetNick()), channelName, tmp, ""), this->channels[idxChan].getClients()[i]);
 				break;
 			case 'k':
 				add_options('k',sign,channelName);
@@ -158,7 +157,9 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 				else if (sign == 0)
 					tmp = "-";
 				tmp += *op;
-				sendRPL(RPL_MODE(userID(_client.GetNick(), _client.GetNick()), channelName, tmp,  ""), _client.GetSock());
+				// BROADCAST
+				for (size_t i = 0; i < this->channels[idxChan].getClients().size(); i++)
+					sendRPL(RPL_MODE(userID(_client.GetNick(), _client.GetNick()), channelName, tmp, ""), this->channels[idxChan].getClients()[i]);
 				break;
 			case 'o':
 				if(*pit == "" || pit->empty()){
@@ -172,7 +173,9 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 				else if (sign == 0)
 					tmp = "-";
 				tmp += *op;
-				sendRPL(RPL_MODE(userID(_client.GetNick(), _client.GetNick()), channelName, tmp,  *pit), _client.GetSock());
+				// BROADCAST
+				for (size_t i = 0; i < this->channels[idxChan].getClients().size(); i++)
+					sendRPL(RPL_MODE(userID(_client.GetNick(), _client.GetNick()), channelName, tmp, ""), this->channels[idxChan].getClients()[i]);
 				param.erase(param.begin());
 				break;
 			case 'l':
@@ -188,7 +191,9 @@ void IRC::handle_mode(client &_client, std::vector<char> opt_vector, std::string
 				else if (sign == 0)
 					tmp = "-";
 				tmp += *op;
-				sendRPL(RPL_MODE(userID(_client.GetNick(), _client.GetNick()), channelName, tmp,  ""), _client.GetSock());
+				// BROADCAST
+				for (size_t i = 0; i < this->channels[idxChan].getClients().size(); i++)
+					sendRPL(RPL_MODE(userID(_client.GetNick(), _client.GetNick()), channelName, tmp, ""), this->channels[idxChan].getClients()[i]);
 				param.erase(param.begin());
 				break;
 		}

@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:16:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 19:49:33 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/02 15:10:07 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,29 +17,31 @@
 bool	IRC::kick(client &client, std::string cmd)
 {
 	std::cout << BOLD << BLUE << "In kick()" << END_C << std::endl;
-	std::string chanNam;
-	std::string	targetNam;
-	size_t		idxChan;
-	int			targSock;
+	std::string chanNam = "";
+	std::string	targetNam = "";
+	std::string	reason = "";
+	size_t		idxChan = 0;
+	int			targSock = 0;
 
 	//----- Parsing 
 	if (cmd.find("#") == std::string::npos)
 		return ((void)sendRPL(ERR_NOTENOUGHPARAM(client.GetUser()), client.GetSock()), false);
-	if (cmd.find(":") != std::string::npos)
-		return ((void)sendRPL(ERR_ERRONEUSNICK(cmd.substr(cmd.find(" "), cmd.find("\r") - cmd.find(" "))), client.GetSock()), false);
+	if (cmd.find(":") == std::string::npos)
+		return ((void)sendRPL(ERR_NOTENOUGHPARAM(cmd.substr(cmd.find(" "), cmd.find("\r") - cmd.find(" "))), client.GetSock()), false);
 	//----- Extract
 	chanNam = cmd.substr(cmd.find("#"), cmd.find(" ") - cmd.find("#"));
-	targetNam	= cmd.substr(cmd.find(" ") + 1, cmd.find("\r") - cmd.find(" "));
-	//----- Check
-	std::cout << "ChanNam: " << "." << MAGENTA << chanNam << END_C << "." << std::endl;
-	std::cout << "ChanNam: " << "." << MAGENTA << targetNam << END_C << "." << std::endl;
+	reason	= cmd.substr(cmd.find(":") + 1, cmd.find("\r") - cmd.find(":"));
+	targetNam	= cmd.substr(cmd.find(" ") + 1, cmd.find(":") - cmd.find(" ") - 2);
 	//----- Defining channel idx
 	for (size_t i = 0; i <= this->channels.size(); i++)
 	{
 		if (i == this->channels.size())
-			return (void(sendRPL(ERR_CHANNELNOTFOUND(client.GetNick(),chanNam), client.GetSock())), false);
+			return (void(sendRPL(ERR_NOSUCHCHANNEL(chanNam), client.GetSock())), false);
 		if (chanNam == this->channels[i].getName())
+		{	
 			idxChan = i;
+			break ;
+		}
 	}
 	//----- Defining target sock
 	for (size_t i = 0; i <= this->channels[idxChan].getClients().size(); i++)
@@ -47,15 +49,21 @@ bool	IRC::kick(client &client, std::string cmd)
 		if (i == this->channels[idxChan].getClients().size())
 			return (void(sendRPL(ERR_USERNOTINCHANNEL(client.GetNick(), client.GetNick(), chanNam), client.GetSock())), false);
 		if (targetNam == getNameFromSock(this->channels[idxChan].getClients()[i]))
+		{	
 			targSock = this->channels[idxChan].getClients()[i];
+			break ;
+		}
 	}
 	//----- Erasing sock from channel
+	//----- IRC server validation answer
+	for (size_t i = 0; i < this->channels[idxChan].getClients().size(); i++)
+	{
+		sendRPL(RPL_KICK(userID(client.GetNick(), client.GetNick()), chanNam, targetNam, reason), this->channels[idxChan].getClients()[i]);
+	}
 	std::vector<int>::iterator ite;
 	ite = std::find(this->channels[idxChan].getClients().begin(), this->channels[idxChan].getClients().end(), targSock);
 	this->channels[idxChan].getClients().erase(ite);
-	//----- IRC server validation answer
-	return ((void)sendRPL(RPL_KICK(userID(client.GetNick(), client.GetNick()), chanNam, getNameFromSock(targSock), ""), client.GetSock()), false);
- 
+	return (true);
 }
 
 // bool	IRC::kick(client &clients, std::string cmd)

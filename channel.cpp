@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 16:09:27 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/02 12:42:21 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ bool				IRC::Channel::isOperator(client &client)
 	return (false);
 }
 
-bool				IRC::Channel::isOperator(int& socket, std::vector<int> opertors)
+bool				IRC::Channel::isOperator(int socket, std::vector<int> opertors)
 {
 	for (size_t i = 0; i < opertors.size(); i++)
 	{

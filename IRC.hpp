@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 16:10:01 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/02 12:41:55 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ class IRC
 			void					delOperators(int operateur);
 
 		//------------------- Utils -----------------------------------------//
-			bool					isOperator(int& socket, std::vector<int> operators);
+			bool					isOperator(int socket, std::vector<int> operators);
 			bool					isClient(int sock);
 			bool					isOperator(client &client);
 			//bool					isOperator(int sock);
