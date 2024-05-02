@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 16:09:27 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/02 15:10:57 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ void				IRC::Channel::delModes(char c)
 	std::size_t position_c = modes.find(c);
 	if(position_c != std::string::npos)
 		modes.erase(position_c);
-	std::cout << "MODES STRING = " << modes << std::endl;
+	std::cout << RED << BOLD << "MODES STRING = " << modes << END_C << std::endl;
 	return ;
 }
 
@@ -205,7 +205,7 @@ void				IRC::Channel::setModes(char c)
 {
 	if(modes.find(c) == std::string::npos)
 		modes += c;
-	std::cout << "MODES STRING = " << modes << std::endl;
+	std::cout << GREEN << BOLD << "\tMODES STRING = " << modes << END_C << std::endl;
 	return ;
 }
 

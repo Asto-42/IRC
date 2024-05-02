@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rencarna <rencarna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 16:10:01 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/01 20:05:15 by rencarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ class IRC
 		static void						SignalHandler(int signum);
 		//	MODE
 		bool						mode_opt(size_t idxChan, int sign , std::string pit , client &_client, char op);
-		void 						handle_mode(client &_client, std::vector<char> opt_vector, std::string channelName, std::vector<std::string> param);
+		void 						handle_mode(client &_client, std::vector<char> &opt_vector, std::string channelName, std::vector<std::string> &param);
 		
 		//------------------- Cons/Des --------------------------------------//
 									IRC(int port, std::string mdp);
