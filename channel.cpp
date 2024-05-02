@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/02 12:42:21 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/02 18:09:37 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 //-------------------- Cons/Des ----------------------------------------------//
 IRC::Channel::Channel(std::string name, client &creator)
 {
-	std::cout << "Parametric constructor called for Channel " << this->name << " destructor called" << std::endl;
+	//std::cout << "Parametric constructor called for Channel " << this->name << " destructor called" << std::endl;
 	this->name = name;
 	this->operators.push_back(creator.GetSock());
 	this->clients.push_back(creator.GetSock());
@@ -27,7 +27,7 @@ IRC::Channel::Channel(std::string name, client &creator)
 
 IRC::Channel::~Channel()
 {
-	std::cout << "Channel " << this->name << " destructor called" << std::endl;
+	//std::cout << "Channel " << this->name << " destructor called" << std::endl;
 	return ;
 }
 
@@ -56,16 +56,6 @@ bool				IRC::Channel::isOperator(int socket, std::vector<int> opertors)
 	}
 	return (false);
 }
-
-// bool				IRC::Channel::isOperator(int sock)
-// {
-// 	for (std::vector<int>::iterator it = this->operators.begin(); it != this->operators.end(); ++it)
-// 	{
-// 		if (*it == sock)
-// 			return (true);
-// 	}
-// 	return (false);
-// }
 
 bool				IRC::Channel::isClient(int sock)
 {
@@ -99,7 +89,6 @@ bool				IRC::Channel::add_client(client &new_client)
 	{
 		this->white_list.push_back(new_client.GetSock());
 		std::cout << new_client.GetUser() << " successfully add to " << this->getName() << "'s white list" << std::endl;
-		//add to whitelist
 	}
 	else
 		std::cout << new_client.GetUser() << " is already in " << this->getName() << std::endl;
@@ -133,7 +122,7 @@ void				IRC::Channel::delModes(char c)
 	std::size_t position_c = modes.find(c);
 	if(position_c != std::string::npos)
 		modes.erase(position_c);
-	std::cout << "MODES STRING = " << modes << std::endl;
+	std::cout << RED << BOLD << "MODES STRING = " << modes << END_C << std::endl;
 	return ;
 }
 
@@ -206,7 +195,7 @@ void				IRC::Channel::setModes(char c)
 {
 	if(modes.find(c) == std::string::npos)
 		modes += c;
-	std::cout << "MODES STRING = " << modes << std::endl;
+	std::cout << GREEN << BOLD << "\tMODES STRING = " << modes << END_C << std::endl;
 	return ;
 }
 
@@ -221,11 +210,3 @@ void				IRC::Channel::setClients(client& client)
 	std::cout << "Client " << client.GetSock() << " added to " << this->getName();
 	this->clients.push_back(client.GetSock());
 }
-
-// bool							IRC::Channel::isOperator(int fd){
-// 	for (std::vector<int>::iterator it = operators.begin(); it != operators.end(); ++it){
-// 		if (*it == fd)
-// 			return (true);
-// 	}
-// 	return (false);
-// }

@@ -6,23 +6,11 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:14:55 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/02 14:18:25 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/02 18:22:04 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
-
-
-// bool	isOperator(int& socket, std::vector<int> opertors)
-// {
-// 	for (size_t i = 0; i < opertors.size(); i++)
-// 	{
-// 		if (opertors[i] == socket)
-// 			return (true);
-// 	}
-// 	return (false);
-// }
-
 
 bool						IRC::join(client &client, std::string cmd)
 {
@@ -30,7 +18,6 @@ bool						IRC::join(client &client, std::string cmd)
 	std::string		rplList;
 	size_t			idxChan = 0;
 
-	
 	std::cout << BOLD<< "\tIn join(): " << END_C  << std::endl;
 	std::cout << "Content cmd: \"" << cmd <<  "\""<< std::endl;
 	if (cmd.empty())
@@ -48,8 +35,9 @@ bool						IRC::join(client &client, std::string cmd)
 			break;
 		idxChan++;
 	}
-	
 	// ADD client to existing channel
+	if (client.GetSetup() != 4)
+		return (0);
 	if (idxChan != this->channels.size())
 	{
 		std::cout << "CLIENT LIMIT 1: " <<  this->channels[idxChan].getLimitClients() << std::endl;
@@ -63,8 +51,8 @@ bool						IRC::join(client &client, std::string cmd)
 				std::cout << YELLOW << BOLD << "ALREADY IN CHANNEL" << END_C << std::endl;
 				return (false);
 			}
-		}
-		if (this->channels[idxChan].getModes().find('i') != std::string::npos)// I
+		}// I
+		if (this->channels[idxChan].getModes().find('i') != std::string::npos)
 		{
 			std::cout << YELLOW << "in Mode i check: " << chanNam << END_C <<std::endl;
 			for (size_t i = 0; i <= this->channels[idxChan].getInvitations().size(); i++)
@@ -94,7 +82,6 @@ bool						IRC::join(client &client, std::string cmd)
 			return ((void)sendRPL(ERR_CHANNELISFULL(client.GetNick(), chanNam), client.GetSock()), false);
 		}
 		this->channels[idxChan].setClients(client);
-		
 		// RPL LIST
 		for (size_t i = 0; i < this->channels[idxChan].getClients().size(); i++)
 		{
@@ -103,33 +90,19 @@ bool						IRC::join(client &client, std::string cmd)
 			else
 				rplList += users[this->channels[idxChan].getClients()[i]].GetNick() + " ";
 		}
-		
-		//std::vector<int> clientsVec2 = this->channels[idxchan].getClients();
-		//std::cout << BLUE << " 2 - JOINING CHANNEL" << END_C << std::endl;
-		//for (std::vector<int>::iterator ite = clientsVec2.begin(); ite != clientsVec2.end(); ite++)
-		//	std::cout << GREEN << *ite << END_C << std::endl;
 
 		std::cout << YELLOW << rplList << END_C << std::endl;
 		sendRPL(RPL_JOIN(client.GetNick(), chanNam), client.GetSock());
 		sendRPL(RPL_NAMREPLY(client.GetNick(), chanNam, rplList), client.GetSock());
-		//for (size_t j = 0; j < this->channels[idxChan].getClients().size(); j++)
-		//	this->channels[idxChan].send_topic_rpl(RPL_TOPIC(client.GetSock(), this->channels[idxChan].getName(), this->channels[idxChan].getTopic()));
 		sendRPL(RPL_TOPIC(client.GetNick(), chanNam, this->channels[idxChan].getTopic()), client.GetSock());
 		sendRPL(RPL_ENDOFNAMES(client.GetNick(), chanNam), client.GetSock());
 		return (true);
 	}
-
 	// NO - CREATE channel
 	Channel newChannel(chanNam, client);
 	newChannel.setOperators(client.GetSock());
 	std::cout << "CLIENT LIMIT 3: " <<  newChannel.getLimitClients() << std::endl;
 	setChannels(newChannel);
-	// need to check limit
-	//channels.push_back(newChannel);
-	//std::cout << BLUE << " 1 - CHANNEL CREATED" << END_C << std::endl;
-	//std::vector<int> clientsVec = newChannel.getClients();
-	//for (std::vector<int>::iterator ite = clientsVec.begin(); ite != clientsVec.end(); ite++)
-	//	std::cout << GREEN << *ite << END_C << std::endl;
 	for (size_t i = 0; i < newChannel.getClients().size(); i++)
 	{
 		if (this->channels[idxChan].isOperator(newChannel.getClients()[i], newChannel.getOperators()) == true)
@@ -137,11 +110,9 @@ bool						IRC::join(client &client, std::string cmd)
 		else
 			rplList += users[newChannel.getClients()[i]].GetNick() + " ";
 	}
-	//std::cout << BLUE << rplList << END_C << std::endl;
-	
-		sendRPL(RPL_JOIN(client.GetNick(), chanNam), client.GetSock());
-		sendRPL(RPL_NAMREPLY(client.GetNick(), chanNam, rplList), client.GetSock());
-		sendRPL(RPL_TOPIC(client.GetNick(), chanNam, ""), client.GetSock());
-		sendRPL(RPL_ENDOFNAMES(client.GetNick(), chanNam), client.GetSock());
+	sendRPL(RPL_JOIN(client.GetNick(), chanNam), client.GetSock());
+	sendRPL(RPL_NAMREPLY(client.GetNick(), chanNam, rplList), client.GetSock());
+	sendRPL(RPL_TOPIC(client.GetNick(), chanNam, ""), client.GetSock());
+	sendRPL(RPL_ENDOFNAMES(client.GetNick(), chanNam), client.GetSock());
 	return (true);
 }

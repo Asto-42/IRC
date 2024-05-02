@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:12:57 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 16:11:54 by jquil            ###   ########.fr       */
+/*   Updated: 2024/05/02 18:03:54 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,6 @@ bool	IRC::nick(client &client, std::string cmd)
 	else{
 		client.SetNick(cmd);
 		client.SetSetup(3);
-		//std::string msg = :jquil!~jquil@5dc0-87b-e09c-1be2-a46.210.62.ip NICK :testeuuuuuuuuuuuuuuur;
-		//send();
 		return (1);
 	}
 	return (1);

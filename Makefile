@@ -6,7 +6,7 @@
 #    By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/18 16:46:22 by aboulest          #+#    #+#              #
-#    Updated: 2024/04/23 17:00:18 by lbouguet         ###   ########.fr        #
+#    Updated: 2024/05/02 18:10:09 by lbouguet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,6 @@ SRC			:= 	main.cpp			\
 				privmsg.cpp			\
 				topic.cpp			\
 				mode.cpp			\
-				oper.cpp			\
 				whois.cpp			\
 				kick.cpp			\
 				quit.cpp			\

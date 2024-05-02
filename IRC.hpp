@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/02 12:41:55 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/02 17:40:51 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,8 +192,8 @@ class IRC
 		static void						SignalHandler(int signum);
 		//	MODE
 		bool						mode_opt(size_t idxChan, int sign , std::string pit , client &_client, char op);
-		void 						handle_mode(client &_client, std::vector<char> opt_vector, std::string channelName, std::vector<std::string> param);
-		
+		void 						handle_mode(client &_client, std::vector<char> &opt_vector, std::string channelName, std::vector<std::string> &param);
+		void						private_msg_user(std::string msg, client &sender, std::string clients);
 		//------------------- Cons/Des --------------------------------------//
 									IRC(int port, std::string mdp);
 									~IRC();

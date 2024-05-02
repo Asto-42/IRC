@@ -8,17 +8,11 @@
 #define RPL_CONNECTED(nickname) (": 001 " + nickname + " : Welcome to the IRC server!" + CRLF)
 #define RPL_TOPIC(nickname, channelName, topic) (": 332 " + nickname + " " + channelName + " :" + topic + CRLF)
 #define RPL_CHANGEMODE(hostname, channelname, mode, arguments) (":" + hostname + " MODE " + channelname + " " + mode + " " + arguments + CRLF)
-//---------- MODE I
-//#define RPL_INVEXLIST1(nick, channel) (":localhost 346 " + nick + " " + channel + " :Invite-only mode has been activated" + CRLF)
-//#define RPL_INVEXLIST2(nick, channel) (":localhost 346 " + nick + " " + channel + " :Invite-only mode has been deactivated" + CRLF)
 
 //---------- /INVITE
-//#define RPL_INVITE(client, invited, channel) (":localhost ")
 #define RPL_INVITE(user_id, invited, channel) (user_id + " INVITE " + invited + " :" + channel + "\r\n")
 #define RPL_INVITING(client, nick, channel) (":localhost 341 " + client + " " + nick + " " + channel + "\r\n")
 #define RPL_INVITINGCHANMSG(client, chan) (":localhost 341 " + client + " " + chan + " :HEYYYYYYY" + CRLF)
-//#define RPL_INVITING(client, nick, channel) (":localhost 341 " + client + " " + nick + " " + channel + CRLF)
-//:server 341 <nick of inviter> <nick of invitee> <channel>
 #define RPL_INVITING2(inviter, invitee, channel) (":localhost 341 " + inviter + " " + invitee + " " + channel + "\r\n")
 #define RPL_INVITENOTICE(client, channel) (":localhost NOTICE " + channel + " :" + client + " has been invited the channel" + CRLF)
 

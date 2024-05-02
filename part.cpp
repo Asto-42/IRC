@@ -6,18 +6,16 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:09 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/02 15:13:03 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/02 18:03:25 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
-//<< PART #testjeubnssodf
 bool	IRC::part(client &client, std::string cmd)
 {
 	std::cout << BLUE << BOLD << "In part(): " <<  END_C << "cmd: " << cmd << std::endl;
 	std::string chan;
 	size_t idxChan = 0;
-	//std::string::size_type x;
 
 	if (cmd.find("#") == std::string::npos)
 		return ((void)sendRPL(ERR_NOTENOUGHPARAM(client.GetNick()), client.GetSock()), false);
@@ -29,7 +27,7 @@ bool	IRC::part(client &client, std::string cmd)
 	std::cout << "chan: " << chan << std::endl;
 	// do channels exit ?
 	if (!this->channels.size())
-		return 0;
+		return ((void)sendRPL(ERR_NOSUCHCHANNEL(chan), client.GetSock()), false);
 	// find channel
 	while (idxChan < this->channels.size())
 	{
@@ -55,32 +53,6 @@ bool	IRC::part(client &client, std::string cmd)
 	}
 	if (i == this->channels[idxChan].getClients().size())
 		sendRPL(RPL_PARTNOTICE2(client.GetNick(), chan), client.GetSock());
-
-			// JUJU tu flexes trop la
-			// for (std::map<int, client>::iterator it2 = this->users.begin(); it2 != (this->users.end()); ++it2)
-			// {
-			// 	if (it2->second.GetUser() == clients.GetUser())
-			// 	{
-			// 		std::string msg;
-			// 		if (it->remove_client(it2->second.GetSock()) == 0)
-			// 		{
-			// 			std::cout << clients.GetUser() << " is not in " << chan << std::endl;
-			// 			msg = ":localhost 442 " + clients.GetNick() + chan + " :You're not on that channel";
-			// 			std::cout << msg << std::endl;
-			// 			send(clients.GetSock(), msg.c_str(), msg.size(), 0);
-			// 			//>> :bitcoin.uk.eu.dal.net 442 jquil_ #test :You're not on that channel
-			// 			return (0);
-			// 		}
-			// 		else
-			// 		{
-			// 			msg = ":" + clients.GetNick() + "!~" + clients.GetUser() + " PART " + chan;
-			// 			std::cout << msg << std::endl;
-			// 			send(clients.GetSock(), msg.c_str(), msg.size(), 0);
-			// 		//	:jquil!~jquil@5dc0-87b-e09c-1be2-a46.210.62.ip PART #testjeubnssodf
-			// 			return (true);
-			// 		}
-			// 	}
-			// }
 	std::cout << "returning false" << std::endl;
 	return (false);
 }

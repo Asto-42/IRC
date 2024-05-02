@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:11:56 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/01 12:33:07 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/02 18:09:48 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ bool	IRC::capLs(client &client, std::string cmd)
 	{	
 		std::cout << "Setting up" << std::endl;
 		client.SetSetup(1);
-		// sendRPL(RPL_CAPLS(), client.GetSock());
 	}
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:05:17 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 16:26:45 by jquil            ###   ########.fr       */
+/*   Updated: 2024/05/02 18:08:41 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ IRC::client::client()
 
 IRC::client::client(int sock)
 {
-	std::cout << "Default client constructor called" << std::endl;
+	//std::cout << "Default client constructor called" << std::endl;
 	this->sock = sock;
 	this->setup = 0;
 };
