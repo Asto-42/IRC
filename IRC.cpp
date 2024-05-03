@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/03 16:29:02 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/03 18:42:09 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ IRC::IRC(int port, std::string mdp)
 	// this->poll_fds = NULL;
 	this->server.sin_family = AF_INET;
 	this->sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	// int optval = 1;
-	// setsockopt(this->sock, SOL_SOCKET, SO_REUSEADDR, &optval , sizeof(int));
+	int optval = 1;
+	setsockopt(this->sock, SOL_SOCKET, SO_REUSEADDR, &optval , sizeof(int));
 	// if (this->calloc_pollfd(10) == 0)
 	// 	this->secure = 1;
 	if (this->sock < 0)
@@ -52,6 +52,7 @@ IRC::IRC(int port, std::string mdp)
 	this->peer_addr_size = sizeof(struct sockaddr_in);
 	this->port = port;
 	this->mdp = mdp;
+	flag = -1;
 	initCommand();
 };
 
@@ -196,7 +197,7 @@ void IRC::manage_input(int x)
 void IRC::sendRPL(std::string rpl, int fd)
 {
 	int bytes = 0;
-	std::cout << "Response sent to " << fd << ": " << rpl << std::endl;
+	std::cout << "Response sent to " << fd << BOLD << ": " << rpl << END_C <<std::endl;
 	send(fd, rpl.c_str(), rpl.size(), 0);
 	if (bytes < 0)
 		std::cout << "Error sending data to client." << std::endl;

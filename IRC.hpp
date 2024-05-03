@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/02 17:40:51 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/03 19:14:09 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,9 @@ class IRC
 		std::vector<Channel> 		channels;
 		bool						secure;
 		static bool					_signal;
+		int 						flag;
+		std::string 				tmp;
+		std::string 				oldNick;
 	//------------------- SubClasses -----------------------------------------//
 	
 	

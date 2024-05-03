@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:12:57 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/03 16:47:53 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/03 19:14:53 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int IRC::cmd_used_name(std::string &name, int mode)
 bool	IRC::nick(client &client, std::string cmd)
 {
 	std::string err = "localhost";
+	std::cout << BLUE << BOLD << client.GetSetup() <<  END_C << std::endl;
 	if (cmd.size() == 0)
 	{
 		std::string tmp = "USER";
@@ -49,9 +50,21 @@ bool	IRC::nick(client &client, std::string cmd)
 		sendRPL(ERR_NOTENOUGHPARAM(err), client.GetSock());
 	else if(cmd_used_name(cmd, 0) == 1)
 	{
-		sendRPL(NICKNAMEINUSE_ERR(err), client.GetSock());
-		cmd.insert(cmd.end(), '_');
-		nick(client, cmd);
+		this->oldNick = cmd;
+		sendRPL(NICKNAMEINUSE_ERR(cmd), client.GetSock());
+		// cmd.insert(cmd.end(), '_');
+		// nick(client, cmd);
+		return (1);
+	}
+	else if(flag == 42)
+	{
+		client.SetNick(cmd);
+		client.SetSetup(3);
+
+		std::string newNickname = cmd;
+		std::string msg = ":" + this->oldNick  + " NICK " + newNickname + "\r\n";
+		user(client, this->tmp);
+		sendRPL(msg, client.GetSock());
 		return (1);
 	}
 	else if((cmd)[0] == '#')
