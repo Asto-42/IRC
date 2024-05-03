@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:39 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/02 18:04:02 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/03 16:44:17 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,21 @@ bool IRC::mode(client &_client, std::string cmd){
 	}
 	if(optCount == 0)
 		return (0);
+	int flag = 0;
 	if(*argument.begin() == _client.GetNick())
 		return (true);
+	for(std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); it++)
+	{
+		std::cout << RED << it->getName() << END_C << std::endl;
+		if(it->getName() == chaname)
+			flag = 1;
+	}
+	if(flag == 0)
+	{
+		sendRPL(ERR_NOSUCHCHANNEL(chaname), _client.GetSock());
+		return (0);
+	}
+	// std::cout << RED << *argument.begin() << " == " << _client.GetNick() << END_C << std::endl;
 	else
 		handle_mode(_client, opt_vector, chaname, param);
 	return(true);

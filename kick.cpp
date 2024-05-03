@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:16:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/02 18:04:47 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/03 16:26:31 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,10 @@ bool	IRC::kick(client &client, std::string cmd)
 			break ;
 		}
 	}
+	if (this->channels[idxChan].isOperator(client) == false)
+		return (sendRPL(ERR_NOTOPERATOR(client.GetNick() ), client.GetSock()), false);
+		
+		
 	//----- Defining target sock
 	for (size_t i = 0; i <= this->channels[idxChan].getClients().size(); i++)
 	{

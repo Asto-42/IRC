@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:12:57 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/02 18:03:54 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/03 16:47:53 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ bool	IRC::nick(client &client, std::string cmd)
 		sendRPL(ERR_NOTENOUGHPARAM(err), client.GetSock());
 	else if(cmd_used_name(cmd, 0) == 1)
 	{
-		sendRPL(ERR_ALREADYREGISTERED(err), client.GetSock());
+		sendRPL(NICKNAMEINUSE_ERR(err), client.GetSock());
 		cmd.insert(cmd.end(), '_');
 		nick(client, cmd);
 		return (1);

@@ -60,3 +60,4 @@
 #define ERR_CHANNELISFULL(client, channel) (":localhost 471 " + client + " " + channel + " :Cannot join channel (+l)" + "\r\n")
 #define ERR_USERNOTINCHANNEL(client, nickname, channel) (":localhost 441 " + client + " " + nickname + " " + channel + " :They aren't on that channel" + CRLF)
 #define userID(nickname, username) (":" + nickname + "!" + username + "@localhost")
+#define NICKNAMEINUSE_ERR(username) (":localhost 433 * " + username + " :Nickname is already in use." + CRLF)

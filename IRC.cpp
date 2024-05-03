@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/02 18:07:35 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/03 16:29:02 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ IRC::IRC(int port, std::string mdp)
 	// this->poll_fds = NULL;
 	this->server.sin_family = AF_INET;
 	this->sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	int optval = 1;
-	setsockopt(this->sock, SOL_SOCKET, SO_REUSEADDR, &optval , sizeof(int));
+	// int optval = 1;
+	// setsockopt(this->sock, SOL_SOCKET, SO_REUSEADDR, &optval , sizeof(int));
 	// if (this->calloc_pollfd(10) == 0)
 	// 	this->secure = 1;
 	if (this->sock < 0)
@@ -169,6 +169,11 @@ void IRC::manage_input(int x)
 		std::string tmp;
 		std::string::size_type end;
 		std::string::size_type space;
+		if (line.find("\r\n", 0) == std::string::npos)
+		{
+			this->users.find(fd)->second.SetBuffer(line);
+			return;
+		}
 		while ((end = line.find("\r\n", 0)) != std::string::npos)
 		{
 			input = line.substr(0, end);

@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:13:49 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/02 18:40:34 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/03 16:42:35 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void					IRC::private_msg_user(std::string msg, client &sender, std::string clie
 	if ((clientSock = getSockFromName(clients)) == -1)
 		return(void)sendRPL(ERR_NOSUCHNICK(sender.GetNick(), clients), sender.GetSock());
 	sendRPL(RPL_PRIVMSG(sender.GetNick(), sender.GetNick(), clients, msg), clientSock);
-	
 }	
 
 void					IRC::private_msg_chan(std::string msg, client &sender, std::string channel)

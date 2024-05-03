@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:13:25 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 16:13:30 by jquil            ###   ########.fr       */
+/*   Updated: 2024/05/03 16:47:20 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ bool	IRC::user(client &client, std::string cmd)
 	std::string err = "localhost";
 	if (client.GetSetup() != 3)
 		return (0);
-	if (cmd_used_name(cmd, 0) == 1)
+	if (cmd_used_name(cmd, 1) == 1)
 	{
 		sendRPL(ERR_ALREADYREGISTERED(err), client.GetSock());
 		cmd.insert(cmd.end(), '_');
