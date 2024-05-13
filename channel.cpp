@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/13 15:47:51 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/13 18:35:08 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ bool				IRC::Channel::remove_client(int sock)
 			if (*it == sock)
 			{
 				this->clients.erase(it);
+				std::cout << this->getModes() << std::endl;
 				if (this->isInvitation(sock) == 1)
 				{
 					for (std::vector<int>::iterator it1 = this->invitations.begin(); it1 != this->invitations.end(); ++it1)
@@ -97,6 +98,8 @@ bool				IRC::Channel::remove_client(int sock)
 						}
 					}
 				}
+				if (this->isOperator(sock, operators) == true)
+					this->delOperators(sock);
 				return (true);
 			}
 		}

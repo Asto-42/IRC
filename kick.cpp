@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:16:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/13 15:35:50 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/13 18:33:42 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,8 @@ bool	IRC::kick(client &client, std::string cmd)
 	for (size_t i = 0; i < this->channels[idxChan].getClients().size(); i++)
 	{
 		//clean the socket user from the channel
-		this->channels[idxChan].remove_client(targSock);
 		sendRPL(RPL_KICK(userID(client.GetNick(), client.GetNick()), chanNam, targetNam, reason), this->channels[idxChan].getClients()[i]);
 	}
-	std::vector<int>::iterator ite;
-	ite = std::find(this->channels[idxChan].getClients().begin(), this->channels[idxChan].getClients().end(), targSock);
-	this->channels[idxChan].getClients().erase(ite);
+	this->channels[idxChan].remove_client(targSock);
 	return (true);
 }

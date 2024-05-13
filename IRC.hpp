@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/13 15:39:47 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/13 17:37:43 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ class IRC
 	class client
 	{
 		private :
+			int 						flag;
 			std::string					pass;
 			std::string					nick;
 			std::string					user;
@@ -67,6 +68,8 @@ class IRC
 
 		public :
 		//------------------- Getters ---------------------------------------//
+			int				getFlag();
+			void			setFlag(int fl);
 			int				GetSock();
 			int				GetSetup() const;
 			std::string 	GetPass();
@@ -151,7 +154,6 @@ class IRC
 		std::vector<Channel> 		channels;
 		bool						secure;
 		static bool					_signal;
-		int 						flag;
 		std::string 				tmp;
 		std::string 				oldNick;
 	//------------------- SubClasses -----------------------------------------//

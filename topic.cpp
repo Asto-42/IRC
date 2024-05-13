@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:23 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 17:20:38 by jquil            ###   ########.fr       */
+/*   Updated: 2024/05/13 17:18:55 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,10 @@ bool						IRC::topic(client &client, std::string cmd)
 	if (this->channels[i].getModes().find('t') != std::string::npos)
 	{
 		//if Yes, does the client has the right to change the topic ?
-		for (size_t i = 0; i < this->channels[i].getOperators().size(); i++)
+		for (size_t t = 0; t < this->channels[i].getOperators().size(); t++)
 		{
 			//if Yes, change the channel's topic
-			if (this->channels[i].getOperators()[i] == client.GetSock())
+			if (this->channels[i].getOperators()[t] == client.GetSock())
 			{
 				this->channels[i].setTopic(topicNam);
 				this->channels[i].send_topic_rpl(RPL_TOPIC(client.GetNick(), this->channels[i].getName(), this->channels[i].getTopic()));

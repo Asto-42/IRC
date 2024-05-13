@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:13:25 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/13 16:48:12 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/13 17:38:32 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ bool	IRC::user(client &client, std::string cmd)
 		// }
 	std::string err = "localhost";
 	if(client.GetSetup() == 2 && client.GetNick() == "")
-		flag = 42;
-	std::cout << "flag: " << flag << std::endl;
+		client.setFlag(42);
+	std::cout << "flag: " << client.getFlag() << std::endl;
 	this->tmp = cmd;
 	if (client.GetSetup() != 3)
 		return (0);
@@ -41,6 +41,7 @@ bool	IRC::user(client &client, std::string cmd)
 		std::string					msg;
 		std::string					name;
 		msg = ":localhost 001 " + client.GetNick() + " :Welcome to SUUUUUServer " + client.GetNick() + "!~" + client.GetUser() + "@127.0.0.1\r\n";
+		client.setFlag(42);
 		if (send(client.GetSock(), msg.c_str(), msg.size(), 0) < 1)
 		{
 			//del_user(client.getFd());

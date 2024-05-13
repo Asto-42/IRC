@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:05:17 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/02 18:08:41 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/13 17:37:45 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,3 +82,10 @@ void 		IRC::client::SetSetup(int x)
 {
 	this->setup = x;
 }
+
+int			IRC::client::getFlag(){
+	return (this->flag);
+};
+void			IRC::client::setFlag(int fl){
+	this->flag = fl;
+};

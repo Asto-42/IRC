@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:12:57 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/13 16:49:20 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/13 17:38:08 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,25 +56,28 @@ bool	IRC::nick(client &client, std::string cmd)
 		// nick(client, cmd);
 		return (1);
 	}
-	else if(flag == 42 && client.GetSetup() == 2)
+	else if(client.getFlag() == 42 )
 	{
-		client.SetNick(cmd);
-		client.SetSetup(3);
-
+		if(!client.GetNick().empty())
+			this->oldNick = client.GetNick();
 		std::string newNickname = cmd;
 		std::string msg = ":" + this->oldNick  + " NICK " + newNickname + "\r\n";
-		user(client, this->tmp);
+		client.SetNick(cmd);	
+		if(client.GetSetup()  < 4){
+			client.SetSetup(3);
+			user(client, this->tmp);	
+		}
 		sendRPL(msg, client.GetSock());
 		return (1);
 	}
-	else if (flag != 42 && client.GetSetup() == 4)
-	{
-		std::string newNickname = cmd;
-		std::string msg = ":" + client.GetNick() + " NICK " + newNickname + "\r\n";
-		client.SetNick(cmd);
-		sendRPL(msg, client.GetSock());		
-		return (1);
-	}
+	// else if (flag != 42 && client.GetSetup() == 4)
+	// {
+	// 	std::string newNickname = cmd;
+	// 	std::string msg = ":" + client.GetNick() + " NICK " + newNickname + "\r\n";
+	// 	client.SetNick(cmd);
+	// 	sendRPL(msg, client.GetSock());		
+	// 	return (1);
+	// }
 	else if((cmd)[0] == '#')
 		sendRPL(ERR_ERRONEUSNICK(err), client.GetSock());
 	else{

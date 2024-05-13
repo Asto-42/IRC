@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/13 16:28:25 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/13 17:37:23 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ IRC::IRC(int port, std::string mdp)
 	this->peer_addr_size = sizeof(struct sockaddr_in);
 	this->port = port;
 	this->mdp = mdp;
-	flag = -1;
+	// flag = -1;
 	initCommand();
 };
 
@@ -126,6 +126,7 @@ void IRC::launch_serv(void)
 					poll_fds.push_back(pollStruct);
 					class client cl(client);
 					this->users[client] = cl;
+					this->users[client].setFlag(0);
 					std::cout << GREEN << "Client added to vector" << END_C << std::endl;
 				}
 			}

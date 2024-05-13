@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:39 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/13 15:54:59 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/13 17:27:20 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ void IRC::handle_mode(client &_client, std::vector<char> &opt_vector, std::strin
 					sendRPL(RPL_MODE(userID(_client.GetNick(), _client.GetNick()), channelName, tmp, ""), this->channels[idxChan].getClients()[i]);
 				break;
 			case 'o':
-				if(sign == 1 && param.empty())
+				if((sign == 1  || sign == 0)&& param.empty())
 				{
 					sendRPL(ERR_NOTENOUGHPARAM(_client.GetNick()), _client.GetSock());
 					break ;
@@ -191,7 +191,7 @@ void IRC::handle_mode(client &_client, std::vector<char> &opt_vector, std::strin
 					sendRPL(RPL_MODE(userID(_client.GetNick(), _client.GetNick()), channelName, tmp, ""), this->channels[idxChan].getClients()[i]);
 				break;
 			case 'l':
-				if(sign == 1 && param.empty())
+				if((sign == 1) && param.empty())
 				{
 					sendRPL(ERR_NOTENOUGHPARAM(_client.GetNick()), _client.GetSock());
 					break ;
@@ -222,7 +222,10 @@ bool						IRC::mode_opt(size_t idxChan, int sign , std::string pit , client &_cl
 	if (op == 'o'){
 		for(std::map<int, client>::iterator iter = users.begin(); iter != users.end(); iter++)
 			if(pit == iter->second.GetNick() && channels[idxChan].isClient(iter->first))
+			{
 				found = true;
+				std::cout << "client found" << std::endl;
+			}
 		if(found)
 		{
 			std::string hostname = _client.GetNick() + "!" + _client.GetUser();
