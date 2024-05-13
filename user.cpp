@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:13:25 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/03 19:10:57 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/13 16:48:12 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 
 bool	IRC::user(client &client, std::string cmd)
 {
+		// if (cmd.size() == 0)
+		// {
+		// 	// std::string err = "localhost";
+		// 	// sendRPL(ERR_NOTENOUGHPARAM(err), client.GetSock());
+		// 	return (0);
+		// }
 	std::string err = "localhost";
 	if(client.GetSetup() == 2 && client.GetNick() == "")
 		flag = 42;

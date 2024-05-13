@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/03 19:14:09 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/13 15:39:47 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ class IRC
 			std::string				modes;
 			std::vector<int> 		invitations;
 			std::vector<int>		operators;
-			std::vector<int>		white_list;
 			std::vector<int>		clients;
 			std::string				channelPassword;
 			int						limitClients;
@@ -129,8 +128,8 @@ class IRC
 			bool					isOperator(int socket, std::vector<int> operators);
 			bool					isClient(int sock);
 			bool					isOperator(client &client);
+			bool					isInvitation(int sock);
 			//bool					isOperator(int sock);
-			bool					add_client(client &new_client);
 			bool					remove_client(int sock);
 			void					send_topic_rpl(std::string rpl);
 			void					SignalHandler(int signum);

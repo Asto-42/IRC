@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:57:58 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/02 18:09:37 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/13 15:47:51 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,16 @@ bool				IRC::Channel::isClient(int sock)
 	return (false);
 }
 
+bool				IRC::Channel::isInvitation(int sock)
+{
+	for (std::vector<int>::iterator it = this->invitations.begin(); it != this->invitations.end(); ++it)
+	{
+		if (*it == sock)
+			return (true);
+	}
+	return (false);
+}
+
 bool				IRC::Channel::remove_client(int sock)
 {
 	if (this->isClient(sock) == 1)
@@ -76,22 +86,21 @@ bool				IRC::Channel::remove_client(int sock)
 			if (*it == sock)
 			{
 				this->clients.erase(it);
+				if (this->isInvitation(sock) == 1)
+				{
+					for (std::vector<int>::iterator it1 = this->invitations.begin(); it1 != this->invitations.end(); ++it1)
+					{
+						if (*it1 == sock)
+						{
+							this->invitations.erase(it1);
+							break ;
+						}
+					}
+				}
 				return (true);
 			}
 		}
 	}
-	return (false);
-}
-
-bool				IRC::Channel::add_client(client &new_client)
-{
-	if (this->isClient(new_client.GetSock()) == 0)
-	{
-		this->white_list.push_back(new_client.GetSock());
-		std::cout << new_client.GetUser() << " successfully add to " << this->getName() << "'s white list" << std::endl;
-	}
-	else
-		std::cout << new_client.GetUser() << " is already in " << this->getName() << std::endl;
 	return (false);
 }
 
@@ -106,6 +115,7 @@ void				IRC::Channel::send_topic_rpl(std::string rpl)
 			std::cout << "Error sending data to client." << std::endl;
 	}
 }
+
 void				IRC::Channel::delOperators(int operateur)
 {
 	std::cout << GREEN << "operator deleted" << END_C << std::endl;

@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/03 18:42:09 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/13 16:28:25 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ void IRC::launch_serv(void)
 	}
 	CloseFds();
 }
+
 void IRC::ClearClients(int fd)
 {
 	for(size_t i = 0 ; i < poll_fds.size(); i++)
@@ -147,6 +148,16 @@ void IRC::ClearClients(int fd)
     if (it != users.end()) {
         users.erase(it);
     }
+	for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
+	{
+		if (it->isClient(fd) == 1)
+			it->remove_client(fd);
+	}
+	for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
+	{
+		if (it->isOperator(fd, it->getOperators()) == 1)
+			it->delOperators(fd);
+	}
 }
 
 void IRC::manage_input(int x)
@@ -199,6 +210,9 @@ void IRC::sendRPL(std::string rpl, int fd)
 	int bytes = 0;
 	std::cout << "Response sent to " << fd << BOLD << ": " << rpl << END_C <<std::endl;
 	send(fd, rpl.c_str(), rpl.size(), 0);
+	std::cout << "\n----- Server response -----\n";
+	std::cerr << rpl;
+	std::cout << "---------------------------\n";
 	if (bytes < 0)
 		std::cout << "Error sending data to client." << std::endl;
 }

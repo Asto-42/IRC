@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:39 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/03 16:44:17 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/13 15:54:59 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ void IRC::handle_mode(client &_client, std::vector<char> &opt_vector, std::strin
 					tmp = "+";
 				}
 				else if (sign == 0){
-					mode_opt(idxChan, sign, "", _client, *op);
+					mode_opt(idxChan, sign, *param.begin(), _client, *op);
 					tmp = "-";
 				}
 				tmp += *op;
@@ -230,7 +230,7 @@ bool						IRC::mode_opt(size_t idxChan, int sign , std::string pit , client &_cl
 			if(sign == 1)
 				return(this->channels[idxChan].setOperators(this->getSockFromName(pit)), true);
 			else if(sign == 0)
-				return(this->channels[idxChan].delModes(this->getSockFromName(pit)), true);
+				return(this->channels[idxChan].delOperators(this->getSockFromName(pit)), true);
 		}
 		else
 			return(sendRPL(ERR_NOSUCHNICK(this->channels[idxChan].getName(), pit), _client.GetSock()), false);
