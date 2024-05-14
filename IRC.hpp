@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 14:32:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/13 17:37:43 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/14 11:13:29 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,14 @@ class IRC
 			int							setup;
 			int							sock;
 			std::vector<std::string>	current_channel;
+			std::string 				oldNick;
 
 		public :
 		//------------------- Getters ---------------------------------------//
 			int				getFlag();
 			void			setFlag(int fl);
+			std::string		getoldnick();
+			void			setoldnick(std::string fl);
 			int				GetSock();
 			int				GetSetup() const;
 			std::string 	GetPass();
@@ -142,7 +145,7 @@ class IRC
 		int							poll_count;
 		int							poll_size;
 		int							port;
-		int							sock;
+		int							sock;std::string 				oldNick;
 		int							bind_sock;
 		int							lstn;
 		std::string 				mdp;
@@ -155,7 +158,7 @@ class IRC
 		bool						secure;
 		static bool					_signal;
 		std::string 				tmp;
-		std::string 				oldNick;
+		
 	//------------------- SubClasses -----------------------------------------//
 	
 	

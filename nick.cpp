@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:12:57 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/13 17:38:08 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/14 11:14:43 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,10 @@ bool	IRC::nick(client &client, std::string cmd)
 	else if(client.getFlag() == 42 )
 	{
 		if(!client.GetNick().empty())
-			this->oldNick = client.GetNick();
+			client.setoldnick(client.GetNick());
+			// this->oldNick = client.GetNick();
 		std::string newNickname = cmd;
-		std::string msg = ":" + this->oldNick  + " NICK " + newNickname + "\r\n";
+		std::string msg = ":" + client.getoldnick()  + " NICK " + newNickname + "\r\n";
 		client.SetNick(cmd);	
 		if(client.GetSetup()  < 4){
 			client.SetSetup(3);

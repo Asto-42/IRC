@@ -6,7 +6,7 @@
 /*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:05:17 by jquil             #+#    #+#             */
-/*   Updated: 2024/05/13 17:37:45 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/05/14 11:16:04 by lbouguet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,4 +88,11 @@ int			IRC::client::getFlag(){
 };
 void			IRC::client::setFlag(int fl){
 	this->flag = fl;
+};
+std::string		IRC::client::getoldnick(){
+	return this->oldNick;	
+};
+			
+void			IRC::client::setoldnick(std::string fl){
+	this->oldNick = fl;
 };
