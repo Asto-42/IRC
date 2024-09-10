@@ -6,11 +6,11 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:16:05 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/24 14:32:25 by jquil            ###   ########.fr       */
+/*   Updated: 2024/09/10 12:35:40 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IRC.hpp"
+#include "include/IRC.hpp"
 
 bool	IRC::kick(client &clients, std::string cmd)
 {

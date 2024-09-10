@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:39 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/25 17:45:43 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/09/10 12:35:40 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IRC.hpp"
+#include "include/IRC.hpp"
 
 
 // Sign 0 = - || 1 = +
@@ -80,7 +80,7 @@ bool IRC::mode(client &_client, std::string cmd){
 	}
 	for(;it != argument.end() ; it++)
 	{
-		
+
 		std::string opt = *it;
 		if(opt[0] == '-' || opt[0] == '+')
 		{
@@ -95,7 +95,7 @@ bool IRC::mode(client &_client, std::string cmd){
 		else
 			param.push_back(opt);
 	}
-	
+
 	if(optCount == 0)
 		return(0);
 	std::cout << "channelname " <<channelName << std::endl;
@@ -132,10 +132,10 @@ bool IRC::mode(client &_client, std::string cmd){
 								{
 									// std::cout << " pit = " << *pit << std::endl;
 									ite->setOperators(it->first);
-									
+
 								}
 							}
-							
+
 						}
 						if(sign == 0)
 							ite->delModes('o');

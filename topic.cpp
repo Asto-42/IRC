@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:15:23 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 14:48:30 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/09/10 12:35:40 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IRC.hpp"
+#include "include/IRC.hpp"
 
 bool						IRC::topic(client &client, std::string cmd)
 {
@@ -19,8 +19,8 @@ bool						IRC::topic(client &client, std::string cmd)
 	std::string 			chanNam;
 	std::string::size_type 	posHash = cmd.find('#');
 	std::string::size_type 	posColon = cmd.find(':');
-	
-	
+
+
 	chanNam = cmd.substr(posHash,  posColon - posHash);
 	std::cout <<"Found channel name: " << MAGENTA << chanNam << END_C << std::endl;
 
@@ -45,19 +45,19 @@ bool						IRC::topic(client &client, std::string cmd)
 		else
 			return ((void)sendRPL(RPL_TOPIC(client.GetNick(), this->channels[i].getName(), this->channels[i].getTopic()), client.GetSock()), false);
 	}
-	
+
 	// Extracting topic name from cmd
 	topicNam = cmd.substr(posColon + 1, cmd.find("\r") - posColon - 1);
-	
+
 	// Checking if the channel's topic is protected
 	if (this->channels[i].getModes().find('t') != std::string::npos)
 	{
 		//if Yes, does the client has the right to change the topic ?
 		for (size_t i = 0; i < this->channels[i].getOperators().size(); i++)
-		{	
+		{
 			//if Yes, change the channel's topic
 			if (this->channels[i].getOperators()[i] == client.GetSock())
-			{	
+			{
 				this->channels[i].setTopic(topicNam);
 				return (true);
 			}
@@ -65,11 +65,11 @@ bool						IRC::topic(client &client, std::string cmd)
 		return ((void)sendRPL(ERR_CHANOPRIVSNEEDED(client.GetNick(), this->channels[i].getName()), client.GetSock()), false);
 	}
 	else
-	{	
+	{
 		this->channels[i].setTopic(topicNam);
 		sendRPL(RPL_TOPIC(client.GetNick(), this->channels[i].getName(), this->channels[i].getTopic()), client.GetSock());
 		return (true);
 	}
 	std::cout << BLUE << "CHECK 3"  << std::endl;
 	return (false);
-}	
+}

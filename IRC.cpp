@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 18:07:38 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 14:47:23 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/09/10 12:35:40 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IRC.hpp"
+#include "include/IRC.hpp"
 
 IRC::IRC(int port, std::string mdp)
 {
@@ -56,7 +56,7 @@ IRC::IRC(int port, std::string mdp)
 // {
 // 	for (std::vector<int>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
 // 	{
-		
+
 // 		std::string tmp = ":" + sender + "!" + this->getName + "@" + sender + " PRIVMSG " + this->name + " :" + msg + "\r\n";
 // 		std::cout << tmp << std::endl;
 // 		send(*it, tmp.c_str(), tmp.size(), 0);
@@ -161,7 +161,7 @@ void IRC::manage_input(int x)
 				if (this->cmd.find(tmp) != this->cmd.end())
 					(this->*cmd[tmp])(this->users.find(fd)->second, input);
 				tmp.clear();
-			
+
 			}
 		}
 	}
@@ -192,9 +192,9 @@ void IRC::sendRPL(std::string rpl, int fd)
 	int bytes = 0;
 	std::cout << "Response sent to " << fd << ": " << rpl << std::endl;
 	send(fd, rpl.c_str(), rpl.size(), 0);
-	if (bytes < 0) 
+	if (bytes < 0)
 		std::cout << "Error sending data to client." << std::endl;
-	
+
 }
 
 void					IRC::setChannels(Channel newChannel)

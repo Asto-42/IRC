@@ -6,12 +6,12 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:12:57 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/23 17:19:42 by jquil            ###   ########.fr       */
+/*   Updated: 2024/09/10 12:35:40 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
-#include "IRC.hpp"
+#include "include/IRC.hpp"
 
 int IRC::cmd_used_name(std::string &name, int mode){
 	if(mode == 1){

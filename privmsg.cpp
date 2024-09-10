@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:13:49 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 14:47:31 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/09/10 12:35:40 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IRC.hpp"
+#include "include/IRC.hpp"
 
 
 
@@ -18,7 +18,7 @@ void					IRC::private_msg_chan(std::string msg, client &sender, std::string chan
 {
 	std::cout << BOLD << BLUE << "private_msg_chan" << END_C << std::endl;
 	Channel *chanFound = NULL;
-	
+
 	// Search for the corresponding channel object
 	for (std::vector<Channel>::iterator it = this->channels.begin(); it != this->channels.end(); ++it)
 	{

@@ -6,11 +6,11 @@
 /*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 15:41:53 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/03 16:58:41 by jquil            ###   ########.fr       */
+/*   Updated: 2024/09/10 12:35:40 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IRC.hpp"
+#include "include/IRC.hpp"
 /*
 int socket(int domain, int type, int protocol) -> renvoi un descripteur
 ->Un socket, qu’il soit TCP ou UDP, sera défini par un simple entier qui devra être

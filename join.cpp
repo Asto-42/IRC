@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbouguet <lbouguet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jquil <jquil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 18:14:55 by jquil             #+#    #+#             */
-/*   Updated: 2024/04/26 12:43:54 by lbouguet         ###   ########.fr       */
+/*   Updated: 2024/09/10 12:35:40 by jquil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IRC.hpp"
+#include "include/IRC.hpp"
 
 bool						IRC::join(client &client, std::string cmd)
 {
 	Channel			*chanFound = NULL;
 	std::string 	chanNam("");
 	std::string		rplList;
-	
+
 	if (cmd.empty())
 		return ((void)sendRPL(ERR_NOTENOUGHPARAM(client.GetUser()), client.GetSock()), false);
 
@@ -26,19 +26,19 @@ bool						IRC::join(client &client, std::string cmd)
 		chanNam = cmd.substr(cmd.find('#'), cmd.find(' ') - cmd.find('#') - 1);
 	else
 		chanNam = cmd.substr(cmd.find('#'), cmd.find('\r') - cmd.find('#') - 1);
-	
-	// Does channel exists ? 
+
+	// Does channel exists ?
 	for (size_t i = 0; i < this->channels.size(); i++)
 	{
-		if (this->channels[i].getName() == chanNam)	
+		if (this->channels[i].getName() == chanNam)
 			chanFound = &this->channels[i];
 	}
-	
+
 	//Is the client already part of the channel ?
 	// if (std::find(chanFound->getClientSockets().begin(), chanFound->getClientSockets().end(), client.GetSock()) != chanFound->getClientSockets().end())
 	// 	return (1);
-		
-	// YES - ADD client to channel 
+
+	// YES - ADD client to channel
 	if (chanFound != NULL)
 	{
 		//std::cout << BLUE << "CHANNEL EXISTS" << END_C << std::endl;
@@ -50,7 +50,7 @@ bool						IRC::join(client &client, std::string cmd)
 				// No
 			if (std::find(chanFound->getInvitations().begin(), chanFound->getInvitations().end(), client.GetUser()) == chanFound->getInvitations().end()) // NO
 				return ((void)sendRPL(ERR_INVITEONLYCHAN(client.GetUser(), chanNam), client.GetSock()), false);
-		}// Key 
+		}// Key
 		if (chanFound->getModes().find('k') != std::string::npos)
 		{
 			if (cmd.find(" ") == std::string::npos)
@@ -61,7 +61,7 @@ bool						IRC::join(client &client, std::string cmd)
 		}// Limit
 		if (static_cast<int>(chanFound->getClients().size() + 1) > chanFound->getLimitClients())
 			return ((void)sendRPL(ERR_CHANNELISFULL(client.GetUser(), chanNam), client.GetSock()), false);
-		
+
 		chanFound->setClients(client);
 		for (size_t i = 0; i < chanFound->getClients().size(); i++)
 		{
@@ -74,7 +74,7 @@ bool						IRC::join(client &client, std::string cmd)
 		//std::cout << BLUE << " 2 - JOINING CHANNEL" << END_C << std::endl;
 		//for (std::vector<int>::iterator ite = clientsVec2.begin(); ite != clientsVec2.end(); ite++)
 		//	std::cout << GREEN << *ite << END_C << std::endl;
-		
+
 		std::cout << YELLOW << rplList << END_C << std::endl;
 		sendRPL(RPL_JOIN(client.GetNick(), chanNam), client.GetSock());
 		sendRPL(RPL_NAMREPLY(client.GetNick(), chanNam, rplList), client.GetSock());
